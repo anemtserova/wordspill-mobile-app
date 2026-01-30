@@ -1,0 +1,23 @@
+src/
+  navigation/
+    AuthNavigator.tsx
+    MainAppNavigator.tsx
+    OnboardingNavigatior.tsx
+    RootNavigator.tsx
+    TabNavigator.tsx
+  screens/
+    auth/
+      ForgottenPasswordScreen.tsx
+      SignInScreen.tsx
+      SignupScreen.tsx
+    mainApp/
+      CategoriesScreen.tsx
+      HomeScreen.tsx
+      ProfileScreen.tsx
+      SelectedCategoryScreen.tsx
+    onboarding/
+      DiaryScreen.tsx
+      FictionPoetryScreen.tsx
+      GetStartedScreen.tsx
+      TravelScreen.tsx
+      WelcomeScreen.tsx
