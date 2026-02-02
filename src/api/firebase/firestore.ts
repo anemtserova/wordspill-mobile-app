@@ -68,7 +68,9 @@ export const deleteCollection = async (collectionId: string): Promise<void> => {
 };
 
 // Fetch all collections ordered by creation date descending
-export const getAllCollections = async (): Promise<Collection[]> => {
+export const getAllCollections = async (
+	userId: string,
+): Promise<Collection[]> => {
 	const collectionsCol = collection(db, 'collections');
 	const q = query(collectionsCol, orderBy('createdAt', 'desc'));
 	const collectionsSnapshot = await getDocs(q);

@@ -1,20 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
-import { getCollection } from '../firebase/firestore';
+import { getCollection, getAllCollections } from '../firebase/firestore';
 
 export const useGetCollection = (userId: string, collectionId: string) => {
 	return useQuery({
-		queryKey: ['collections', userId, collectionId],
+		queryKey: ['collection', userId, collectionId],
 		queryFn: async () => {
 			return getCollection(userId, collectionId);
 		},
 	});
 };
 
-export const getAllCollections = () => {
+export const useGetAllCollections = (userId: string) => {
 	return useQuery({
-		queryKey: ['collections'],
+		queryKey: ['collections', userId],
 		queryFn: async () => {
-			getAllCollections();
+			return getAllCollections(userId);
 		},
 	});
 };
