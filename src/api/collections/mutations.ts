@@ -14,15 +14,15 @@ export const useCreateCollection = (userId: string) => {
 	});
 };
 
-export const useDeleteCollection = (collectionId: string) => {
+export const useDeleteCollection = (userId: string, collectionId: string) => {
 	const qc = useQueryClient();
 
 	return useMutation({
 		mutationFn: async () => {
-			return await deleteCollection(collectionId);
+			return await deleteCollection(userId, collectionId);
 		},
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ['collections'] });
+			qc.invalidateQueries({ queryKey: ['collections', userId] });
 		},
 	});
 };

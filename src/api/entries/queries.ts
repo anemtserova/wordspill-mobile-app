@@ -1,15 +1,11 @@
-import { useQueries } from '@tanstack/react-query';
-import { Entry } from '../../types/Entry';
+import { useQuery } from '@tanstack/react-query';
+import { getEntries } from '../firebase/firestore';
 
-export const getEntries = async (): Promise<Entry[]> => {
-	return useQueries({
-		queries: [
-			{
-				queryKey: ['entries'],
-				queryFn: async () => {
-					getEntries();
-				},
-			},
-		],
+export const useGetEntries = (userId: string) => {
+	return useQuery({
+		queryKey: ['entries', userId],
+		queryFn: async () => {
+			return getEntries(userId);
+		},
 	});
 };

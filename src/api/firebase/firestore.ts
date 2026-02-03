@@ -15,7 +15,6 @@ import {
 import { Collection } from '../../types/Collection';
 import { Entry } from '../../types/Entry';
 import { UserProfile } from '../../types/User';
-import { User } from 'firebase/auth/cordova';
 
 // Fetch a collection of entries by its ID
 export const getCollection = async (userId: string, collectionId: string) => {
@@ -30,7 +29,7 @@ export const createCollection = async (
 	userId: string,
 	collectionData: Omit<Collection, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<string> => {
-	const collectionsCol = collection(db, 'collections');
+	const collectionsCol = collection(db, 'users', userId, 'collections');
 	const newCollection = {
 		...collectionData,
 		createdAt: serverTimestamp(),
@@ -42,21 +41,37 @@ export const createCollection = async (
 
 // Update an existing collection of entries
 export const updateCollection = async (
+	userId: string,
 	collectionId: string,
 	updatedData: Partial<Omit<Collection, 'id' | 'createdAt' | 'updatedAt'>>,
 ): Promise<void> => {
-	const collectionDocRef = doc(db, 'collections', collectionId);
+	const collectionDocRef = doc(
+		db,
+		'users',
+		userId,
+		'collections',
+		collectionId,
+	);
 	await updateDoc(collectionDocRef, updatedData);
 };
 
 // Soft delete a collection and reassign its entries to a default collection
-export const deleteCollection = async (collectionId: string): Promise<void> => {
-	const DEFAULT_COLLECTION_ID = 'Uncollected'; // Or whatever you choose
+export const deleteCollection = async (
+	userId: string,
+	collectionId: string,
+): Promise<void> => {
+	const DEFAULT_COLLECTION_ID = 'Uncollected';
 
-	const collectionDocRef = doc(db, 'collections', collectionId);
+	const collectionDocRef = doc(
+		db,
+		'users',
+		userId,
+		'collections',
+		collectionId,
+	);
 	await updateDoc(collectionDocRef, { deletedAt: serverTimestamp() });
 
-	const entriesCol = collection(db, 'entries');
+	const entriesCol = collection(db, 'users', userId, 'entries');
 	const q = query(entriesCol, where('collectionId', '==', collectionId));
 	const entriesSnapshot = await getDocs(q);
 
@@ -71,7 +86,7 @@ export const deleteCollection = async (collectionId: string): Promise<void> => {
 export const getAllCollections = async (
 	userId: string,
 ): Promise<Collection[]> => {
-	const collectionsCol = collection(db, 'collections');
+	const collectionsCol = collection(db, 'users', userId, 'collections');
 	const q = query(collectionsCol, orderBy('createdAt', 'desc'));
 	const collectionsSnapshot = await getDocs(q);
 	const collectionsList = collectionsSnapshot.docs.map((doc) => ({
@@ -83,9 +98,10 @@ export const getAllCollections = async (
 
 // Create a new entry
 export const createEntry = async (
+	userId: string,
 	entryData: Omit<Entry, 'id' | 'createdAt'>,
 ): Promise<string> => {
-	const entriesCol = collection(db, 'entries');
+	const entriesCol = collection(db, 'users', userId, 'entries');
 	const newEntry = {
 		...entryData,
 		createdAt: serverTimestamp(),
@@ -96,22 +112,26 @@ export const createEntry = async (
 
 // Update an existing entry
 export const updateEntry = async (
+	userId: string,
 	entryId: string,
 	updatedData: Partial<Omit<Entry, 'id' | 'createdAt'>>,
 ): Promise<void> => {
-	const entryDocRef = doc(db, 'entries', entryId);
+	const entryDocRef = doc(db, 'users', userId, 'entries', entryId);
 	await updateDoc(entryDocRef, updatedData);
 };
 
 // Soft delete an entry by setting a deletedAt timestamp
-export const deleteEntry = async (entryId: string): Promise<void> => {
-	const entryDocRef = doc(db, 'entries', entryId);
+export const deleteEntry = async (
+	userId: string,
+	entryId: string,
+): Promise<void> => {
+	const entryDocRef = doc(db, 'users', userId, 'entries', entryId);
 	await updateDoc(entryDocRef, { deletedAt: serverTimestamp() });
 };
 
 // Fetch all entries ordered by creation date descending
-export const getEntries = async (): Promise<Entry[]> => {
-	const entriesCol = collection(db, 'entries');
+export const getEntries = async (userId: string): Promise<Entry[]> => {
+	const entriesCol = collection(db, 'users', userId, 'entries');
 	const q = query(entriesCol, orderBy('createdAt', 'desc'));
 	const entriesSnapshot = await getDocs(q);
 	const entriesList = entriesSnapshot.docs.map((doc) => ({

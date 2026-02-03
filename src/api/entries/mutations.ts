@@ -2,41 +2,41 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Entry } from '../../types/Entry';
 import { createEntry, deleteEntry, updateEntry } from '../firebase/firestore';
 
-export const useCreateEntry = () => {
+export const useCreateEntry = (userId: string) => {
 	const qc = useQueryClient();
 	return useMutation({
 		mutationKey: ['createEntry'],
 		mutationFn: async (data: Omit<Entry, 'id' | 'createdAt'>) => {
-			return await createEntry(data);
+			return await createEntry(userId, data);
 		},
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ['entries'] });
+			qc.invalidateQueries({ queryKey: ['entries', userId] });
 		},
 	});
 };
 
-export const useUpdateEntry = (entryId: string) => {
+export const useUpdateEntry = (userId: string, entryId: string) => {
 	const qc = useQueryClient();
 	return useMutation({
 		mutationKey: ['updateEntry', entryId],
 		mutationFn: async (data: Partial<Omit<Entry, 'id' | 'createdAt'>>) => {
-			return await updateEntry(entryId, data);
+			return await updateEntry(userId, entryId, data);
 		},
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ['entries'] });
+			qc.invalidateQueries({ queryKey: ['entries', userId] });
 		},
 	});
 };
 
-export const useDeleteEntry = (entryId: string) => {
+export const useDeleteEntry = (userId: string, entryId: string) => {
 	const qc = useQueryClient();
 	return useMutation({
 		mutationKey: ['deleteEntry', entryId],
 		mutationFn: async () => {
-			return await deleteEntry(entryId);
+			return await deleteEntry(userId, entryId);
 		},
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ['entries'] });
+			qc.invalidateQueries({ queryKey: ['entries', userId] });
 		},
 	});
 };
