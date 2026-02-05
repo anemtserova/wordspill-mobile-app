@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 
-export const CategoriesScreen = () => {
+export const CollectionsScreen = () => {
 	return (
 		<View>
-			<Text>Categories Screen</Text>
+			<Text>Collections Screen</Text>
 		</View>
 	);
 };

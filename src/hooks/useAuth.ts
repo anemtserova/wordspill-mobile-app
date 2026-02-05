@@ -4,6 +4,7 @@ import {
 	loginUser,
 	logoutUser,
 	registerUser,
+	resetPassword,
 } from '../api/firebase/auth';
 import { db } from '../../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
@@ -46,5 +47,6 @@ export const useAuth = () => {
 		login: loginUser,
 		register: registerUser,
 		logout: logoutUser,
+		resetPassword: resetPassword,
 	};
 };

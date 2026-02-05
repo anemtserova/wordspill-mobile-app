@@ -4,17 +4,22 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 	onAuthStateChanged,
+	sendPasswordResetEmail,
 	User,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
-export const registerUser = async (email: string, password: string) => {
+export const registerUser = async (
+	email: string,
+	password: string,
+	displayName: string,
+) => {
 	const result = await createUserWithEmailAndPassword(auth, email, password);
 	const user = result.user;
 
 	// Create Firestore profile
 	await setDoc(doc(db, 'users', user.uid), {
-		displayName: '',
+		displayName: displayName,
 		username: '',
 		email: user.email,
 		avatarUrl: null,
@@ -33,6 +38,9 @@ export const loginUser = (email: string, password: string) =>
 	signInWithEmailAndPassword(auth, email, password);
 
 export const logoutUser = () => signOut(auth);
+
+export const resetPassword = (email: string) =>
+	sendPasswordResetEmail(auth, email);
 
 export const listenToAuth = (callback: (user: User | null) => void) =>
 	onAuthStateChanged(auth, callback);

@@ -13,6 +13,8 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { Button } from '../../components/ui';
 import { useOnboarding } from '../../hooks/useOnboarding';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -44,7 +46,12 @@ const slides: OnboardingSlide[] = [
 	},
 ];
 
+interface OnboardingCarouselProps {
+	navigation: NativeStackNavigationProp<any>;
+}
+
 export const OnboardingCarousel = () => {
+	const navigation = useNavigation<NativeStackNavigationProp<any>>();
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const flatListRef = useRef<FlatList>(null);
 	const { completeOnboarding } = useOnboarding();
@@ -58,6 +65,7 @@ export const OnboardingCarousel = () => {
 
 	const handleGetStarted = async () => {
 		await completeOnboarding();
+		navigation.navigate('LoginScreen');
 	};
 
 	const renderItem = ({ item }: { item: OnboardingSlide }) => (
