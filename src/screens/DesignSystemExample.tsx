@@ -11,14 +11,23 @@ import {
 	Image,
 	SearchBar,
 	ImagePicker,
+	HeaderImagePicker,
+	LocationPicker,
 } from '../components/ui';
 import { colors, spacing } from '../theme';
+import { Book, Heart } from 'iconoir-react-native';
 
 export const DesignSystemExample = () => {
 	const [inputValue, setInputValue] = useState('');
 	const [textAreaValue, setTextAreaValue] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
 	const [images, setImages] = useState<string[]>([]);
+	const [headerImage, setHeaderImage] = useState<string | null>(null);
+	const [location, setLocation] = useState<{
+		latitude: number;
+		longitude: number;
+		address?: string;
+	} | null>(null);
 
 	const handleAddImage = () => {
 		// Mock adding an image
@@ -29,6 +38,13 @@ export const DesignSystemExample = () => {
 
 	const handleRemoveImage = (index: number) => {
 		setImages(images.filter((_, i) => i !== index));
+	};
+
+	const handleAddHeaderImage = () => {
+		// Mock adding a header image
+		const mockHeaderImage =
+			'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
+		setHeaderImage(mockHeaderImage);
 	};
 
 	return (
@@ -423,7 +439,85 @@ export const DesignSystemExample = () => {
 					<Text variant="h5">Filled Card</Text>
 					<Text variant="body">Card with background fill</Text>
 				</Card>
+
+				<Text
+					variant="bodySmall"
+					style={[styles.subsectionTitle, { paddingHorizontal: spacing.lg }]}>
+					Horizontal Cards
+				</Text>
+
+				<Card
+					variant="elevated"
+					orientation="horizontal"
+					padding="md"
+					style={styles.card}>
+					<Book
+						width={24}
+						height={24}
+						color={colors.primary.main}
+						strokeWidth={2}
+					/>
+					<Text variant="h6">Fiction Collection</Text>
+				</Card>
+
+				<Card
+					variant="outlined"
+					orientation="horizontal"
+					padding="md"
+					style={styles.card}>
+					<Heart
+						width={24}
+						height={24}
+						color={colors.accent.peach}
+						strokeWidth={2}
+					/>
+					<Text variant="h6">Favorite Words</Text>
+				</Card>
 			</View>
+
+			{/* Header Image Picker */}
+			<Card variant="elevated" padding="lg" style={styles.card}>
+				<Text variant="h3" style={styles.sectionTitle}>
+					Header Image Picker
+				</Text>
+
+				<Text variant="body" color={colors.text.secondary} style={styles.hint}>
+					Full-width header image component for entries
+				</Text>
+
+				<HeaderImagePicker
+					imageUri={headerImage}
+					onPress={handleAddHeaderImage}
+					placeholder="Add entry header image"
+				/>
+
+				{headerImage && (
+					<Button
+						variant="outline"
+						size="sm"
+						onPress={() => setHeaderImage(null)}
+						style={{ marginTop: spacing.md }}>
+						Clear Image
+					</Button>
+				)}
+			</Card>
+
+			{/* Location Picker */}
+			<Card variant="elevated" padding="lg" style={styles.card}>
+				<Text variant="h3" style={styles.sectionTitle}>
+					Location Picker
+				</Text>
+
+				<Text variant="body" color={colors.text.secondary} style={styles.hint}>
+					Add location to entries with current location or manual input
+				</Text>
+
+				<LocationPicker
+					location={location}
+					onLocationSelect={setLocation}
+					onLocationClear={() => setLocation(null)}
+				/>
+			</Card>
 
 			{/* Color Palette */}
 			<Card variant="elevated" padding="lg" style={styles.card}>

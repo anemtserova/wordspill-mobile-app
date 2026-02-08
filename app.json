@@ -22,6 +22,27 @@
 			"predictiveBackGestureEnabled": false,
 			"package": "com.anonymous.wordspillmobileapp"
 		},
-		"web": {}
+		"web": {},
+		"plugins": [
+			[
+				"expo-image-picker",
+				{
+					"photosPermission": "The app accesses your photos to let you share them with your friends.",
+					"cameraPermission": "The app accesses your camera to let you take photos and share them with your friends."
+				}
+			],
+			[
+				"expo-media-library",
+				{
+					"accessPrivileges": "The app needs access to your media library to let you share photos with your friends."
+				}
+			],
+			[
+				"expo-location",
+				{
+					"locationAlwaysAndWhenInUsePermission": "The app needs access to your location to show it on your profile and let your friends see where you are."
+				}
+			]
+		]
 	}
 }

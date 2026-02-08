@@ -2,12 +2,23 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Entry } from '../../types/Entry';
 import { createEntry, deleteEntry, updateEntry } from '../firebase/firestore';
 
+interface EntryDataProps {
+	title: string;
+	content: string;
+	collectionId: string | null;
+	tags: string[];
+	headerImage: string | null;
+	mediaUrls: string[];
+	createdAt: Date;
+	updatedAt: Date;
+}
+
 export const useCreateEntry = (userId: string) => {
 	const qc = useQueryClient();
 	return useMutation({
 		mutationKey: ['createEntry'],
-		mutationFn: async (data: Omit<Entry, 'id' | 'createdAt'>) => {
-			return await createEntry(userId, data);
+		mutationFn: async (entryData: Omit<Entry, 'id' | 'createdAt'>) => {
+			return await createEntry(userId, entryData);
 		},
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ['entries', userId] });

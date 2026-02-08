@@ -65,7 +65,7 @@ export const OnboardingCarousel = () => {
 
 	const handleGetStarted = async () => {
 		await completeOnboarding();
-		navigation.navigate('LoginScreen');
+		navigation.navigate('Auth');
 	};
 
 	const renderItem = ({ item }: { item: OnboardingSlide }) => (

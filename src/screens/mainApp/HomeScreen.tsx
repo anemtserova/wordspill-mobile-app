@@ -27,7 +27,7 @@ import { Flower } from 'iconoir-react-native/regular';
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - spacing.lg * 3) / 2;
 
-const PREDEFINED_COLLECTIONS = [
+export const PREDEFINED_COLLECTIONS = [
 	{
 		id: 'fiction',
 		name: 'Fiction',
@@ -79,13 +79,18 @@ export const HomeScreen = ({
 	const greeting = getGreeting();
 
 	const handleCollectionPress = (collectionId: string) => {
-		// TODO: Navigate to selected collection screen
-		navigation.navigate('SelectedCollectionScreen', { collectionId });
+		// Navigate to Entries navigator, which will show the SelectedCollectionScreen
+		navigation.navigate('Entries', {
+			screen: 'Collections',
+			params: { collectionId },
+		});
 	};
 
 	const handleStartWithoutCollection = () => {
-		// TODO: Navigate to add entry without collection
-		navigation.navigate('AddEntryScreen');
+		// Navigate to add entry screen
+		navigation.navigate('Entries', {
+			screen: 'Add Entry',
+		});
 	};
 
 	const handleSearch = () => {

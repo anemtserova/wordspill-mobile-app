@@ -3,15 +3,18 @@ import { View, StyleSheet, ViewProps, ViewStyle } from 'react-native';
 import { colors, spacing, borderRadius, shadows } from '../../theme';
 
 type CardVariant = 'elevated' | 'outlined' | 'filled';
+type CardOrientation = 'vertical' | 'horizontal';
 
 interface CardProps extends ViewProps {
 	variant?: CardVariant;
+	orientation?: CardOrientation;
 	padding?: keyof typeof spacing;
 	children: React.ReactNode;
 }
 
 export const Card: React.FC<CardProps> = ({
 	variant = 'elevated',
+	orientation = 'vertical',
 	padding = 'md',
 	style,
 	children,
@@ -20,8 +23,9 @@ export const Card: React.FC<CardProps> = ({
 	const cardStyle: ViewStyle[] = [
 		styles.base,
 		styles[variant],
+		orientation === 'horizontal' ? styles.horizontal : undefined,
 		{ padding: spacing[padding] },
-	];
+	].filter(Boolean) as ViewStyle[];
 
 	return (
 		<View style={[cardStyle, style]} {...props}>
@@ -44,5 +48,10 @@ const styles = StyleSheet.create({
 	},
 	filled: {
 		backgroundColor: colors.background.secondary,
+	},
+	horizontal: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 	},
 });

@@ -1,6 +1,24 @@
+// {
+//   "extends": "expo/tsconfig.base",
+//   "compilerOptions": {
+//     "strict": true,
+//      "paths": {
+//       "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
+//     }
+//   },
+//   "extends": "expo/tsconfig.base"
+//   }
+// }
+// Source - https://stackoverflow.com/a/77021337
+// Posted by Olalekan Ajayi, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-02-07, License - CC BY-SA 4.0
+
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true
-  }
+	"compilerOptions": {
+		"strict": true,
+		"paths": {
+			"@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
+		}
+	},
+	"extends": "expo/tsconfig.base"
 }

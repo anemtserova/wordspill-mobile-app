@@ -8,7 +8,7 @@ export const ProfileNavigator = () => {
 
 	return (
 		<ProfileStack.Navigator screenOptions={{ headerShown: false }}>
-			<ProfileStack.Screen name="Profile" component={ProfileScreen} />
+			<ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
 			<ProfileStack.Screen name="Settings" component={SettingsScreen} />
 			<ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
 		</ProfileStack.Navigator>

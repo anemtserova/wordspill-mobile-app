@@ -1,9 +1,423 @@
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import {
+	View,
+	StyleSheet,
+	ScrollView,
+	KeyboardAvoidingView,
+	Platform,
+	Alert,
+	TouchableOpacity,
+} from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {
+	Text,
+	Input,
+	TextArea,
+	Button,
+	Card,
+	Tag,
+	HeaderImagePicker,
+	ImagePicker,
+} from '../../components/ui';
+import { colors, spacing } from '../../theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ArrowLeft, Plus, Xmark } from 'iconoir-react-native';
+import * as ImagePickerExpo from 'expo-image-picker';
+import { useCreateEntry } from '../../api/entries';
+import { useAuth } from '../../hooks/useAuth';
 
-export const AddEntryScreen = () => {
+interface AddEntryScreenProps {
+	navigation: NativeStackNavigationProp<any>;
+	route?: {
+		params?: {
+			collectionId?: string;
+			userId?: string; // Add userId to route params for mutation
+		};
+	};
+}
+
+export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
+	navigation,
+	route,
+}) => {
+	const insets = useSafeAreaInsets();
+	const preselectedCollection = route?.params?.collectionId;
+	const { user } = useAuth(); // Get authenticated user
+	const userId = user?.uid || ''; // Get userId from authenticated user
+
+	// Mutation hook for creating entry
+	const createEntryMutation = useCreateEntry(userId);
+
+	// Form state
+	const [title, setTitle] = useState('');
+	const [content, setContent] = useState('');
+	const [selectedCollection, setSelectedCollection] = useState<string | null>(
+		preselectedCollection || null,
+	);
+	const [tags, setTags] = useState<string[]>([]);
+	const [tagInput, setTagInput] = useState('');
+	const [headerImage, setHeaderImage] = useState<string | null>(null);
+	const [mediaImages, setMediaImages] = useState<string[]>([]);
+	const [isSaving, setIsSaving] = useState(false);
+
+	// Mock collections - replace with real data from context/API
+	const availableCollections = [
+		{ id: 'fiction', name: 'Fiction' },
+		{ id: 'poetry', name: 'Poetry' },
+		{ id: 'travel', name: 'Travel' },
+		{ id: 'quick-notes', name: 'Quick Notes' },
+	];
+
+	const handleAddTag = () => {
+		const trimmedTag = tagInput.trim();
+		if (trimmedTag && !tags.includes(trimmedTag)) {
+			setTags([...tags, trimmedTag]);
+			setTagInput('');
+		}
+	};
+
+	const handleRemoveTag = (tagToRemove: string) => {
+		setTags(tags.filter((tag) => tag !== tagToRemove));
+	};
+
+	const handlePickHeaderImage = async () => {
+		const { status } =
+			await ImagePickerExpo.requestMediaLibraryPermissionsAsync();
+		if (status !== 'granted') {
+			Alert.alert(
+				'Permission Needed',
+				'Please grant photo library access to add images.',
+			);
+			return;
+		}
+
+		const result = await ImagePickerExpo.launchImageLibraryAsync({
+			mediaTypes: ImagePickerExpo.MediaTypeOptions.Images,
+			allowsEditing: true,
+			aspect: [16, 9],
+			quality: 0.8,
+		});
+
+		if (!result.canceled) {
+			setHeaderImage(result.assets[0].uri);
+		}
+	};
+
+	const handleAddMediaImage = async () => {
+		const { status } =
+			await ImagePickerExpo.requestMediaLibraryPermissionsAsync();
+		if (status !== 'granted') {
+			Alert.alert(
+				'Permission Needed',
+				'Please grant photo library access to add images.',
+			);
+			return;
+		}
+
+		const result = await ImagePickerExpo.launchImageLibraryAsync({
+			mediaTypes: ImagePickerExpo.MediaTypeOptions.Images,
+			allowsEditing: true,
+			quality: 0.8,
+		});
+
+		if (!result.canceled && mediaImages.length < 5) {
+			setMediaImages([...mediaImages, result.assets[0].uri]);
+		}
+	};
+
+	const handleRemoveMediaImage = (index: number) => {
+		setMediaImages(mediaImages.filter((_, i) => i !== index));
+	};
+
+	const handleSave = async () => {
+		// Validation
+		if (!title.trim()) {
+			Alert.alert('Missing Title', 'Please enter a title for your entry.');
+			return;
+		}
+		if (!content.trim()) {
+			Alert.alert('Missing Content', 'Please add some content to your entry.');
+			return;
+		}
+
+		setIsSaving(true);
+
+		try {
+			const newEntry = {
+				title: title.trim(),
+				content: content.trim(),
+				collectionId: selectedCollection,
+				tags,
+				headerImage,
+				mediaUrls: mediaImages,
+				date: new Date(),
+				mood: null,
+				updatedAt: new Date(),
+			};
+
+			await createEntryMutation.mutateAsync(newEntry);
+
+			Alert.alert('Success', 'Entry saved successfully!', [
+				{
+					text: 'OK',
+					onPress: () => navigation.goBack(),
+				},
+			]);
+		} catch (error) {
+			Alert.alert('Error', 'Failed to save entry. Please try again.');
+			console.error('Save error:', error);
+		} finally {
+			setIsSaving(false);
+		}
+	};
+
+	const handleDiscard = () => {
+		Alert.alert(
+			'Discard Entry?',
+			'Are you sure you want to discard this entry? All changes will be lost.',
+			[
+				{ text: 'Cancel', style: 'cancel' },
+				{
+					text: 'Discard',
+					style: 'destructive',
+					onPress: () => navigation.goBack(),
+				},
+			],
+		);
+	};
+
 	return (
-		<View>
-			<Text>Add Entry</Text>
-		</View>
+		<KeyboardAvoidingView
+			style={styles.container}
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+			keyboardVerticalOffset={insets.top}>
+			{/* Header */}
+			<View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}>
+				<TouchableOpacity onPress={handleDiscard} style={styles.backButton}>
+					<ArrowLeft
+						width={24}
+						height={24}
+						color={colors.text.primary}
+						strokeWidth={2}
+					/>
+				</TouchableOpacity>
+				<Text variant="h5">New Entry</Text>
+				<View style={styles.headerRight} />
+			</View>
+
+			<ScrollView
+				style={styles.scrollView}
+				contentContainerStyle={styles.scrollContent}
+				showsVerticalScrollIndicator={false}>
+				{/* Header Image */}
+				<HeaderImagePicker
+					imageUri={headerImage}
+					onPress={handlePickHeaderImage}
+					placeholder="Add header image (optional)"
+				/>
+
+				{/* Title Input */}
+				<Input
+					label="Title"
+					placeholder="Enter title..."
+					value={title}
+					onChangeText={setTitle}
+					style={styles.input}
+				/>
+
+				{/* Collection Selector */}
+				<View style={styles.section}>
+					<Text variant="label" style={styles.sectionLabel}>
+						Collection (Optional)
+					</Text>
+					<View style={styles.collectionsRow}>
+						{availableCollections.map((collection) => (
+							<Tag
+								key={collection.id}
+								variant={
+									selectedCollection === collection.id ? 'primary' : 'default'
+								}
+								onPress={() =>
+									setSelectedCollection(
+										selectedCollection === collection.id ? null : collection.id,
+									)
+								}
+								style={styles.collectionTag}>
+								{collection.name}
+							</Tag>
+						))}
+					</View>
+				</View>
+
+				{/* Content TextArea */}
+				<TextArea
+					label="Content"
+					placeholder="What's on your mind?"
+					value={content}
+					onChangeText={setContent}
+					minHeight={200}
+					maxLength={10000}
+					showCount
+					style={styles.input}
+				/>
+
+				{/* Tags Section */}
+				<View style={styles.section}>
+					<Text variant="label" style={styles.sectionLabel}>
+						Tags
+					</Text>
+					<View style={styles.tagInputRow}>
+						<Input
+							placeholder="Add a tag..."
+							value={tagInput}
+							onChangeText={setTagInput}
+							onSubmitEditing={handleAddTag}
+							returnKeyType="done"
+							style={styles.tagInput}
+						/>
+						<Button
+							variant="primary"
+							size="sm"
+							onPress={handleAddTag}
+							disabled={!tagInput.trim()}
+							style={styles.addTagButton}>
+							<Plus
+								width={20}
+								height={20}
+								color={colors.neutral.white}
+								strokeWidth={2}
+							/>
+						</Button>
+					</View>
+					{tags.length > 0 && (
+						<View style={styles.tagsContainer}>
+							{tags.map((tag) => (
+								<Tag
+									key={tag}
+									variant="accent"
+									removable
+									onRemove={() => handleRemoveTag(tag)}>
+									{tag}
+								</Tag>
+							))}
+						</View>
+					)}
+				</View>
+
+				{/* Media Images */}
+				<View style={styles.section}>
+					<Text variant="label" style={styles.sectionLabel}>
+						Images (Optional)
+					</Text>
+					<ImagePicker
+						images={mediaImages}
+						onAddImage={handleAddMediaImage}
+						onRemoveImage={handleRemoveMediaImage}
+						maxImages={5}
+					/>
+				</View>
+			</ScrollView>
+
+			{/* Bottom Action Buttons */}
+			<View
+				style={[
+					styles.bottomActions,
+					{ paddingBottom: insets.bottom + spacing.md },
+				]}>
+				<Button
+					variant="outline"
+					onPress={handleDiscard}
+					style={styles.actionButton}>
+					Cancel
+				</Button>
+				<Button
+					variant="primary"
+					onPress={handleSave}
+					loading={isSaving}
+					disabled={isSaving}
+					style={styles.actionButton}>
+					Save Entry
+				</Button>
+			</View>
+		</KeyboardAvoidingView>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: colors.background.primary,
+	},
+	header: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		paddingHorizontal: spacing.lg,
+		paddingBottom: spacing.sm,
+		backgroundColor: colors.background.primary,
+		borderBottomWidth: 1,
+		borderBottomColor: colors.border.light,
+	},
+	backButton: {
+		padding: spacing.xs,
+		width: 40,
+	},
+	headerRight: {
+		width: 40,
+	},
+	scrollView: {
+		flex: 1,
+	},
+	scrollContent: {
+		padding: spacing.lg,
+		gap: spacing.lg,
+	},
+	input: {
+		marginBottom: 0,
+	},
+	section: {
+		gap: spacing.sm,
+	},
+	sectionLabel: {
+		marginBottom: spacing.xs,
+	},
+	collectionsRow: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		gap: spacing.sm,
+	},
+	collectionTag: {
+		marginBottom: 0,
+	},
+	tagInputRow: {
+		flexDirection: 'row',
+		gap: spacing.sm,
+		alignItems: 'flex-start',
+	},
+	tagInput: {
+		flex: 1,
+		marginBottom: 0,
+	},
+	addTagButton: {
+		paddingHorizontal: spacing.md,
+		minWidth: 'auto',
+	},
+	tagsContainer: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		gap: spacing.sm,
+		marginTop: spacing.xs,
+	},
+	bottomActions: {
+		flexDirection: 'row',
+		gap: spacing.md,
+		paddingHorizontal: spacing.lg,
+		paddingTop: spacing.md,
+		backgroundColor: colors.background.primary,
+		borderTopWidth: 1,
+		borderTopColor: colors.border.light,
+	},
+	actionButton: {
+		flex: 1,
+	},
+});
