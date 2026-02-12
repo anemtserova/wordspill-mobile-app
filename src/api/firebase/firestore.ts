@@ -29,10 +29,9 @@ export const getEntriesByCollection = async (
 
 // Create a new collection of entries
 export const createCollection = async (
-	userId: string,
 	collectionData: Omit<Collection, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<string> => {
-	const collectionsCol = collection(db, 'users', userId, 'collections');
+	const collectionsCol = collection(db, 'collections');
 	const newCollection = {
 		...collectionData,
 		createdAt: serverTimestamp(),
@@ -44,58 +43,33 @@ export const createCollection = async (
 
 // Update an existing collection of entries
 export const updateCollection = async (
-	userId: string,
 	collectionId: string,
 	updatedData: Partial<Omit<Collection, 'id' | 'createdAt' | 'updatedAt'>>,
 ): Promise<void> => {
-	const collectionDocRef = doc(
-		db,
-		'users',
-		userId,
-		'collections',
-		collectionId,
-	);
-	await updateDoc(collectionDocRef, updatedData);
+	const collectionDocRef = doc(db, 'collections', collectionId);
+	await updateDoc(collectionDocRef, {
+		...updatedData,
+		updatedAt: serverTimestamp(),
+	});
 };
 
 // Soft delete a collection and reassign its entries to a default collection
-export const deleteCollection = async (
-	userId: string,
-	collectionId: string,
-): Promise<void> => {
-	const DEFAULT_COLLECTION_ID = 'Uncollected';
-
-	const collectionDocRef = doc(
-		db,
-		'users',
-		userId,
-		'collections',
-		collectionId,
-	);
+export const deleteCollection = async (collectionId: string): Promise<void> => {
+	const collectionDocRef = doc(db, 'collections', collectionId);
 	await updateDoc(collectionDocRef, { deletedAt: serverTimestamp() });
-
-	const entriesCol = collection(db, 'users', userId, 'entries');
-	const q = query(entriesCol, where('collectionId', '==', collectionId));
-	const entriesSnapshot = await getDocs(q);
-
-	const batch = writeBatch(db);
-	entriesSnapshot.docs.forEach((doc) => {
-		batch.update(doc.ref, { collectionId: DEFAULT_COLLECTION_ID });
-	});
-	await batch.commit();
 };
 
 // Fetch all collections ordered by creation date descending
-export const getAllCollections = async (
-	userId: string,
-): Promise<Collection[]> => {
-	const collectionsCol = collection(db, 'users', userId, 'collections');
+export const getAllCollections = async (): Promise<Collection[]> => {
+	const collectionsCol = collection(db, 'collections');
 	const q = query(collectionsCol, orderBy('createdAt', 'desc'));
 	const collectionsSnapshot = await getDocs(q);
-	const collectionsList = collectionsSnapshot.docs.map((doc) => ({
-		id: doc.id,
-		...doc.data(),
-	})) as Collection[];
+	const collectionsList = collectionsSnapshot.docs
+		.map((doc) => ({
+			id: doc.id,
+			...doc.data(),
+		}))
+		.filter((collection) => !collection.deletedAt) as Collection[];
 	return collectionsList;
 };
 

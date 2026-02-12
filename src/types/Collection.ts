@@ -5,4 +5,5 @@ export interface Collection {
 	iconUrl: string | null;
 	updatedAt: Date;
 	color: string | null;
+	deletedAt?: Date | null;
 }
