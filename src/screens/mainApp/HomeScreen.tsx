@@ -9,7 +9,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, Button, SearchBar, Card } from '../../components/ui';
 import { colors, spacing } from '../../theme';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 import {
 	Book,
 	Page,

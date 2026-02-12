@@ -16,8 +16,11 @@ import { Collection } from '../../types/Collection';
 import { Entry } from '../../types/Entry';
 import { UserProfile } from '../../types/User';
 
-// Fetch a collection of entries by its ID
-export const getCollection = async (userId: string, collectionId: string) => {
+// Fetch entries by collection ID
+export const getEntriesByCollection = async (
+	userId: string,
+	collectionId: string,
+) => {
 	const ref = collection(db, 'users', userId, 'entries');
 	const q = query(ref, where('collectionId', '==', collectionId));
 	const snap = await getDocs(q);
@@ -118,6 +121,20 @@ export const updateEntry = async (
 ): Promise<void> => {
 	const entryDocRef = doc(db, 'users', userId, 'entries', entryId);
 	await updateDoc(entryDocRef, updatedData);
+};
+
+export const getEntriesByTag = async (
+	userId: string,
+	tag: string,
+): Promise<Entry[]> => {
+	const entriesCol = collection(db, 'users', userId, 'entries');
+	const q = query(
+		entriesCol,
+		where('tags', 'array-contains', tag),
+		orderBy('createdAt', 'desc'),
+	);
+	const snapshot = await getDocs(q);
+	return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Entry[];
 };
 
 // Soft delete an entry by setting a deletedAt timestamp

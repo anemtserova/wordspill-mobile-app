@@ -11,7 +11,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, Button, Input } from '../../components/ui';
 import { colors, spacing } from '../../theme';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 
 export const SignupScreen = ({
 	navigation,

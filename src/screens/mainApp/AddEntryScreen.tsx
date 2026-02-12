@@ -18,13 +18,14 @@ import {
 	Tag,
 	HeaderImagePicker,
 	ImagePicker,
+	DatePicker,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, Plus, Xmark } from 'iconoir-react-native';
 import * as ImagePickerExpo from 'expo-image-picker';
 import { useCreateEntry } from '../../api/entries';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface AddEntryScreenProps {
 	navigation: NativeStackNavigationProp<any>;
@@ -51,6 +52,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 	// Form state
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
+	const [entryDate, setEntryDate] = useState<Date>(new Date());
 	const [selectedCollection, setSelectedCollection] = useState<string | null>(
 		preselectedCollection || null,
 	);
@@ -150,7 +152,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 				tags,
 				headerImage,
 				mediaUrls: mediaImages,
-				date: new Date(),
+				date: entryDate,
 				mood: null,
 				updatedAt: new Date(),
 			};
@@ -225,6 +227,14 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					style={styles.input}
 				/>
 
+				{/* Date Picker */}
+				<DatePicker
+					label="Date"
+					value={entryDate}
+					onChange={setEntryDate}
+					placeholder="Select date..."
+				/>
+
 				{/* Collection Selector */}
 				<View style={styles.section}>
 					<Text variant="label" style={styles.sectionLabel}>
@@ -235,7 +245,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 							<Tag
 								key={collection.id}
 								variant={
-									selectedCollection === collection.id ? 'primary' : 'default'
+									selectedCollection === collection.id ? 'accent' : 'default'
 								}
 								onPress={() =>
 									setSelectedCollection(
@@ -276,7 +286,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 							style={styles.tagInput}
 						/>
 						<Button
-							variant="primary"
+							variant="secondary"
 							size="sm"
 							onPress={handleAddTag}
 							disabled={!tagInput.trim()}
@@ -331,7 +341,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					Cancel
 				</Button>
 				<Button
-					variant="primary"
+					variant="secondary"
 					onPress={handleSave}
 					loading={isSaving}
 					disabled={isSaving}

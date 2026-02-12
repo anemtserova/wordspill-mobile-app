@@ -2,6 +2,7 @@
 	"expo": {
 		"name": "wordspill-mobile-app",
 		"slug": "wordspill-mobile-app",
+		"icon": "./assets/icon.png",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"userInterfaceStyle": "light",
@@ -27,20 +28,20 @@
 			[
 				"expo-image-picker",
 				{
-					"photosPermission": "The app accesses your photos to let you share them with your friends.",
-					"cameraPermission": "The app accesses your camera to let you take photos and share them with your friends."
+					"photosPermission": "The app accesses your photos to let you add them to your stories.",
+					"cameraPermission": "The app accesses your camera to let you take photos and add them to your stories."
 				}
 			],
 			[
 				"expo-media-library",
 				{
-					"accessPrivileges": "The app needs access to your media library to let you share photos with your friends."
+					"accessPrivileges": "The app needs access to your media library to let you add photos to your stories."
 				}
 			],
 			[
 				"expo-location",
 				{
-					"locationAlwaysAndWhenInUsePermission": "The app needs access to your location to show it on your profile and let your friends see where you are."
+					"locationAlwaysAndWhenInUsePermission": "The app needs access to your location to save it into your stories and keeps your memories complete."
 				}
 			]
 		]

@@ -8,7 +8,7 @@ import {
 	NativeSyntheticEvent,
 	StatusBar,
 } from 'react-native';
-import { Video, ResizeMode } from 'expo-av';
+import { VideoView, useVideoPlayer } from 'expo-video';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { Button } from '../../components/ui';
 import { useOnboarding } from '../../hooks/useOnboarding';
@@ -46,16 +46,41 @@ const slides: OnboardingSlide[] = [
 	},
 ];
 
-interface OnboardingCarouselProps {
-	navigation: NativeStackNavigationProp<any>;
-}
-
 export const OnboardingCarousel = () => {
 	const navigation = useNavigation<NativeStackNavigationProp<any>>();
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const flatListRef = useRef<FlatList>(null);
 	const { completeOnboarding } = useOnboarding();
 	const insets = useSafeAreaInsets();
+
+	// Create video players for each slide
+	const player1 = useVideoPlayer(slides[0].video, (player) => {
+		player.loop = true;
+		player.muted = true;
+		player.play();
+	});
+	const player2 = useVideoPlayer(slides[1].video, (player) => {
+		player.loop = true;
+		player.muted = true;
+		player.play();
+	});
+	const player3 = useVideoPlayer(slides[2].video, (player) => {
+		player.loop = true;
+		player.muted = true;
+		player.play();
+	});
+	const player4 = useVideoPlayer(slides[3].video, (player) => {
+		player.loop = true;
+		player.muted = true;
+		player.play();
+	});
+	const player5 = useVideoPlayer(slides[4].video, (player) => {
+		player.loop = true;
+		player.muted = true;
+		player.play();
+	});
+
+	const videoPlayers = [player1, player2, player3, player4, player5];
 
 	const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
 		const offsetX = event.nativeEvent.contentOffset.x;
@@ -68,15 +93,19 @@ export const OnboardingCarousel = () => {
 		navigation.navigate('Auth');
 	};
 
-	const renderItem = ({ item }: { item: OnboardingSlide }) => (
+	const renderItem = ({
+		item,
+		index,
+	}: {
+		item: OnboardingSlide;
+		index: number;
+	}) => (
 		<View style={styles.slide}>
-			<Video
-				source={item.video}
+			<VideoView
 				style={[styles.video, { marginTop: -insets.top }]}
-				resizeMode={ResizeMode.CONTAIN}
-				shouldPlay
-				isLooping
-				isMuted
+				player={videoPlayers[index]}
+				contentFit="contain"
+				nativeControls={false}
 			/>
 		</View>
 	);

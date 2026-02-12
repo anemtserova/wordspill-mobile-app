@@ -12,7 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, Button, Input, Card } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { Xmark } from 'iconoir-react-native';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 
 export const ForgottenPasswordScreen = ({
 	navigation,

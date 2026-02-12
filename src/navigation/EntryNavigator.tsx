@@ -3,6 +3,7 @@ import { AddEntryScreen } from '../screens/mainApp/AddEntryScreen';
 import { EditEntryScreen } from '../screens/mainApp/EditEntryScreen';
 import { EntryDetailsScreen } from '../screens/mainApp/EntryDetailsScreen';
 import { SelectedCollectionScreen } from '../screens/mainApp/SelectedCollectionScreen';
+import { EntriesByTagScreen } from '../screens/mainApp/EntriesByTagScreen';
 
 export const EntryNavigator = () => {
 	const EntryStack = createNativeStackNavigator();
@@ -16,6 +17,7 @@ export const EntryNavigator = () => {
 			<EntryStack.Screen name="Add Entry" component={AddEntryScreen} />
 			<EntryStack.Screen name="Entry Details" component={EntryDetailsScreen} />
 			<EntryStack.Screen name="Edit Entry" component={EditEntryScreen} />
+			<EntryStack.Screen name="Entries By Tag" component={EntriesByTagScreen} />
 		</EntryStack.Navigator>
 	);
 };
