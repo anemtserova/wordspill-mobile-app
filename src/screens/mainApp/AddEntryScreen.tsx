@@ -101,7 +101,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		if (status !== 'granted') {
 			Alert.alert(
 				'Permission Needed',
-				'Please grant camera access to take photos.',
+				'Please grant camera access to take photos so your entries can capture beautiful moments like this one.',
 			);
 			return;
 		}
@@ -123,7 +123,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		if (status !== 'granted') {
 			Alert.alert(
 				'Permission Needed',
-				'Please grant photo library access to add images.',
+				'Please grant photo library access to add images so your entries fully capture your experiences.',
 			);
 			return;
 		}
@@ -146,7 +146,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		if (status !== 'granted') {
 			Alert.alert(
 				'Permission Needed',
-				'Please grant photo library access to add media.',
+				'Please grant photo library access to add media so your entries fully capture your experiences.',
 			);
 			return;
 		}
@@ -257,7 +257,6 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 			style={styles.container}
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 			keyboardVerticalOffset={insets.top}>
-			{/* Header */}
 			<View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}>
 				<TouchableOpacity onPress={handleDiscard} style={styles.backButton}>
 					<ArrowLeft

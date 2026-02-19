@@ -26,25 +26,21 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 	const { user } = useAuth();
 	const queryClient = useQueryClient();
 
-	// Fetch collection details
 	const { data: collections = [] } = useGetAllCollections(user?.uid || '');
 	const collection = collections.find((c) => c.id === collectionId);
 
-	// Fetch entries for this collection
 	const {
 		data: entries = [],
 		isLoading: entriesLoading,
 		error: entriesError,
 	} = useGetEntriesByCollection(user?.uid || '', collectionId);
 
-	// Delete mutation
 	const deleteEntryMutation = useMutation({
 		mutationFn: async (entryId: string) => {
 			if (!user?.uid) throw new Error('User not authenticated');
 			return await deleteEntry(user.uid, entryId);
 		},
 		onSuccess: () => {
-			// Invalidate both the general entries query and the specific collection query
 			queryClient.invalidateQueries({ queryKey: ['entries', user?.uid] });
 			queryClient.invalidateQueries({
 				queryKey: ['entries', user?.uid, 'collection', collectionId],
@@ -90,7 +86,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			{/* Collection Header */}
 			<View
 				style={[
 					styles.header,
@@ -124,7 +119,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 					</Text>
 				</View>
 
-				{/* Entry Count */}
 				<Text
 					variant="label"
 					color={colors.neutral.white}
@@ -133,7 +127,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 				</Text>
 			</View>
 
-			{/* Entries List */}
 			<ScrollView
 				contentContainerStyle={styles.scrollContent}
 				showsVerticalScrollIndicator={false}>
@@ -175,7 +168,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 								}>
 								<Card style={styles.entryCard}>
 									<View style={styles.entryContent}>
-										{/* Header Image */}
 										{entry.headerImage && (
 											<RNImage
 												source={{ uri: entry.headerImage }}
@@ -184,7 +176,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 											/>
 										)}
 
-										{/* Entry Info */}
 										<View style={styles.entryInfo}>
 											<Text variant="h5" numberOfLines={2}>
 												{entry.title}
@@ -197,7 +188,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 												{entry.content}
 											</Text>
 
-											{/* Tags */}
 											{entry.tags.length > 0 && (
 												<View style={styles.tagsContainer}>
 													{entry.tags
@@ -221,7 +211,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 												</View>
 											)}
 
-											{/* Date and Actions */}
 											<View style={styles.entryFooter}>
 												<Text variant="caption" color={colors.text.secondary}>
 													{new Date(entry.createdAt).toDateString()}
@@ -250,7 +239,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 				)}
 			</ScrollView>
 
-			{/* Floating Add Button */}
 			{entries.length > 0 && (
 				<TouchableOpacity style={styles.fab} onPress={handleAddEntry}>
 					<Text variant="h2" color={colors.neutral.white}>

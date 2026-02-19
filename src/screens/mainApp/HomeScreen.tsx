@@ -25,7 +25,6 @@ export const HomeScreen = ({
 	const { profile, user } = useAuth();
 	const [searchQuery, setSearchQuery] = useState('');
 
-	// Fetch user's collections from Firestore
 	const {
 		data: collections = [],
 		isLoading: collectionsLoading,
