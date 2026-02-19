@@ -1,7 +1,7 @@
 import React from 'react';
 import {
 	Fish,
-	SeaAndSun,
+	Globe,
 	EditPencil,
 	FavouriteBook,
 	Learning,
@@ -14,7 +14,6 @@ import {
 } from 'iconoir-react-native';
 import { Flower } from 'iconoir-react-native/regular';
 
-// Type for icon components
 export type IconComponent = React.ComponentType<{
 	width?: number;
 	height?: number;
@@ -22,20 +21,16 @@ export type IconComponent = React.ComponentType<{
 	strokeWidth?: number;
 }>;
 
-// Default icon for user-created collections
 export const DEFAULT_COLLECTION_ICON = 'bookStack';
 
-// Map of icon names to icon components
 export const COLLECTION_ICONS: Record<string, IconComponent> = {
-	// Default collection icons
 	fish: Fish,
 	flower: Flower,
-	seaAndSun: SeaAndSun,
+	globe: Globe,
 	editPencil: EditPencil,
 	favouriteBook: FavouriteBook,
 	learning: Learning,
 
-	// Additional icons available for user collections
 	bookStack: BookStack,
 	book: Book,
 	page: Page,
@@ -53,8 +48,11 @@ export const getCollectionIcon = (iconName?: string | null): IconComponent => {
 		return COLLECTION_ICONS[DEFAULT_COLLECTION_ICON];
 	}
 
+	const normalizedName = iconName.charAt(0).toLowerCase() + iconName.slice(1);
+
 	return (
-		COLLECTION_ICONS[iconName] || COLLECTION_ICONS[DEFAULT_COLLECTION_ICON]
+		COLLECTION_ICONS[normalizedName] ||
+		COLLECTION_ICONS[DEFAULT_COLLECTION_ICON]
 	);
 };
 

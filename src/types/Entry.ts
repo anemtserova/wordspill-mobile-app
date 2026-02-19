@@ -16,4 +16,5 @@ export interface Entry {
 	media: MediaItem[];
 	createdAt: Date;
 	updatedAt: Date;
+	deletedAt?: Date | null;
 }

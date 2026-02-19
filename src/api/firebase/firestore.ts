@@ -20,11 +20,23 @@ import { UserProfile } from '../../types/User';
 export const getEntriesByCollection = async (
 	userId: string,
 	collectionId: string,
-) => {
+): Promise<Entry[]> => {
 	const ref = collection(db, 'users', userId, 'entries');
 	const q = query(ref, where('collectionId', '==', collectionId));
 	const snap = await getDocs(q);
-	return snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+	const entries = snap.docs.map((doc) => {
+		const data = doc.data();
+		return {
+			id: doc.id,
+			...data,
+			createdAt: data.createdAt?.toDate?.() || data.createdAt,
+			updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+			date: data.date?.toDate?.() || data.date,
+			deletedAt: data.deletedAt?.toDate?.() || data.deletedAt,
+		} as Entry;
+	});
+
+	return entries.filter((entry) => !entry.deletedAt);
 };
 
 // Create a new collection of entries
@@ -130,7 +142,19 @@ export const getEntriesByTag = async (
 		orderBy('createdAt', 'desc'),
 	);
 	const snapshot = await getDocs(q);
-	return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Entry[];
+	const entries = snapshot.docs.map((doc) => {
+		const data = doc.data();
+		return {
+			id: doc.id,
+			...data,
+			createdAt: data.createdAt?.toDate?.() || data.createdAt,
+			updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+			date: data.date?.toDate?.() || data.date,
+			deletedAt: data.deletedAt?.toDate?.() || data.deletedAt,
+		} as Entry;
+	});
+
+	return entries.filter((entry) => !entry.deletedAt);
 };
 
 // Soft delete an entry by setting a deletedAt timestamp
@@ -147,11 +171,19 @@ export const getEntries = async (userId: string): Promise<Entry[]> => {
 	const entriesCol = collection(db, 'users', userId, 'entries');
 	const q = query(entriesCol, orderBy('createdAt', 'desc'));
 	const entriesSnapshot = await getDocs(q);
-	const entriesList = entriesSnapshot.docs.map((doc) => ({
-		id: doc.id,
-		...doc.data(),
-	})) as Entry[];
-	return entriesList;
+	const entriesList = entriesSnapshot.docs.map((doc) => {
+		const data = doc.data();
+		return {
+			id: doc.id,
+			...data,
+			createdAt: data.createdAt?.toDate?.() || data.createdAt,
+			updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+			date: data.date?.toDate?.() || data.date,
+			deletedAt: data.deletedAt?.toDate?.() || data.deletedAt,
+		} as Entry;
+	});
+
+	return entriesList.filter((entry) => !entry.deletedAt);
 };
 
 export const getUser = async (userId: string): Promise<UserProfile | null> => {
