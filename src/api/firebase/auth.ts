@@ -8,6 +8,7 @@ import {
 	User,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { seedDefaultCollections } from '../../utils/seedDefaultCollections';
 
 export const registerUser = async (
 	email: string,
@@ -30,6 +31,9 @@ export const registerUser = async (
 			fontFamily: 'System',
 		},
 	});
+
+	// Seed default collections for the new user
+	await seedDefaultCollections(user.uid);
 
 	return user;
 };

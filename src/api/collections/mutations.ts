@@ -2,27 +2,27 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Collection } from '../../types/Collection';
 import { createCollection, deleteCollection } from '../firebase/firestore';
 
-export const useCreateCollection = () => {
+export const useCreateCollection = (userId: string) => {
 	const qc = useQueryClient();
 
 	return useMutation({
 		mutationFn: (data: Omit<Collection, 'id' | 'createdAt' | 'updatedAt'>) =>
-			createCollection(data),
+			createCollection(userId, data),
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ['collections'] });
+			qc.invalidateQueries({ queryKey: ['collections', userId] });
 		},
 	});
 };
 
-export const useDeleteCollection = () => {
+export const useDeleteCollection = (userId: string) => {
 	const qc = useQueryClient();
 
 	return useMutation({
 		mutationFn: async (collectionId: string) => {
-			return await deleteCollection(collectionId);
+			return await deleteCollection(userId, collectionId);
 		},
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ['collections'] });
+			qc.invalidateQueries({ queryKey: ['collections', userId] });
 		},
 	});
 };

@@ -6,13 +6,19 @@ import {
 	ViewStyle,
 	Alert,
 } from 'react-native';
-import { MediaImage, Plus, Xmark } from 'iconoir-react-native';
+import { MediaImage, Plus, Xmark, Play } from 'iconoir-react-native';
+import { Video, ResizeMode } from 'expo-av';
 import { Text } from './Text';
 import { Image } from './Image';
 import { colors, spacing, borderRadius } from '../../theme';
 
+interface MediaItemType {
+	uri: string;
+	type?: 'image' | 'video';
+}
+
 interface ImagePickerProps {
-	images: string[];
+	images: string[] | MediaItemType[];
 	onAddImage: () => void;
 	onRemoveImage: (index: number) => void;
 	maxImages?: number;
@@ -31,40 +37,75 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
 	const handleAddImage = () => {
 		if (!canAddMore) {
 			Alert.alert(
-				'Maximum Images Reached',
-				`You can only add up to ${maxImages} images.`,
+				'Maximum Media Reached',
+				`You can only add up to ${maxImages} items.`,
 			);
 			return;
 		}
 		onAddImage();
 	};
 
+	const isVideo = (item: string | MediaItemType): boolean => {
+		if (typeof item === 'string') {
+			return item.toLowerCase().match(/\\.(mp4|mov|avi|webm)$/i) !== null;
+		}
+		return item.type === 'video';
+	};
+
+	const getUri = (item: string | MediaItemType): string => {
+		return typeof item === 'string' ? item : item.uri;
+	};
+
 	return (
 		<View style={[styles.container, containerStyle]}>
-			{/* Image Grid */}
 			<View style={styles.imagesGrid}>
-				{images.map((imageUri, index) => (
-					<View key={index} style={styles.imageContainer}>
-						<Image
-							source={{ uri: imageUri }}
-							variant="rounded"
-							size="md"
-							resizeMode="cover"
-						/>
-						<TouchableOpacity
-							style={styles.removeButton}
-							onPress={() => onRemoveImage(index)}>
-							<Xmark
-								width={16}
-								height={16}
-								color={colors.neutral.white}
-								strokeWidth={2.5}
-							/>
-						</TouchableOpacity>
-					</View>
-				))}
+				{images.map((item, index) => {
+					const uri = getUri(item);
+					const isVideoItem = isVideo(item);
 
-				{/* Add Image Button */}
+					return (
+						<View key={index} style={styles.imageContainer}>
+							{isVideoItem ? (
+								<View style={styles.videoContainer}>
+									<Video
+										source={{ uri }}
+										style={styles.video}
+										resizeMode={ResizeMode.COVER}
+										shouldPlay={false}
+										useNativeControls={false}
+									/>
+									{/* Play icon overlay */}
+									<View style={styles.playOverlay}>
+										<Play
+											width={32}
+											height={32}
+											color={colors.neutral.white}
+											strokeWidth={2}
+										/>
+									</View>
+								</View>
+							) : (
+								<Image
+									source={{ uri }}
+									variant="rounded"
+									size="md"
+									resizeMode="cover"
+								/>
+							)}
+							<TouchableOpacity
+								style={styles.removeButton}
+								onPress={() => onRemoveImage(index)}>
+								<Xmark
+									width={16}
+									height={16}
+									color={colors.neutral.white}
+									strokeWidth={2.5}
+								/>
+							</TouchableOpacity>
+						</View>
+					);
+				})}
+
 				{canAddMore && (
 					<TouchableOpacity
 						style={styles.addButton}
@@ -77,19 +118,18 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
 							strokeWidth={2}
 						/>
 						<Text variant="bodySmall" color={colors.text.secondary}>
-							Add Image
+							Add Media
 						</Text>
 					</TouchableOpacity>
 				)}
 			</View>
 
-			{/* Image Count */}
 			{images.length > 0 && (
 				<Text
 					variant="caption"
 					color={colors.text.secondary}
 					style={styles.imageCount}>
-					{images.length} / {maxImages} images
+					{images.length} / {maxImages} items
 				</Text>
 			)}
 		</View>
@@ -107,6 +147,28 @@ const styles = StyleSheet.create({
 	},
 	imageContainer: {
 		position: 'relative',
+	},
+	videoContainer: {
+		width: 128,
+		height: 128,
+		borderRadius: borderRadius.lg,
+		overflow: 'hidden',
+		backgroundColor: colors.neutral.gray800,
+		position: 'relative',
+	},
+	video: {
+		width: '100%',
+		height: '100%',
+	},
+	playOverlay: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: 'rgba(0, 0, 0, 0.3)',
 	},
 	removeButton: {
 		position: 'absolute',

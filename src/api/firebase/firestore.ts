@@ -29,9 +29,10 @@ export const getEntriesByCollection = async (
 
 // Create a new collection of entries
 export const createCollection = async (
+	userId: string,
 	collectionData: Omit<Collection, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<string> => {
-	const collectionsCol = collection(db, 'collections');
+	const collectionsCol = collection(db, 'users', userId, 'collections');
 	const newCollection = {
 		...collectionData,
 		createdAt: serverTimestamp(),
@@ -43,10 +44,17 @@ export const createCollection = async (
 
 // Update an existing collection of entries
 export const updateCollection = async (
+	userId: string,
 	collectionId: string,
 	updatedData: Partial<Omit<Collection, 'id' | 'createdAt' | 'updatedAt'>>,
 ): Promise<void> => {
-	const collectionDocRef = doc(db, 'collections', collectionId);
+	const collectionDocRef = doc(
+		db,
+		'users',
+		userId,
+		'collections',
+		collectionId,
+	);
 	await updateDoc(collectionDocRef, {
 		...updatedData,
 		updatedAt: serverTimestamp(),
@@ -54,22 +62,36 @@ export const updateCollection = async (
 };
 
 // Soft delete a collection and reassign its entries to a default collection
-export const deleteCollection = async (collectionId: string): Promise<void> => {
-	const collectionDocRef = doc(db, 'collections', collectionId);
+export const deleteCollection = async (
+	userId: string,
+	collectionId: string,
+): Promise<void> => {
+	const collectionDocRef = doc(
+		db,
+		'users',
+		userId,
+		'collections',
+		collectionId,
+	);
 	await updateDoc(collectionDocRef, { deletedAt: serverTimestamp() });
 };
 
 // Fetch all collections ordered by creation date descending
-export const getAllCollections = async (): Promise<Collection[]> => {
-	const collectionsCol = collection(db, 'collections');
+export const getAllCollections = async (
+	userId: string,
+): Promise<Collection[]> => {
+	const collectionsCol = collection(db, 'users', userId, 'collections');
 	const q = query(collectionsCol, orderBy('createdAt', 'desc'));
 	const collectionsSnapshot = await getDocs(q);
 	const collectionsList = collectionsSnapshot.docs
-		.map((doc) => ({
-			id: doc.id,
-			...doc.data(),
-		}))
-		.filter((collection) => !collection.deletedAt) as Collection[];
+		.map(
+			(doc) =>
+				({
+					id: doc.id,
+					...doc.data(),
+				}) as Collection,
+		)
+		.filter((collection) => !collection.deletedAt);
 	return collectionsList;
 };
 

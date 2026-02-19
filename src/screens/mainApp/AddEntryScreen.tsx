@@ -26,13 +26,16 @@ import { ArrowLeft, Plus, Xmark } from 'iconoir-react-native';
 import * as ImagePickerExpo from 'expo-image-picker';
 import { useCreateEntry } from '../../api/entries';
 import { useAuth } from '../../contexts/AuthContext';
+import { uploadMedia } from '../../api/firebase/storage';
+import { MediaItem } from '../../types/Entry';
+import { useGetAllCollections } from '../../api/collections';
 
 interface AddEntryScreenProps {
 	navigation: NativeStackNavigationProp<any>;
 	route?: {
 		params?: {
 			collectionId?: string;
-			userId?: string; // Add userId to route params for mutation
+			userId?: string;
 		};
 	};
 }
@@ -43,13 +46,11 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 }) => {
 	const insets = useSafeAreaInsets();
 	const preselectedCollection = route?.params?.collectionId;
-	const { user } = useAuth(); // Get authenticated user
-	const userId = user?.uid || ''; // Get userId from authenticated user
+	const { user } = useAuth();
+	const userId = user?.uid || '';
 
-	// Mutation hook for creating entry
 	const createEntryMutation = useCreateEntry(userId);
 
-	// Form state
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
 	const [entryDate, setEntryDate] = useState<Date>(new Date());
@@ -59,16 +60,12 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 	const [tags, setTags] = useState<string[]>([]);
 	const [tagInput, setTagInput] = useState('');
 	const [headerImage, setHeaderImage] = useState<string | null>(null);
-	const [mediaImages, setMediaImages] = useState<string[]>([]);
+	const [mediaItems, setMediaItems] = useState<
+		{ uri: string; type: 'image' | 'video' }[]
+	>([]);
 	const [isSaving, setIsSaving] = useState(false);
 
-	// Mock collections - replace with real data from context/API
-	const availableCollections = [
-		{ id: 'fiction', name: 'Fiction' },
-		{ id: 'poetry', name: 'Poetry' },
-		{ id: 'travel', name: 'Travel' },
-		{ id: 'quick-notes', name: 'Quick Notes' },
-	];
+	const defaultCollections = useGetAllCollections(userId).data || [];
 
 	const handleAddTag = () => {
 		const trimmedTag = tagInput.trim();
@@ -82,7 +79,45 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		setTags(tags.filter((tag) => tag !== tagToRemove));
 	};
 
-	const handlePickHeaderImage = async () => {
+	const handlePickHeaderImage = () => {
+		Alert.alert('Add Header Image', 'Choose an option', [
+			{
+				text: 'Take Photo',
+				onPress: handleTakeHeaderPhoto,
+			},
+			{
+				text: 'Choose from Library',
+				onPress: handleChooseHeaderFromLibrary,
+			},
+			{
+				text: 'Cancel',
+				style: 'cancel',
+			},
+		]);
+	};
+
+	const handleTakeHeaderPhoto = async () => {
+		const { status } = await ImagePickerExpo.requestCameraPermissionsAsync();
+		if (status !== 'granted') {
+			Alert.alert(
+				'Permission Needed',
+				'Please grant camera access to take photos.',
+			);
+			return;
+		}
+
+		const result = await ImagePickerExpo.launchCameraAsync({
+			allowsEditing: true,
+			aspect: [16, 9],
+			quality: 0.8,
+		});
+
+		if (!result.canceled) {
+			setHeaderImage(result.assets[0].uri);
+		}
+	};
+
+	const handleChooseHeaderFromLibrary = async () => {
 		const { status } =
 			await ImagePickerExpo.requestMediaLibraryPermissionsAsync();
 		if (status !== 'granted') {
@@ -94,7 +129,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		}
 
 		const result = await ImagePickerExpo.launchImageLibraryAsync({
-			mediaTypes: ImagePickerExpo.MediaTypeOptions.Images,
+			mediaTypes: ['images'],
 			allowsEditing: true,
 			aspect: [16, 9],
 			quality: 0.8,
@@ -111,28 +146,29 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		if (status !== 'granted') {
 			Alert.alert(
 				'Permission Needed',
-				'Please grant photo library access to add images.',
+				'Please grant photo library access to add media.',
 			);
 			return;
 		}
 
 		const result = await ImagePickerExpo.launchImageLibraryAsync({
-			mediaTypes: ImagePickerExpo.MediaTypeOptions.Images,
+			mediaTypes: ['images', 'videos'],
 			allowsEditing: true,
 			quality: 0.8,
 		});
 
-		if (!result.canceled && mediaImages.length < 5) {
-			setMediaImages([...mediaImages, result.assets[0].uri]);
+		if (!result.canceled && mediaItems.length < 5) {
+			const asset = result.assets[0];
+			const mediaType = asset.type === 'video' ? 'video' : 'image';
+			setMediaItems([...mediaItems, { uri: asset.uri, type: mediaType }]);
 		}
 	};
 
 	const handleRemoveMediaImage = (index: number) => {
-		setMediaImages(mediaImages.filter((_, i) => i !== index));
+		setMediaItems(mediaItems.filter((_, i) => i !== index));
 	};
 
 	const handleSave = async () => {
-		// Validation
 		if (!title.trim()) {
 			Alert.alert('Missing Title', 'Please enter a title for your entry.');
 			return;
@@ -145,13 +181,38 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		setIsSaving(true);
 
 		try {
+			let uploadedHeaderImage: string | null = null;
+			if (headerImage) {
+				const { url } = await uploadMedia(
+					userId,
+					headerImage,
+					'image',
+					'headers',
+				);
+				uploadedHeaderImage = url;
+			}
+
+			const uploadedMedia: MediaItem[] = [];
+			for (const item of mediaItems) {
+				const { url } = await uploadMedia(
+					userId,
+					item.uri,
+					item.type,
+					'entries',
+				);
+				uploadedMedia.push({
+					url,
+					type: item.type,
+				});
+			}
+
 			const newEntry = {
 				title: title.trim(),
 				content: content.trim(),
 				collectionId: selectedCollection,
 				tags,
-				headerImage,
-				mediaUrls: mediaImages,
+				headerImage: uploadedHeaderImage,
+				media: uploadedMedia,
 				date: entryDate,
 				mood: null,
 				updatedAt: new Date(),
@@ -166,7 +227,10 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 				},
 			]);
 		} catch (error) {
-			Alert.alert('Error', 'Failed to save entry. Please try again.');
+			Alert.alert(
+				'Error',
+				'Failed to save entry. Please check your connection and try again.',
+			);
 			console.error('Save error:', error);
 		} finally {
 			setIsSaving(false);
@@ -211,14 +275,12 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 				style={styles.scrollView}
 				contentContainerStyle={styles.scrollContent}
 				showsVerticalScrollIndicator={false}>
-				{/* Header Image */}
 				<HeaderImagePicker
 					imageUri={headerImage}
 					onPress={handlePickHeaderImage}
 					placeholder="Add header image (optional)"
 				/>
 
-				{/* Title Input */}
 				<Input
 					label="Title"
 					placeholder="Enter title..."
@@ -227,7 +289,6 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					style={styles.input}
 				/>
 
-				{/* Date Picker */}
 				<DatePicker
 					label="Date"
 					value={entryDate}
@@ -235,13 +296,12 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					placeholder="Select date..."
 				/>
 
-				{/* Collection Selector */}
 				<View style={styles.section}>
 					<Text variant="label" style={styles.sectionLabel}>
 						Collection (Optional)
 					</Text>
 					<View style={styles.collectionsRow}>
-						{availableCollections.map((collection) => (
+						{defaultCollections.map((collection) => (
 							<Tag
 								key={collection.id}
 								variant={
@@ -259,7 +319,6 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					</View>
 				</View>
 
-				{/* Content TextArea */}
 				<TextArea
 					label="Content"
 					placeholder="What's on your mind?"
@@ -271,7 +330,6 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					style={styles.input}
 				/>
 
-				{/* Tags Section */}
 				<View style={styles.section}>
 					<Text variant="label" style={styles.sectionLabel}>
 						Tags
@@ -314,13 +372,12 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					)}
 				</View>
 
-				{/* Media Images */}
 				<View style={styles.section}>
 					<Text variant="label" style={styles.sectionLabel}>
-						Images (Optional)
+						Media (Optional)
 					</Text>
 					<ImagePicker
-						images={mediaImages}
+						images={mediaItems}
 						onAddImage={handleAddMediaImage}
 						onRemoveImage={handleRemoveMediaImage}
 						maxImages={5}
@@ -328,7 +385,6 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 				</View>
 			</ScrollView>
 
-			{/* Bottom Action Buttons */}
 			<View
 				style={[
 					styles.bottomActions,

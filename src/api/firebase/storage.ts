@@ -25,6 +25,74 @@ interface ImageMetadata {
 	createdAt: any;
 }
 
+export interface MediaMetadata {
+	id?: string;
+	url: string;
+	storagePath: string;
+	userId: string;
+	mediaType: 'image' | 'video';
+	createdAt: any;
+	duration?: number; // For videos, in seconds
+	thumbnailUrl?: string; // For videos
+}
+
+/**
+ * Upload media (image or video) to Firebase Storage
+ * @param userId - The user ID who owns the media
+ * @param mediaUri - The local URI of the media (from image picker)
+ * @param mediaType - Type of media: 'image' or 'video'
+ * @param folder - Optional folder name (e.g., 'entries', 'headers')
+ * @returns Object with download URL and storage path
+ */
+/**
+ * Uploads a local media file to Firebase Storage and returns its public download URL and storage path.
+ *
+ * @param userId - The ID of the user, used to namespace uploaded files under `folder/userId/...`.
+ * @param mediaUri - The local URI of the media file to upload (fetched and converted to a `Blob`).
+ * @param mediaType - Declared media kind (`'image' | 'video'`), used to determine the file extension.
+ * @param folder - Top-level storage folder. Defaults to `'media'`.
+ * @returns An object containing:
+ * - `url`: The Firebase download URL for the uploaded file.
+ * - `storagePath`: The full path used in Firebase Storage.
+ *
+ * @throws Rethrows any error encountered while fetching, uploading, or retrieving the download URL.
+ *
+ * @remarks
+ * The ternary that picks `'mp4'` for video and `'jpg'` otherwise exists because this utility is designed
+ * to support both media types. Even if your current call site only uploads videos, the function signature
+ * still allows images, so the extension selection remains necessary for correctness and reuse.
+ */
+export const uploadMedia = async (
+	userId: string,
+	mediaUri: string,
+	mediaType: 'image' | 'video',
+	folder: string = 'media',
+): Promise<{ url: string; storagePath: string }> => {
+	try {
+		const response = await fetch(mediaUri);
+		const blob = await response.blob();
+
+		const timestamp = Date.now();
+		const extension = mediaType === 'video' ? 'mp4' : 'jpg';
+
+		const filename = `${folder}/${userId}/${timestamp}.${extension}`;
+
+		const storageRef = ref(storage, filename);
+
+		await uploadBytes(storageRef, blob);
+
+		const downloadURL = await getDownloadURL(storageRef);
+
+		return {
+			url: downloadURL,
+			storagePath: filename,
+		};
+	} catch (error) {
+		console.error('Error uploading media:', error);
+		throw error;
+	}
+};
+
 /**
  * Upload an image to Firebase Storage and save metadata to Firestore
  * @param userId - The user ID who owns the image
@@ -38,24 +106,18 @@ export const uploadImage = async (
 	folder: string = 'images',
 ): Promise<string> => {
 	try {
-		// Fetch the image as a blob
 		const response = await fetch(imageUri);
 		const blob = await response.blob();
 
-		// Create a unique filename
 		const timestamp = Date.now();
 		const filename = `${folder}/${userId}/${timestamp}.jpg`;
 
-		// Create a storage reference
 		const storageRef = ref(storage, filename);
 
-		// Upload the image
 		await uploadBytes(storageRef, blob);
 
-		// Get the download URL
 		const downloadURL = await getDownloadURL(storageRef);
 
-		// Save metadata to Firestore
 		const imagesCol = collection(db, 'users', userId, 'images');
 		await addDoc(imagesCol, {
 			url: downloadURL,
@@ -81,7 +143,6 @@ export const deleteImage = async (
 	imageUrl: string,
 ): Promise<void> => {
 	try {
-		// Find the image metadata in Firestore
 		const imagesCol = collection(db, 'users', userId, 'images');
 		const q = query(imagesCol, where('url', '==', imageUrl));
 		const querySnapshot = await getDocs(q);
@@ -90,16 +151,13 @@ export const deleteImage = async (
 			throw new Error('Image metadata not found');
 		}
 
-		// Get the storage path and document ID
 		const imageDoc = querySnapshot.docs[0];
 		const imageData = imageDoc.data() as ImageMetadata;
 		const storagePath = imageData.storagePath;
 
-		// Delete from Storage
 		const storageRef = ref(storage, storagePath);
 		await deleteObject(storageRef);
 
-		// Delete metadata from Firestore
 		await deleteDoc(doc(db, 'users', userId, 'images', imageDoc.id));
 	} catch (error) {
 		console.error('Error deleting image:', error);

@@ -10,61 +10,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, Button, SearchBar, Card } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
-import {
-	Book,
-	Page,
-	Map,
-	EditPencil,
-	BookLock,
-	PageEdit,
-	Fish,
-	SeaAndSun,
-	FavouriteBook,
-	Learning,
-} from 'iconoir-react-native';
-import { Flower } from 'iconoir-react-native/regular';
+import { useGetAllCollections } from '../../api/collections';
+import { getCollectionIcon } from '../../utils/collectionIcons';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - spacing.lg * 3) / 2;
-
-export const PREDEFINED_COLLECTIONS = [
-	{
-		id: 'fiction',
-		name: 'Fiction',
-		icon: Fish,
-		color: colors.accent.cream,
-	},
-	{
-		id: 'poetry',
-		name: 'Poetry',
-		icon: Flower,
-		color: colors.accent.teal,
-	},
-	{
-		id: 'travel',
-		name: 'Travel',
-		icon: SeaAndSun,
-		color: colors.accent.peach,
-	},
-	{
-		id: 'quick-notes',
-		name: 'Quick Notes',
-		icon: EditPencil,
-		color: colors.accent.gold,
-	},
-	{
-		id: 'diary',
-		name: 'Diary',
-		icon: FavouriteBook,
-		color: colors.secondary.light,
-	},
-	{
-		id: 'essay',
-		name: 'Essay',
-		icon: Learning,
-		color: colors.primary.light,
-	},
-];
 
 export const HomeScreen = ({
 	navigation,
@@ -73,6 +23,13 @@ export const HomeScreen = ({
 }) => {
 	const { profile, user } = useAuth();
 	const [searchQuery, setSearchQuery] = useState('');
+
+	// Fetch user's collections from Firestore
+	const {
+		data: collections = [],
+		isLoading: collectionsLoading,
+		error: collectionsError,
+	} = useGetAllCollections(user?.uid || '');
 
 	const displayName =
 		profile?.displayName || user?.email?.split('@')[0] || 'Friend';
@@ -143,34 +100,51 @@ export const HomeScreen = ({
 						Choose a Collection
 					</Text>
 
-					<View style={styles.collectionsGrid}>
-						{PREDEFINED_COLLECTIONS.map((collection) => {
-							const IconComponent = collection.icon;
-							return (
-								<TouchableOpacity
-									key={collection.id}
-									style={[
-										styles.collectionCard,
-										{ backgroundColor: collection.color },
-									]}
-									onPress={() => handleCollectionPress(collection.id)}
-									activeOpacity={0.8}>
-									<IconComponent
-										width={32}
-										height={32}
-										color={colors.neutral.white}
-										strokeWidth={2}
-									/>
-									<Text
-										variant="h6"
-										color={colors.neutral.white}
-										style={styles.collectionName}>
-										{collection.name}
-									</Text>
-								</TouchableOpacity>
-							);
-						})}
-					</View>
+					{collectionsLoading ? (
+						<Text variant="body" color={colors.text.secondary}>
+							Loading your collections...
+						</Text>
+					) : collectionsError ? (
+						<Text variant="body" color={colors.semantic.error}>
+							Error loading collections
+						</Text>
+					) : collections.length === 0 ? (
+						<Text variant="body" color={colors.text.secondary}>
+							No collections yet. Start creating entries!
+						</Text>
+					) : (
+						<View style={styles.collectionsGrid}>
+							{collections.map((collection) => {
+								const IconComponent = getCollectionIcon(collection.iconName);
+								return (
+									<TouchableOpacity
+										key={collection.id}
+										style={[
+											styles.collectionCard,
+											{
+												backgroundColor:
+													collection.color || colors.primary.light,
+											},
+										]}
+										onPress={() => handleCollectionPress(collection.id)}
+										activeOpacity={0.8}>
+										<IconComponent
+											width={32}
+											height={32}
+											color={colors.neutral.white}
+											strokeWidth={2}
+										/>
+										<Text
+											variant="h6"
+											color={colors.neutral.white}
+											style={styles.collectionName}>
+											{collection.name}
+										</Text>
+									</TouchableOpacity>
+								);
+							})}
+						</View>
+					)}
 				</View>
 
 				{/* Start Without Collection Button */}
