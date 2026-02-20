@@ -51,6 +51,14 @@ export const typography = {
 		semibold: '600',
 		bold: '700',
 	},
+
+	// Text Ellipsis Modes (use with truncated prop on Text component)
+	ellipsizeModes: {
+		tail: 'tail' as const,
+		head: 'head' as const,
+		middle: 'middle' as const,
+		clip: 'clip' as const,
+	},
 };
 
 export type Typography = typeof typography;

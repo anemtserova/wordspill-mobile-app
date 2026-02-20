@@ -19,10 +19,11 @@ import {
 	HeaderImagePicker,
 	ImagePicker,
 	DatePicker,
+	AddTagsModal,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft, Plus, Xmark } from 'iconoir-react-native';
+import { ArrowLeft, Plus } from 'iconoir-react-native';
 import * as ImagePickerExpo from 'expo-image-picker';
 import { useCreateEntry } from '../../api/entries';
 import { useAuth } from '../../contexts/AuthContext';
@@ -58,7 +59,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		preselectedCollection || null,
 	);
 	const [tags, setTags] = useState<string[]>([]);
-	const [tagInput, setTagInput] = useState('');
+	const [isTagModalVisible, setIsTagModalVisible] = useState(false);
 	const [headerImage, setHeaderImage] = useState<string | null>(null);
 	const [mediaItems, setMediaItems] = useState<
 		{ uri: string; type: 'image' | 'video' }[]
@@ -67,12 +68,8 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 
 	const defaultCollections = useGetAllCollections(userId).data || [];
 
-	const handleAddTag = () => {
-		const trimmedTag = tagInput.trim();
-		if (trimmedTag && !tags.includes(trimmedTag)) {
-			setTags([...tags, trimmedTag]);
-			setTagInput('');
-		}
+	const handleAddTags = (newTags: string[]) => {
+		setTags([...tags, ...newTags]);
 	};
 
 	const handleRemoveTag = (tagToRemove: string) => {
@@ -333,29 +330,20 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					<Text variant="label" style={styles.sectionLabel}>
 						Tags
 					</Text>
-					<View style={styles.tagInputRow}>
-						<Input
-							placeholder="Add a tag..."
-							value={tagInput}
-							onChangeText={setTagInput}
-							onSubmitEditing={handleAddTag}
-							returnKeyType="done"
-							style={styles.tagInput}
+					<Button
+						variant="outline"
+						onPress={() => setIsTagModalVisible(true)}
+						style={styles.addTagButton}>
+						<Plus
+							width={20}
+							height={20}
+							color={colors.primary.main}
+							strokeWidth={2}
 						/>
-						<Button
-							variant="secondary"
-							size="sm"
-							onPress={handleAddTag}
-							disabled={!tagInput.trim()}
-							style={styles.addTagButton}>
-							<Plus
-								width={20}
-								height={20}
-								color={colors.neutral.white}
-								strokeWidth={2}
-							/>
-						</Button>
-					</View>
+						<Text variant="body" color={colors.primary.main}>
+							Add Tags
+						</Text>
+					</Button>
 					{tags.length > 0 && (
 						<View style={styles.tagsContainer}>
 							{tags.map((tag) => (
@@ -404,6 +392,13 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					Save Entry
 				</Button>
 			</View>
+
+			<AddTagsModal
+				visible={isTagModalVisible}
+				onClose={() => setIsTagModalVisible(false)}
+				onAddTags={handleAddTags}
+				existingTags={tags}
+			/>
 		</KeyboardAvoidingView>
 	);
 };
@@ -454,24 +449,14 @@ const styles = StyleSheet.create({
 	collectionTag: {
 		marginBottom: 0,
 	},
-	tagInputRow: {
-		flexDirection: 'row',
-		gap: spacing.sm,
-		alignItems: 'flex-start',
-	},
-	tagInput: {
-		flex: 1,
-		marginBottom: 0,
-	},
 	addTagButton: {
-		paddingHorizontal: spacing.md,
-		minWidth: 'auto',
+		marginTop: spacing.xs,
 	},
 	tagsContainer: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		gap: spacing.sm,
-		marginTop: spacing.xs,
+		marginTop: spacing.md,
 	},
 	bottomActions: {
 		flexDirection: 'row',

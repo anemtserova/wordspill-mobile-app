@@ -24,6 +24,8 @@ interface TextProps extends RNTextProps {
 	color?: string;
 	align?: 'left' | 'center' | 'right' | 'justify';
 	weight?: 'regular' | 'medium' | 'semibold' | 'bold';
+	truncated?: boolean;
+	ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
 }
 
 const variantStyles: Record<TextVariant, TextStyle> = {
@@ -95,6 +97,8 @@ export const Text: React.FC<TextProps> = ({
 	align,
 	weight,
 	style,
+	truncated,
+	ellipsizeMode = 'tail',
 	children,
 	...props
 }) => {
@@ -122,7 +126,11 @@ export const Text: React.FC<TextProps> = ({
 	};
 
 	return (
-		<RNText style={[textStyle, style]} {...props}>
+		<RNText
+			style={[textStyle, style]}
+			numberOfLines={truncated ? 1 : undefined}
+			ellipsizeMode={truncated ? ellipsizeMode : undefined}
+			{...props}>
 			{children}
 		</RNText>
 	);

@@ -11,3 +11,5 @@ export { ImagePicker } from './ImagePicker';
 export { HeaderImagePicker } from './HeaderImagePicker';
 export { LocationPicker } from './LocationPicker';
 export { DatePicker } from './DatePicker';
+export { AddCollectionModal } from './AddCollectionModal';
+export { AddTagsModal } from './AddTagsModal';

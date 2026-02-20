@@ -7,12 +7,19 @@ import {
 	Dimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, Button, SearchBar, Card } from '../../components/ui';
-import { colors, spacing } from '../../theme';
+import {
+	Text,
+	Button,
+	SearchBar,
+	Card,
+	AddCollectionModal,
+} from '../../components/ui';
+import { colors, spacing, typography } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetAllCollections } from '../../api/collections';
 import { getCollectionIcon } from '../../utils/collectionIcons';
 import { seedDefaultCollections } from '../../utils/seedDefaultCollections';
+import { Plus } from 'iconoir-react-native';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - spacing.lg * 3) / 2;
@@ -24,6 +31,8 @@ export const HomeScreen = ({
 }) => {
 	const { profile, user } = useAuth();
 	const [searchQuery, setSearchQuery] = useState('');
+	const [isCollectionModalVisible, setIsCollectionModalVisible] =
+		useState(false);
 
 	const {
 		data: collections = [],
@@ -149,6 +158,8 @@ export const HomeScreen = ({
 										/>
 										<Text
 											variant="h6"
+											truncated={collection.name.length > 12}
+											ellipsizeMode="tail"
 											color={colors.neutral.white}
 											style={styles.collectionName}>
 											{collection.name}
@@ -156,12 +167,28 @@ export const HomeScreen = ({
 									</TouchableOpacity>
 								);
 							})}
+
+							<TouchableOpacity
+								style={[styles.collectionCard, styles.addCollectionCard]}
+								onPress={() => setIsCollectionModalVisible(true)}
+								activeOpacity={0.8}>
+								<Plus
+									width={32}
+									height={32}
+									color={colors.primary.main}
+									strokeWidth={2}
+								/>
+								<Text
+									variant="h6"
+									color={colors.primary.main}
+									style={styles.collectionName}>
+									Add New
+								</Text>
+							</TouchableOpacity>
 						</View>
 					)}
-				</View>
 
-				<View style={styles.section}>
-					<Text variant="h4" style={styles.sectionTitle}>
+					<Text variant="h4" style={styles.jumpRightInTitle}>
 						Or Jump Right In
 					</Text>
 					<Button
@@ -182,6 +209,12 @@ export const HomeScreen = ({
 					</Text>
 				</Card>
 			</ScrollView>
+
+			<AddCollectionModal
+				visible={isCollectionModalVisible}
+				onClose={() => setIsCollectionModalVisible(false)}
+				userId={user?.uid || ''}
+			/>
 		</View>
 	);
 };
@@ -237,10 +270,14 @@ const styles = StyleSheet.create({
 	},
 	section: {
 		paddingHorizontal: spacing.lg,
-		marginBottom: spacing.xl,
+		marginBottom: spacing.sm,
 	},
 	sectionTitle: {
-		marginBottom: spacing.md,
+		marginBottom: spacing.sm,
+	},
+	jumpRightInTitle: {
+		marginTop: spacing.xs,
+		marginBottom: spacing.sm,
 	},
 	collectionsGrid: {
 		flexDirection: 'row',
@@ -249,12 +286,18 @@ const styles = StyleSheet.create({
 	},
 	collectionCard: {
 		width: CARD_WIDTH,
-		aspectRatio: 1,
+		aspectRatio: 1.4,
 		borderRadius: 16,
 		padding: spacing.md,
 		justifyContent: 'center',
 		alignItems: 'center',
 		gap: spacing.sm,
+	},
+	addCollectionCard: {
+		backgroundColor: colors.background.secondary,
+		borderWidth: 2,
+		borderColor: colors.primary.main,
+		borderStyle: 'dashed',
 	},
 	collectionName: {
 		textAlign: 'center',
