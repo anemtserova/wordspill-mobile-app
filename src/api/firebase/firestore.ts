@@ -186,6 +186,31 @@ export const getEntries = async (userId: string): Promise<Entry[]> => {
 	return entriesList.filter((entry) => !entry.deletedAt);
 };
 
+// Fetch a single entry by ID
+export const getEntryById = async (
+	userId: string,
+	entryId: string,
+): Promise<Entry | null> => {
+	const entryDocRef = doc(db, 'users', userId, 'entries', entryId);
+	const entryDoc = await getDoc(entryDocRef);
+
+	if (entryDoc.exists()) {
+		const data = entryDoc.data();
+		const entry = {
+			id: entryDoc.id,
+			...data,
+			createdAt: data.createdAt?.toDate?.() || data.createdAt,
+			updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+			date: data.date?.toDate?.() || data.date,
+			deletedAt: data.deletedAt?.toDate?.() || data.deletedAt,
+		} as Entry;
+
+		return entry.deletedAt ? null : entry;
+	}
+
+	return null;
+};
+
 export const getUser = async (userId: string): Promise<UserProfile | null> => {
 	const userDocRef = doc(db, 'users', userId);
 	const userDoc = await getDoc(userDocRef);

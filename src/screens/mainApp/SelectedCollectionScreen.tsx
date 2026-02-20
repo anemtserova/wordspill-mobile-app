@@ -91,7 +91,6 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 					styles.header,
 					{ backgroundColor: collection.color || colors.primary.light },
 				]}>
-				{/* Back Button and Title Row */}
 				<View style={styles.headerTop}>
 					<TouchableOpacity
 						style={styles.backButton}

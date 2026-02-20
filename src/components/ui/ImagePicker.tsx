@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -7,7 +7,7 @@ import {
 	Alert,
 } from 'react-native';
 import { MediaImage, Plus, Xmark, Play } from 'iconoir-react-native';
-import { Video, ResizeMode } from 'expo-av';
+import { VideoView, useVideoPlayer } from 'expo-video';
 import { Text } from './Text';
 import { Image } from './Image';
 import { colors, spacing, borderRadius } from '../../theme';
@@ -56,6 +56,33 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
 		return typeof item === 'string' ? item : item.uri;
 	};
 
+	const VideoPreview: React.FC<{ uri: string }> = ({ uri }) => {
+		const player = useVideoPlayer(uri, (player) => {
+			player.pause();
+			player.muted = true;
+		});
+
+		return (
+			<View style={styles.videoContainer}>
+				<VideoView
+					player={player}
+					style={styles.video}
+					nativeControls={false}
+					contentFit="cover"
+				/>
+
+				<View style={styles.playOverlay}>
+					<Play
+						width={32}
+						height={32}
+						color={colors.neutral.white}
+						strokeWidth={2}
+					/>
+				</View>
+			</View>
+		);
+	};
+
 	return (
 		<View style={[styles.container, containerStyle]}>
 			<View style={styles.imagesGrid}>
@@ -66,24 +93,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
 					return (
 						<View key={index} style={styles.imageContainer}>
 							{isVideoItem ? (
-								<View style={styles.videoContainer}>
-									<Video
-										source={{ uri }}
-										style={styles.video}
-										resizeMode={ResizeMode.COVER}
-										shouldPlay={false}
-										useNativeControls={false}
-									/>
-									{/* Play icon overlay */}
-									<View style={styles.playOverlay}>
-										<Play
-											width={32}
-											height={32}
-											color={colors.neutral.white}
-											strokeWidth={2}
-										/>
-									</View>
-								</View>
+								<VideoPreview uri={uri} />
 							) : (
 								<Image
 									source={{ uri }}

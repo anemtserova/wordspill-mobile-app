@@ -3,6 +3,7 @@ import {
 	getEntries,
 	getEntriesByTag,
 	getEntriesByCollection,
+	getEntryById,
 } from '../firebase/firestore';
 
 export const useGetEntries = (userId: string) => {
@@ -11,6 +12,16 @@ export const useGetEntries = (userId: string) => {
 		queryFn: async () => {
 			return getEntries(userId);
 		},
+	});
+};
+
+export const useGetEntry = (userId: string, entryId: string) => {
+	return useQuery({
+		queryKey: ['entries', userId, entryId],
+		queryFn: async () => {
+			return getEntryById(userId, entryId);
+		},
+		enabled: !!userId && !!entryId,
 	});
 };
 
