@@ -1,43 +1,11 @@
-import React from 'react';
 import {
-	Fish,
-	Globe,
-	EditPencil,
-	FavouriteBook,
-	Learning,
-	BookStack,
-	Book,
-	Page,
-	PageEdit,
-	BookLock,
-	Journal,
-} from 'iconoir-react-native';
-import { Flower } from 'iconoir-react-native/regular';
+	IconComponent,
+	DEFAULT_COLLECTION_ICON,
+	COLLECTION_ICONS,
+} from './constants';
 
-export type IconComponent = React.ComponentType<{
-	width?: number;
-	height?: number;
-	color?: string;
-	strokeWidth?: number;
-}>;
-
-export const DEFAULT_COLLECTION_ICON = 'bookStack';
-
-export const COLLECTION_ICONS: Record<string, IconComponent> = {
-	fish: Fish,
-	flower: Flower,
-	globe: Globe,
-	editPencil: EditPencil,
-	favouriteBook: FavouriteBook,
-	learning: Learning,
-
-	bookStack: BookStack,
-	book: Book,
-	page: Page,
-	pageEdit: PageEdit,
-	bookLock: BookLock,
-	journal: Journal,
-};
+// Re-export types for backward compatibility
+export type { IconComponent };
 
 /**
  * Get icon component by name

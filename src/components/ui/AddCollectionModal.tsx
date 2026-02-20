@@ -6,12 +6,18 @@ import {
 	TextInput,
 	TouchableOpacity,
 	Alert,
+	ScrollView,
 } from 'react-native';
-import { Xmark } from 'iconoir-react-native';
+import { Xmark, Check } from 'iconoir-react-native';
 import { Text } from './Text';
 import { Button } from './Button';
 import { colors, spacing } from '../../theme';
 import { useCreateCollection } from '../../api/collections';
+import { getCollectionIcon } from '../../utils/collectionIcons';
+import {
+	COLLECTION_COLORS,
+	COLLECTION_ICON_OPTIONS,
+} from '../../utils/constants';
 
 interface AddCollectionModalProps {
 	visible: boolean;
@@ -25,6 +31,8 @@ export const AddCollectionModal: React.FC<AddCollectionModalProps> = ({
 	userId,
 }) => {
 	const [collectionNameInput, setCollectionNameInput] = useState('');
+	const [selectedColor, setSelectedColor] = useState(colors.primary.main);
+	const [selectedIcon, setSelectedIcon] = useState('book');
 	const createCollectionMutation = useCreateCollection(userId);
 
 	const handleAddCollection = () => {
@@ -38,13 +46,15 @@ export const AddCollectionModal: React.FC<AddCollectionModalProps> = ({
 		createCollectionMutation.mutate(
 			{
 				name: trimmedName,
-				color: colors.primary.main,
+				color: selectedColor,
 				iconUrl: null,
-				iconName: 'book',
+				iconName: selectedIcon,
 			},
 			{
 				onSuccess: () => {
 					setCollectionNameInput('');
+					setSelectedColor(colors.primary.main);
+					setSelectedIcon('book');
 					onClose();
 				},
 				onError: (error) => {
@@ -57,6 +67,8 @@ export const AddCollectionModal: React.FC<AddCollectionModalProps> = ({
 
 	const handleClose = () => {
 		setCollectionNameInput('');
+		setSelectedColor(colors.primary.main);
+		setSelectedIcon('book');
 		onClose();
 	};
 
@@ -67,42 +79,109 @@ export const AddCollectionModal: React.FC<AddCollectionModalProps> = ({
 			animationType="fade"
 			onRequestClose={handleClose}>
 			<View style={styles.modalOverlay}>
-				<View style={styles.modalContent}>
-					<View style={styles.modalHeader}>
-						<Text variant="h5">Add New Collection</Text>
-						<TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-							<Xmark
-								width={24}
-								height={24}
-								color={colors.text.secondary}
-								strokeWidth={2}
-							/>
-						</TouchableOpacity>
-					</View>
+				<ScrollView
+					contentContainerStyle={styles.scrollContent}
+					showsVerticalScrollIndicator={false}>
+					<View style={styles.modalContent}>
+						<View style={styles.modalHeader}>
+							<Text variant="h5">Add New Collection</Text>
+							<TouchableOpacity
+								onPress={handleClose}
+								style={styles.closeButton}>
+								<Xmark
+									width={24}
+									height={24}
+									color={colors.text.secondary}
+									strokeWidth={2}
+								/>
+							</TouchableOpacity>
+						</View>
 
-					<TextInput
-						style={styles.modalInput}
-						placeholder="Collection name"
-						value={collectionNameInput}
-						onChangeText={setCollectionNameInput}
-						placeholderTextColor={colors.text.secondary}
-						autoFocus
-						onSubmitEditing={handleAddCollection}
-					/>
+						<TextInput
+							style={styles.modalInput}
+							placeholder="Collection name"
+							value={collectionNameInput}
+							onChangeText={setCollectionNameInput}
+							placeholderTextColor={colors.text.secondary}
+							autoFocus
+							onSubmitEditing={handleAddCollection}
+						/>
 
-					<View style={styles.modalButtons}>
-						<Button variant="outline" onPress={handleClose} style={{ flex: 1 }}>
-							Cancel
-						</Button>
-						<Button
-							variant="primary"
-							onPress={handleAddCollection}
-							style={{ flex: 1 }}
-							disabled={createCollectionMutation.isPending}>
-							{createCollectionMutation.isPending ? 'Adding...' : 'Add'}
-						</Button>
+						{/* Color Picker */}
+						<Text variant="h6" style={styles.sectionLabel}>
+							Choose Color
+						</Text>
+						<View style={styles.colorGrid}>
+							{COLLECTION_COLORS.map((item) => (
+								<TouchableOpacity
+									key={item.color}
+									style={[
+										styles.colorOption,
+										{ backgroundColor: item.color },
+										selectedColor === item.color && styles.selectedColorOption,
+									]}
+									onPress={() => setSelectedColor(item.color)}
+									activeOpacity={0.7}>
+									{selectedColor === item.color && (
+										<Check
+											width={20}
+											height={20}
+											color={colors.neutral.white}
+											strokeWidth={3}
+										/>
+									)}
+								</TouchableOpacity>
+							))}
+						</View>
+
+						{/* Icon Picker */}
+						<Text variant="h6" style={styles.sectionLabel}>
+							Choose Icon
+						</Text>
+						<View style={styles.iconGrid}>
+							{COLLECTION_ICON_OPTIONS.map((iconName) => {
+								const IconComponent = getCollectionIcon(iconName);
+								const isSelected = selectedIcon === iconName;
+
+								return (
+									<TouchableOpacity
+										key={iconName}
+										style={[
+											styles.iconOption,
+											isSelected && styles.selectedIconOption,
+										]}
+										onPress={() => setSelectedIcon(iconName)}
+										activeOpacity={0.7}>
+										<IconComponent
+											width={24}
+											height={24}
+											color={
+												isSelected ? colors.neutral.white : colors.text.primary
+											}
+											strokeWidth={2}
+										/>
+									</TouchableOpacity>
+								);
+							})}
+						</View>
+
+						<View style={styles.modalButtons}>
+							<Button
+								variant="outline"
+								onPress={handleClose}
+								style={{ flex: 1 }}>
+								Cancel
+							</Button>
+							<Button
+								variant="primary"
+								onPress={handleAddCollection}
+								style={{ flex: 1 }}
+								disabled={createCollectionMutation.isPending}>
+								{createCollectionMutation.isPending ? 'Adding...' : 'Add'}
+							</Button>
+						</View>
 					</View>
-				</View>
+				</ScrollView>
 			</View>
 		</Modal>
 	);
@@ -114,6 +193,12 @@ const styles = StyleSheet.create({
 		backgroundColor: 'rgba(0, 0, 0, 0.5)',
 		justifyContent: 'center',
 		alignItems: 'center',
+	},
+	scrollContent: {
+		flexGrow: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingVertical: spacing.xl,
 	},
 	modalContent: {
 		backgroundColor: colors.background.primary,
@@ -139,6 +224,47 @@ const styles = StyleSheet.create({
 		fontFamily: 'Jost_400Regular',
 		color: colors.text.primary,
 		marginBottom: spacing.lg,
+	},
+	sectionLabel: {
+		marginTop: spacing.sm,
+		marginBottom: spacing.sm,
+		color: colors.text.secondary,
+	},
+	colorGrid: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		gap: spacing.md,
+		marginBottom: spacing.md,
+	},
+	colorOption: {
+		width: 48,
+		height: 48,
+		borderRadius: 24,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderWidth: 2,
+		borderColor: 'transparent',
+	},
+	selectedColorOption: {
+		borderColor: colors.neutral.white,
+		borderWidth: 3,
+	},
+	iconGrid: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		gap: spacing.sm,
+		marginBottom: spacing.lg,
+	},
+	iconOption: {
+		width: 48,
+		height: 48,
+		borderRadius: 12,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: colors.background.secondary,
+	},
+	selectedIconOption: {
+		backgroundColor: colors.primary.main,
 	},
 	modalButtons: {
 		flexDirection: 'row',
