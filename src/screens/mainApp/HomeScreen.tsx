@@ -97,7 +97,7 @@ export const HomeScreen = ({
 
 					<TouchableOpacity
 						style={styles.avatarContainer}
-						onPress={() => navigation.navigate('Profile')}>
+						onPress={() => navigation.navigate('ProfileTab')}>
 						<View style={styles.avatar}>
 							<Text style={styles.avatarText}>
 								{displayName.charAt(0).toUpperCase()}

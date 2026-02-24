@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import {
+	View,
+	StyleSheet,
+	Modal,
+	TouchableOpacity,
+	KeyboardAvoidingView,
+	Platform,
+} from 'react-native';
 import { Xmark } from 'iconoir-react-native';
 import { Text } from './Text';
 import { Input } from './Input';
@@ -93,7 +100,7 @@ export const AddTagsModal: React.FC<AddTagsModalProps> = ({
 							Cancel
 						</Button>
 						<Button
-							variant="primary"
+							variant="secondary"
 							onPress={handleAddTags}
 							disabled={!tagInput.trim()}
 							style={styles.modalButton}>
@@ -152,5 +159,6 @@ const styles = StyleSheet.create({
 	},
 	modalButton: {
 		flex: 1,
+		color: colors.text.primary,
 	},
 });

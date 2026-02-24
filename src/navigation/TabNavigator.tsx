@@ -44,9 +44,10 @@ export const TabNavigator = () => {
 				}}
 			/>
 			<Tabs.Screen
-				name="Profile"
+				name="ProfileTab"
 				component={ProfileNavigator}
 				options={{
+					tabBarLabel: 'Profile',
 					tabBarIcon: ({ color, size }) => (
 						<UserCircle
 							width={size}

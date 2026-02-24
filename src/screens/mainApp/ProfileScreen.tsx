@@ -80,7 +80,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 				showBackButton={true}
 				onBackPress={() => navigation.goBack()}
 				style={{
-					backgroundColor: colors.accent.peach,
+					backgroundColor: colors.accent.cream,
 					paddingBottom: spacing.md,
 					paddingTop: spacing.md,
 				}}
@@ -90,7 +90,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 				style={styles.scrollView}
 				contentContainerStyle={styles.scrollContent}
 				showsVerticalScrollIndicator={false}>
-				{/* User Info Card */}
 				<Card variant="elevated" padding="lg" style={styles.userCard}>
 					<View style={styles.userInfo}>
 						{avatarUrl ? (
