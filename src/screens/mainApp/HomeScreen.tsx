@@ -97,7 +97,7 @@ export const HomeScreen = ({
 
 					<TouchableOpacity
 						style={styles.avatarContainer}
-						onPress={() => navigation.navigate('ProfileScreen')}>
+						onPress={() => navigation.navigate('Profile')}>
 						<View style={styles.avatar}>
 							<Text style={styles.avatarText}>
 								{displayName.charAt(0).toUpperCase()}
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		paddingHorizontal: spacing.lg,
-		paddingTop: spacing.md,
+		paddingTop: spacing['2xl'],
 		paddingBottom: spacing.md,
 	},
 	greetingContainer: {

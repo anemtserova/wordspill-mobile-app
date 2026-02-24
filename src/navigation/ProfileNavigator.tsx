@@ -23,7 +23,7 @@ export const ProfileNavigator = () => {
 				headerShadowVisible: false,
 			}}>
 			<ProfileStack.Screen
-				name="ProfileMain"
+				name="Profile"
 				component={ProfileScreen}
 				options={{ headerShown: false }}
 			/>
@@ -36,7 +36,7 @@ export const ProfileNavigator = () => {
 				}}
 			/>
 			<ProfileStack.Screen
-				name="EditProfile"
+				name="Edit Profile"
 				component={EditProfileScreen}
 				options={{
 					headerTitle: 'Edit Profile',

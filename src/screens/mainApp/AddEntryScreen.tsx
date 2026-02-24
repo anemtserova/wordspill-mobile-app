@@ -20,10 +20,10 @@ import {
 	ImagePicker,
 	DatePicker,
 	AddTagsModal,
+	ScreenHeader,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft, Plus } from 'iconoir-react-native';
+import { Plus } from 'iconoir-react-native';
 import * as ImagePickerExpo from 'expo-image-picker';
 import { useCreateEntry } from '../../api/entries';
 import { useAuth } from '../../contexts/AuthContext';
@@ -45,7 +45,6 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 	navigation,
 	route,
 }) => {
-	const insets = useSafeAreaInsets();
 	const preselectedCollection = route?.params?.collectionId;
 	const { user } = useAuth();
 	const userId = user?.uid || '';
@@ -252,20 +251,8 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 	return (
 		<KeyboardAvoidingView
 			style={styles.container}
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-			keyboardVerticalOffset={insets.top}>
-			<View style={styles.header}>
-				<TouchableOpacity onPress={handleDiscard} style={styles.backButton}>
-					<ArrowLeft
-						width={24}
-						height={24}
-						color={colors.text.primary}
-						strokeWidth={2}
-					/>
-				</TouchableOpacity>
-				<Text variant="h5">New Entry</Text>
-				<View style={styles.headerRight} />
-			</View>
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+			<ScreenHeader title="New Entry" onBackPress={handleDiscard} />
 
 			<ScrollView
 				style={styles.scrollView}
@@ -372,11 +359,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 				</View>
 			</ScrollView>
 
-			<View
-				style={[
-					styles.bottomActions,
-					{ paddingBottom: insets.bottom + spacing.md },
-				]}>
+			<View style={styles.bottomActions}>
 				<Button
 					variant="outline"
 					onPress={handleDiscard}
@@ -407,23 +390,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: colors.background.primary,
-	},
-	header: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		paddingHorizontal: spacing.lg,
-		paddingBottom: spacing.sm,
-		backgroundColor: colors.background.primary,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.border.light,
-	},
-	backButton: {
-		padding: spacing.xs,
-		width: 40,
-	},
-	headerRight: {
-		width: 40,
 	},
 	scrollView: {
 		flex: 1,
@@ -462,7 +428,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		gap: spacing.md,
 		paddingHorizontal: spacing.lg,
-		paddingTop: spacing.md,
+		paddingVertical: spacing.md,
 		backgroundColor: colors.background.primary,
 		borderTopWidth: 1,
 		borderTopColor: colors.border.light,

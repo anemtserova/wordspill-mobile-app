@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import {
 	View,
 	StyleSheet,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Text, Button, Card, Image } from '../../components/ui';
+import { Text, Button, Card, Image, ScreenHeader } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetEntry } from '../../api/entries';
@@ -77,32 +77,6 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 		});
 	};
 
-	// Set header buttons
-	useLayoutEffect(() => {
-		navigation.setOptions({
-			headerRight: () => (
-				<View style={{ flexDirection: 'row', gap: spacing.md }}>
-					<TouchableOpacity onPress={handleEdit} style={styles.headerButton}>
-						<EditPencil
-							width={24}
-							height={24}
-							color={colors.text.primary}
-							strokeWidth={2}
-						/>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={handleDelete} style={styles.headerButton}>
-						<Trash
-							width={24}
-							height={24}
-							color={colors.semantic.error}
-							strokeWidth={2}
-						/>
-					</TouchableOpacity>
-				</View>
-			),
-		});
-	}, [navigation, handleEdit, handleDelete]);
-
 	if (isLoading) {
 		return (
 			<View style={styles.centerContent}>
@@ -131,6 +105,30 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 
 	return (
 		<View style={styles.container}>
+			<ScreenHeader
+				title="Entry Details"
+				onBackPress={() => navigation.goBack()}
+				rightComponent={
+					<View style={{ flexDirection: 'row', gap: spacing.md }}>
+						<TouchableOpacity onPress={handleEdit} activeOpacity={0.7}>
+							<EditPencil
+								width={24}
+								height={24}
+								color={colors.text.primary}
+								strokeWidth={2}
+							/>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
+							<Trash
+								width={24}
+								height={24}
+								color={colors.semantic.error}
+								strokeWidth={2}
+							/>
+						</TouchableOpacity>
+					</View>
+				}
+			/>
 			<ScrollView
 				style={styles.scrollView}
 				contentContainerStyle={styles.scrollContent}
@@ -293,11 +291,7 @@ const styles = StyleSheet.create({
 		padding: spacing.lg,
 	},
 	backButton: {
-		marginTop: spacing.lg,
-	},
-
-	headerButton: {
-		padding: spacing.xs,
+		marginTop: spacing.xs,
 	},
 	scrollView: {
 		flex: 1,

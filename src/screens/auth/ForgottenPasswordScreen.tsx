@@ -9,9 +9,8 @@ import {
 	Alert,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, Button, Input, Card } from '../../components/ui';
+import { Text, Button, Input, Card, ScreenHeader } from '../../components/ui';
 import { colors, spacing } from '../../theme';
-import { Xmark } from 'iconoir-react-native';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const ForgottenPasswordScreen = ({
@@ -59,24 +58,14 @@ export const ForgottenPasswordScreen = ({
 	};
 
 	const handleBackToLogin = () => {
-		navigation.navigate('LoginScreen');
+		navigation.navigate('Login');
 	};
 
 	if (submitted) {
 		return (
 			<View style={styles.container}>
+				<ScreenHeader title="Password Reset" onBackPress={handleBackToLogin} />
 				<View style={styles.content}>
-					<TouchableOpacity
-						style={styles.closeButton}
-						onPress={handleBackToLogin}>
-						<Xmark
-							width={24}
-							height={24}
-							color={colors.text.primary}
-							strokeWidth={2}
-						/>
-					</TouchableOpacity>
-
 					<View style={styles.successContent}>
 						<View style={styles.iconContainer}>
 							<Text style={styles.iconText}>✓</Text>
@@ -128,30 +117,10 @@ export const ForgottenPasswordScreen = ({
 		<KeyboardAvoidingView
 			style={styles.container}
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+			<ScreenHeader title="Reset Password" onBackPress={handleBackToLogin} />
 			<ScrollView
 				contentContainerStyle={styles.scrollContent}
 				keyboardShouldPersistTaps="handled">
-				<TouchableOpacity
-					style={styles.closeButton}
-					onPress={handleBackToLogin}>
-					<Xmark
-						width={24}
-						height={24}
-						color={colors.text.primary}
-						strokeWidth={2}
-					/>
-				</TouchableOpacity>
-
-				<View style={styles.header}>
-					<Text variant="h1" style={styles.title}>
-						Reset Password
-					</Text>
-					<Text variant="body" color={colors.text.secondary}>
-						Enter your email and we'll send you instructions to reset your
-						password
-					</Text>
-				</View>
-
 				<View style={styles.form}>
 					<Input
 						label="Email"
@@ -214,19 +183,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingHorizontal: spacing.lg,
 		paddingTop: spacing.xl,
-	},
-	closeButton: {
-		width: 44,
-		height: 44,
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginBottom: spacing.lg,
-	},
-	header: {
-		marginBottom: spacing['3xl'],
-	},
-	title: {
-		marginBottom: spacing.sm,
 	},
 	form: {
 		gap: spacing.lg,

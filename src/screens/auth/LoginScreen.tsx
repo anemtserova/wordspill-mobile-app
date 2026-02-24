@@ -114,7 +114,7 @@ export const LoginScreen = ({
 					/>
 
 					<TouchableOpacity
-						onPress={() => navigation.navigate('ForgottenPasswordScreen')}
+						onPress={() => navigation.navigate('Reset Password')}
 						style={styles.forgotPassword}>
 						<Text variant="bodySmall" color={colors.secondary.main}>
 							Forgot Password?
@@ -142,8 +142,7 @@ export const LoginScreen = ({
 						<Text variant="body" color={colors.text.secondary}>
 							Don't have an account?{' '}
 						</Text>
-						<TouchableOpacity
-							onPress={() => navigation.navigate('SignupScreen')}>
+						<TouchableOpacity onPress={() => navigation.navigate('Sign up')}>
 							<Text variant="body" color={colors.secondary.main}>
 								Sign Up
 							</Text>

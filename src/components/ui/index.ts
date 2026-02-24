@@ -10,6 +10,7 @@ export { SearchBar } from './SearchBar';
 export { ImagePicker } from './ImagePicker';
 export { HeaderImagePicker } from './HeaderImagePicker';
 export { LocationPicker } from './LocationPicker';
+export { ScreenHeader } from './ScreenHeader';
 export { DatePicker } from './DatePicker';
 export { AddCollectionModal } from './AddCollectionModal';
 export { AddTagsModal } from './AddTagsModal';

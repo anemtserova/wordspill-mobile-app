@@ -9,7 +9,7 @@ import {
 	Alert,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, Button, Input } from '../../components/ui';
+import { Text, Button, Input, ScreenHeader } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -79,7 +79,6 @@ export const SignupScreen = ({
 		setLoading(true);
 		try {
 			await register(email, password, name);
-			// Navigation will be handled by RootNavigator based on auth state
 		} catch (error: any) {
 			const errorMessage =
 				error.code === 'auth/email-already-in-use'
@@ -100,18 +99,13 @@ export const SignupScreen = ({
 		<KeyboardAvoidingView
 			style={styles.container}
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+			<ScreenHeader
+				title="Create Account"
+				onBackPress={() => navigation.goBack()}
+			/>
 			<ScrollView
 				contentContainerStyle={styles.scrollContent}
 				keyboardShouldPersistTaps="handled">
-				<View style={styles.header}>
-					<Text variant="h1" style={styles.title}>
-						Create Account
-					</Text>
-					<Text variant="body" color={colors.text.secondary}>
-						Join us and start your word journey
-					</Text>
-				</View>
-
 				<View style={styles.form}>
 					<Input
 						label="Full Name"
@@ -184,8 +178,7 @@ export const SignupScreen = ({
 						<Text variant="body" color={colors.text.secondary}>
 							Already have an account?{' '}
 						</Text>
-						<TouchableOpacity
-							onPress={() => navigation.navigate('LoginScreen')}>
+						<TouchableOpacity onPress={() => navigation.navigate('Login')}>
 							<Text variant="body" color={colors.secondary.main}>
 								Sign In
 							</Text>
@@ -207,12 +200,6 @@ const styles = StyleSheet.create({
 		paddingHorizontal: spacing.lg,
 		paddingTop: spacing.xl,
 		paddingBottom: spacing.xl,
-	},
-	header: {
-		marginBottom: spacing['3xl'],
-	},
-	title: {
-		marginBottom: spacing.sm,
 	},
 	form: {
 		gap: spacing.lg,
