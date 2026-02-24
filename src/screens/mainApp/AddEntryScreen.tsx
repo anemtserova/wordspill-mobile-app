@@ -210,7 +210,6 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 				headerImage: uploadedHeaderImage,
 				media: uploadedMedia,
 				date: entryDate,
-				mood: null,
 				updatedAt: new Date(),
 			};
 

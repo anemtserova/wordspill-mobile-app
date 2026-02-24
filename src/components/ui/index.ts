@@ -16,3 +16,4 @@ export { AddCollectionModal } from './AddCollectionModal';
 export { AddTagsModal } from './AddTagsModal';
 export { EntrySummaryCard } from './EntrySummaryCard';
 export { VideoPlayer } from './VideoPlayer';
+export { ExpandableText } from './ExpandableText';

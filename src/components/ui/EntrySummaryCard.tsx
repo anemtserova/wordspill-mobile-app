@@ -44,6 +44,7 @@ export const EntrySummaryCard: React.FC<EntrySummaryCardProps> = ({
 							variant="body"
 							color={colors.text.secondary}
 							numberOfLines={3}
+							align="justify"
 							style={styles.entryExcerpt}>
 							{entry.content}
 						</Text>

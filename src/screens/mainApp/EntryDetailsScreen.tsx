@@ -16,6 +16,7 @@ import {
 	Image,
 	ScreenHeader,
 	VideoPlayer,
+	ExpandableText,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
@@ -23,13 +24,7 @@ import { useGetEntry } from '../../api/entries';
 import { useGetAllCollections } from '../../api/collections';
 import { deleteEntry } from '../../api/firebase/firestore';
 import { getCollectionIcon } from '../../utils/collectionIcons';
-import {
-	EditPencil,
-	Trash,
-	Calendar,
-	SunLight,
-	BookStack,
-} from 'iconoir-react-native';
+import { EditPencil, Trash, Calendar, BookStack } from 'iconoir-react-native';
 import { Hashtag } from 'iconoir-react-native/regular';
 
 const { width } = Dimensions.get('window');
@@ -150,7 +145,7 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 				)}
 
 				<View style={styles.content}>
-					<Text variant="h3" style={styles.title}>
+					<Text variant="h2" style={styles.title}>
 						{entry.title}
 					</Text>
 
@@ -162,28 +157,15 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 								color={colors.text.secondary}
 								strokeWidth={2}
 							/>
-							<Text variant="caption" color={colors.text.secondary}>
+							<Text
+								weight="medium"
+								variant="label"
+								color={colors.text.secondary}>
 								{formatDate(entry.date)}
 							</Text>
 						</View>
-
-						{/* Mood */}
-						{entry.mood && (
-							<View style={styles.metadataItem}>
-								<SunLight
-									width={16}
-									height={16}
-									color={colors.text.secondary}
-									strokeWidth={2}
-								/>
-								<Text variant="caption" color={colors.text.secondary}>
-									{entry.mood}
-								</Text>
-							</View>
-						)}
 					</View>
 
-					{/* Collection */}
 					{collection && (
 						<View style={styles.collectionContainer}>
 							<View style={styles.metadataItem}>
@@ -193,7 +175,10 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 									color={colors.text.secondary}
 									strokeWidth={2}
 								/>
-								<Text variant="caption" color={colors.text.secondary}>
+								<Text
+									weight="medium"
+									variant="label"
+									color={colors.text.secondary}>
 									Collection:
 								</Text>
 							</View>
@@ -217,7 +202,7 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 										);
 									})()}
 									<Text
-										variant="caption"
+										variant="label"
 										color={colors.neutral.white}
 										style={styles.collectionName}>
 										{collection.name}
@@ -227,7 +212,6 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 						</View>
 					)}
 
-					{/* Tags */}
 					{entry.tags && entry.tags.length > 0 && (
 						<View style={styles.tagsContainer}>
 							<View style={styles.metadataItem}>
@@ -237,14 +221,17 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 									color={colors.text.secondary}
 									strokeWidth={2}
 								/>
-								<Text variant="caption" color={colors.text.secondary}>
+								<Text
+									weight="medium"
+									variant="label"
+									color={colors.text.primary}>
 									Tags:
 								</Text>
 							</View>
 							<View style={styles.tagsWrapper}>
 								{entry.tags.map((tag, index) => (
 									<View key={index} style={styles.tag}>
-										<Text variant="caption" color={colors.text.secondary}>
+										<Text variant="label" color={colors.text.primary}>
 											#{tag}
 										</Text>
 									</View>
@@ -253,17 +240,18 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 						</View>
 					)}
 
-					{/* Content */}
 					<View style={styles.entryContent}>
-						<Text variant="body" style={styles.entryText}>
+						<ExpandableText
+							variant="body"
+							style={styles.entryText}
+							numberOfLines={15}>
 							{entry.content}
-						</Text>
+						</ExpandableText>
 					</View>
 
-					{/* Media Gallery */}
 					{entry.media && entry.media.length > 0 && (
 						<View style={styles.mediaGallery}>
-							<Text variant="h6" style={styles.sectionTitle}>
+							<Text weight="medium" variant="label" style={styles.sectionTitle}>
 								Media
 							</Text>
 							<View style={styles.mediaGrid}>
@@ -364,7 +352,7 @@ const styles = StyleSheet.create({
 		marginTop: spacing.xs,
 	},
 	tag: {
-		backgroundColor: colors.background.secondary,
+		backgroundColor: colors.accent.gold,
 		paddingHorizontal: spacing.sm,
 		paddingVertical: spacing.xs,
 		borderRadius: 12,
@@ -372,6 +360,11 @@ const styles = StyleSheet.create({
 	entryContent: {
 		marginTop: spacing.md,
 		marginBottom: spacing.lg,
+		borderWidth: 1,
+		borderColor: colors.background.secondary,
+		borderRadius: 8,
+		padding: spacing.lg,
+		backgroundColor: colors.background.secondary,
 	},
 	entryText: {
 		lineHeight: 24,

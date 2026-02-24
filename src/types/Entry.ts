@@ -9,7 +9,6 @@ export interface Entry {
 	title: string;
 	content: string;
 	date: Date;
-	mood: string | null;
 	collectionId: string | null;
 	tags: string[];
 	headerImage: string | null;
