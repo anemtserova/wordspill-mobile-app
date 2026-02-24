@@ -9,7 +9,14 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Text, Button, Card, Image, ScreenHeader } from '../../components/ui';
+import {
+	Text,
+	Button,
+	Card,
+	Image,
+	ScreenHeader,
+	VideoPlayer,
+} from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetEntry } from '../../api/entries';
@@ -260,15 +267,24 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 								Media
 							</Text>
 							<View style={styles.mediaGrid}>
-								{entry.media.map((item, index) => (
-									<Image
-										key={index}
-										source={{ uri: item.url }}
-										style={styles.mediaItem}
-										resizeMode="cover"
-										clickable
-									/>
-								))}
+								{entry.media.map((item, index) =>
+									item.type === 'video' ? (
+										<VideoPlayer
+											key={index}
+											uri={item.url}
+											thumbnailUri={item.thumbnailUrl}
+											style={styles.mediaItem}
+										/>
+									) : (
+										<Image
+											key={index}
+											source={{ uri: item.url }}
+											style={styles.mediaItem}
+											resizeMode="cover"
+											clickable
+										/>
+									),
+								)}
 							</View>
 						</View>
 					)}

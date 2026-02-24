@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 		color: colors.text.tertiary,
 	},
 	inputContainer: {
-		backgroundColor: colors.background.primary,
+		backgroundColor: colors.background.secondary,
 		borderWidth: 1,
 		borderColor: colors.border.medium,
 		borderRadius: borderRadius.md,

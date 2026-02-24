@@ -240,8 +240,12 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingHorizontal: spacing.lg,
 		paddingTop: spacing['2xl'],
-		paddingBottom: spacing.md,
+		paddingBottom: spacing.lg,
+		backgroundColor: colors.background.secondary,
+		borderBottomLeftRadius: 24,
+		borderBottomRightRadius: 24,
 	},
+
 	greetingContainer: {
 		flex: 1,
 	},
@@ -267,6 +271,8 @@ const styles = StyleSheet.create({
 	searchBar: {
 		marginHorizontal: spacing.lg,
 		marginBottom: spacing.lg,
+		marginTop: spacing.md,
+		backgroundColor: colors.background.secondary,
 	},
 	section: {
 		paddingHorizontal: spacing.lg,

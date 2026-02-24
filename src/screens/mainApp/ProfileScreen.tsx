@@ -79,6 +79,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 				title="Profile"
 				showBackButton={true}
 				onBackPress={() => navigation.goBack()}
+				style={{
+					backgroundColor: colors.accent.peach,
+					paddingBottom: spacing.md,
+					paddingTop: spacing.md,
+				}}
 			/>
 
 			<ScrollView
@@ -179,7 +184,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 					</Card>
 				</View>
 
-				{/* App Info Section */}
 				<View style={styles.section}>
 					<Text variant="label" style={styles.sectionTitle}>
 						ABOUT
@@ -195,7 +199,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 					</Card>
 				</View>
 
-				{/* Logout Button */}
 				<Button
 					variant="outline"
 					onPress={handleLogout}

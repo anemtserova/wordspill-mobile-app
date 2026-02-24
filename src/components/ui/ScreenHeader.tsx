@@ -23,8 +23,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
 	const insets = useSafeAreaInsets();
 
 	return (
-		<View
-			style={[styles.header, { paddingTop: insets.top + spacing.sm }, style]}>
+		<View style={[styles.header, { paddingTop: spacing.sm }, style]}>
 			{showBackButton ? (
 				<TouchableOpacity
 					onPress={onBackPress}
@@ -61,9 +60,11 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		paddingHorizontal: spacing.lg,
 		paddingBottom: spacing.sm,
-		backgroundColor: colors.background.primary,
+		backgroundColor: colors.background.secondary,
 		borderBottomWidth: 1,
-		borderBottomColor: colors.border.light,
+		borderBottomColor: colors.border.medium,
+		borderBottomLeftRadius: 36,
+		borderBottomRightRadius: 36,
 	},
 	backButton: {
 		padding: spacing.xs,

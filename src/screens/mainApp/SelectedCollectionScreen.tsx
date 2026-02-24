@@ -5,19 +5,18 @@ import {
 	ScrollView,
 	TouchableOpacity,
 	Alert,
-	Image as RNImage,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, Button, Card } from '../../components/ui';
+import { Text, Button, EntrySummaryCard } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetAllCollections } from '../../api/collections';
 import { useGetEntriesByCollection } from '../../api/entries/queries';
 import { deleteEntry } from '../../api/firebase/firestore';
 import { getCollectionIcon } from '../../utils/collectionIcons';
-import { Trash, NavArrowLeft } from 'iconoir-react-native';
+import { NavArrowLeft } from 'iconoir-react-native';
 
 type Props = NativeStackScreenProps<any, 'Collections'>;
 
@@ -165,80 +164,14 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 				) : (
 					<View style={styles.entriesContainer}>
 						{entries.map((entry) => (
-							<TouchableOpacity
+							<EntrySummaryCard
 								key={entry.id}
-								activeOpacity={0.7}
+								entry={entry}
 								onPress={() =>
 									navigation.navigate('Entry Details', { entryId: entry.id })
-								}>
-								<Card style={styles.entryCard}>
-									<View style={styles.entryContent}>
-										{entry.headerImage && (
-											<RNImage
-												source={{ uri: entry.headerImage }}
-												style={styles.entryHeaderImage}
-												resizeMode="cover"
-											/>
-										)}
-
-										<View style={styles.entryInfo}>
-											<Text variant="h5" numberOfLines={2}>
-												{entry.title}
-											</Text>
-											<Text
-												variant="body"
-												color={colors.text.secondary}
-												numberOfLines={3}
-												style={styles.entryExcerpt}>
-												{entry.content}
-											</Text>
-
-											{entry.tags.length > 0 && (
-												<View style={styles.tagsContainer}>
-													{entry.tags
-														.slice(0, 3)
-														.map((tag: string, index: number) => (
-															<View key={index} style={styles.tag}>
-																<Text
-																	variant="caption"
-																	color={colors.primary.main}>
-																	#{tag}
-																</Text>
-															</View>
-														))}
-													{entry.tags.length > 3 && (
-														<Text
-															variant="caption"
-															color={colors.text.secondary}>
-															+{entry.tags.length - 3}
-														</Text>
-													)}
-												</View>
-											)}
-
-											<View style={styles.entryFooter}>
-												<Text variant="caption" color={colors.text.secondary}>
-													{new Date(entry.createdAt).toDateString()}
-												</Text>
-
-												<TouchableOpacity
-													style={styles.deleteButton}
-													onPress={(e) => {
-														e.stopPropagation();
-														handleDeleteEntry(entry.id, entry.title);
-													}}>
-													<Trash
-														width={20}
-														height={20}
-														color={colors.semantic.error}
-														strokeWidth={2}
-													/>
-												</TouchableOpacity>
-											</View>
-										</View>
-									</View>
-								</Card>
-							</TouchableOpacity>
+								}
+								onDelete={() => handleDeleteEntry(entry.id, entry.title)}
+							/>
 						))}
 					</View>
 				)}
@@ -260,7 +193,7 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: colors.background.primary,
+		backgroundColor: colors.background.secondary,
 	},
 	header: {
 		paddingBottom: spacing.lg,
@@ -303,47 +236,6 @@ const styles = StyleSheet.create({
 	},
 	entriesContainer: {
 		gap: spacing.md,
-	},
-	entryCard: {
-		overflow: 'hidden',
-	},
-	entryContent: {
-		flexDirection: 'column',
-	},
-	entryHeaderImage: {
-		width: '100%',
-		height: 150,
-		marginBottom: spacing.md,
-	},
-	entryInfo: {
-		gap: spacing.sm,
-	},
-	entryExcerpt: {
-		marginTop: spacing.xs,
-	},
-	tagsContainer: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		gap: spacing.xs,
-		marginTop: spacing.xs,
-	},
-	tag: {
-		backgroundColor: colors.primary.light,
-		paddingHorizontal: spacing.sm,
-		paddingVertical: spacing.xs,
-		borderRadius: 12,
-	},
-	entryFooter: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		marginTop: spacing.sm,
-		paddingTop: spacing.sm,
-		borderTopWidth: 1,
-		borderTopColor: colors.border.light,
-	},
-	deleteButton: {
-		padding: spacing.xs,
 	},
 	fab: {
 		position: 'absolute',
