@@ -207,13 +207,13 @@ const styles = StyleSheet.create({
 	scrollContent: {
 		flexGrow: 1,
 		paddingHorizontal: spacing.lg,
-		paddingTop: spacing['3xl'],
+		paddingTop: spacing.xl,
 		paddingBottom: spacing.xl,
 	},
 	content: {
 		flex: 1,
 		paddingHorizontal: spacing.lg,
-		paddingTop: spacing['3xl'],
+		paddingTop: spacing.xl,
 	},
 	closeButton: {
 		width: 44,

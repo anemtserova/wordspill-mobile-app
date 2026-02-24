@@ -17,8 +17,7 @@ export const TabNavigator = () => {
 				tabBarStyle: {
 					backgroundColor: colors.background.primary,
 					borderTopColor: colors.neutral.gray200,
-					paddingTop: spacing.md,
-					paddingBottom: spacing.xs,
+					paddingTop: spacing.sm,
 				},
 			}}>
 			<Tabs.Screen

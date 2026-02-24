@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		paddingHorizontal: spacing.lg,
-		paddingTop: spacing.xl,
+		paddingTop: spacing.md,
 		paddingBottom: spacing.md,
 	},
 	greetingContainer: {

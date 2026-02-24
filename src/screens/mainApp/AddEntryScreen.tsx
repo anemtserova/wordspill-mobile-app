@@ -254,7 +254,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 			style={styles.container}
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 			keyboardVerticalOffset={insets.top}>
-			<View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}>
+			<View style={styles.header}>
 				<TouchableOpacity onPress={handleDiscard} style={styles.backButton}>
 					<ArrowLeft
 						width={24}

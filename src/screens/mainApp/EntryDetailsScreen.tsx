@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -17,7 +17,6 @@ import { useGetAllCollections } from '../../api/collections';
 import { deleteEntry } from '../../api/firebase/firestore';
 import { getCollectionIcon } from '../../utils/collectionIcons';
 import {
-	NavArrowLeft,
 	EditPencil,
 	Trash,
 	Calendar,
@@ -78,6 +77,32 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 		});
 	};
 
+	// Set header buttons
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			headerRight: () => (
+				<View style={{ flexDirection: 'row', gap: spacing.md }}>
+					<TouchableOpacity onPress={handleEdit} style={styles.headerButton}>
+						<EditPencil
+							width={24}
+							height={24}
+							color={colors.text.primary}
+							strokeWidth={2}
+						/>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={handleDelete} style={styles.headerButton}>
+						<Trash
+							width={24}
+							height={24}
+							color={colors.semantic.error}
+							strokeWidth={2}
+						/>
+					</TouchableOpacity>
+				</View>
+			),
+		});
+	}, [navigation, handleEdit, handleDelete]);
+
 	if (isLoading) {
 		return (
 			<View style={styles.centerContent}>
@@ -106,37 +131,6 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.header}>
-				<TouchableOpacity
-					onPress={() => navigation.goBack()}
-					style={styles.headerButton}>
-					<NavArrowLeft
-						width={24}
-						height={24}
-						color={colors.text.primary}
-						strokeWidth={2}
-					/>
-				</TouchableOpacity>
-				<View style={styles.headerActions}>
-					<TouchableOpacity onPress={handleEdit} style={styles.headerButton}>
-						<EditPencil
-							width={24}
-							height={24}
-							color={colors.text.primary}
-							strokeWidth={2}
-						/>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={handleDelete} style={styles.headerButton}>
-						<Trash
-							width={24}
-							height={24}
-							color={colors.semantic.error}
-							strokeWidth={2}
-						/>
-					</TouchableOpacity>
-				</View>
-			</View>
-
 			<ScrollView
 				style={styles.scrollView}
 				contentContainerStyle={styles.scrollContent}
@@ -301,23 +295,9 @@ const styles = StyleSheet.create({
 	backButton: {
 		marginTop: spacing.lg,
 	},
-	header: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		paddingHorizontal: spacing.lg,
-		paddingVertical: spacing.md,
-		paddingTop: spacing.xl + spacing.md,
-		backgroundColor: colors.background.primary,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.border.light,
-	},
+
 	headerButton: {
 		padding: spacing.xs,
-	},
-	headerActions: {
-		flexDirection: 'row',
-		gap: spacing.sm,
 	},
 	scrollView: {
 		flex: 1,

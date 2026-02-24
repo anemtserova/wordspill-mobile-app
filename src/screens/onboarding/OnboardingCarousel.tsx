@@ -90,7 +90,6 @@ export const OnboardingCarousel = () => {
 
 	const handleGetStarted = async () => {
 		await completeOnboarding();
-		navigation.navigate('Auth');
 	};
 
 	const renderItem = ({
@@ -124,7 +123,6 @@ export const OnboardingCarousel = () => {
 				scrollEventThrottle={16}
 			/>
 
-			{/* Pagination Dots */}
 			<View style={styles.pagination}>
 				{slides.map((_, index) => (
 					<View
@@ -134,7 +132,6 @@ export const OnboardingCarousel = () => {
 				))}
 			</View>
 
-			{/* Get Started Button - Only on last slide */}
 			{currentIndex === slides.length - 1 && (
 				<Animated.View
 					entering={FadeInUp.delay(300).duration(1000)}

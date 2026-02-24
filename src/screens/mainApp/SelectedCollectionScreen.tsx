@@ -6,10 +6,10 @@ import {
 	TouchableOpacity,
 	Alert,
 	Image as RNImage,
-	Platform,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, Button, Card } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
@@ -25,6 +25,7 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 	const { collectionId } = route.params || {};
 	const { user } = useAuth();
 	const queryClient = useQueryClient();
+	const insets = useSafeAreaInsets();
 
 	const { data: collections = [] } = useGetAllCollections(user?.uid || '');
 	const collection = collections.find((c) => c.id === collectionId);
@@ -89,7 +90,9 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 			<View
 				style={[
 					styles.header,
-					{ backgroundColor: collection.color || colors.primary.light },
+					{
+						backgroundColor: collection.color || colors.primary.light,
+					},
 				]}>
 				<View style={styles.headerTop}>
 					<TouchableOpacity
@@ -127,7 +130,10 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 			</View>
 
 			<ScrollView
-				contentContainerStyle={styles.scrollContent}
+				contentContainerStyle={[
+					styles.scrollContent,
+					{ paddingBottom: 60 + insets.bottom + spacing.lg },
+				]}
 				showsVerticalScrollIndicator={false}>
 				{entriesLoading ? (
 					<View style={styles.centerContent}>
@@ -239,7 +245,9 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 			</ScrollView>
 
 			{entries.length > 0 && (
-				<TouchableOpacity style={styles.fab} onPress={handleAddEntry}>
+				<TouchableOpacity
+					style={[styles.fab, { bottom: 60 + insets.bottom + spacing.lg }]}
+					onPress={handleAddEntry}>
 					<Text variant="h2" color={colors.neutral.white}>
 						+
 					</Text>
@@ -255,7 +263,6 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.background.primary,
 	},
 	header: {
-		paddingTop: Platform.OS === 'ios' ? spacing['4xl'] : spacing.lg,
 		paddingBottom: spacing.lg,
 		paddingHorizontal: spacing.lg,
 		borderBottomLeftRadius: 24,
@@ -280,7 +287,6 @@ const styles = StyleSheet.create({
 	},
 	scrollContent: {
 		padding: spacing.lg,
-		paddingBottom: spacing['5xl'],
 	},
 	centerContent: {
 		alignItems: 'center',
@@ -341,7 +347,6 @@ const styles = StyleSheet.create({
 	fab: {
 		position: 'absolute',
 		right: spacing.lg,
-		bottom: spacing.lg,
 		width: 56,
 		height: 56,
 		borderRadius: 28,
