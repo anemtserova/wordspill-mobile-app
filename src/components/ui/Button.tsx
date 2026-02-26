@@ -22,7 +22,7 @@ interface ButtonProps extends TouchableOpacityProps {
 	children: React.ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = ({
 	variant = 'primary',
 	size = 'md',
 	loading = false,
@@ -33,7 +33,7 @@ export const Button: React.FC<ButtonProps> = ({
 	style,
 	children,
 	...props
-}) => {
+}: ButtonProps) => {
 	const buttonStyle: ViewStyle[] = [
 		styles.base,
 		styles[variant],

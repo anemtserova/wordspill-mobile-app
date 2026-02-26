@@ -12,14 +12,14 @@ interface CardProps extends ViewProps {
 	children: React.ReactNode;
 }
 
-export const Card: React.FC<CardProps> = ({
+export const Card = ({
 	variant = 'elevated',
 	orientation = 'vertical',
 	padding = 'md',
 	style,
 	children,
 	...props
-}) => {
+}: CardProps) => {
 	const cardStyle: ViewStyle[] = [
 		styles.base,
 		styles[variant],

@@ -25,13 +25,13 @@ interface ImagePickerProps {
 	containerStyle?: ViewStyle;
 }
 
-export const ImagePicker: React.FC<ImagePickerProps> = ({
+export const ImagePicker = ({
 	images,
 	onAddImage,
 	onRemoveImage,
 	maxImages = 5,
 	containerStyle,
-}) => {
+}: ImagePickerProps) => {
 	const canAddMore = images.length < maxImages;
 
 	const handleAddImage = () => {
@@ -56,7 +56,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
 		return typeof item === 'string' ? item : item.uri;
 	};
 
-	const VideoPreview: React.FC<{ uri: string }> = ({ uri }) => {
+	const VideoPreview = ({ uri }: { uri: string }) => {
 		const player = useVideoPlayer(uri, (player) => {
 			player.pause();
 			player.muted = true;

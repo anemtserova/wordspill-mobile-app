@@ -1,4 +1,3 @@
-// UI Components Export
 export { Text } from './Text';
 export { Button } from './Button';
 export { Input } from './Input';
@@ -17,3 +16,5 @@ export { AddTagsModal } from './AddTagsModal';
 export { EntrySummaryCard } from './EntrySummaryCard';
 export { VideoPlayer } from './VideoPlayer';
 export { ExpandableText } from './ExpandableText';
+export { WordspillInfoButton } from './WordspillInfoButton';
+export { IconStyled } from './IconStyled';

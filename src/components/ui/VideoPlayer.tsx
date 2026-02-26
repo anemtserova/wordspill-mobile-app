@@ -17,11 +17,7 @@ interface VideoPlayerProps {
 	thumbnailUri?: string;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({
-	uri,
-	style,
-	thumbnailUri,
-}) => {
+export const VideoPlayer = ({ uri, style, thumbnailUri }: VideoPlayerProps) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasError, setHasError] = useState(false);
 	const videoRef = useRef(null);

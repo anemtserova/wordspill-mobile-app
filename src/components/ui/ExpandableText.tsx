@@ -25,7 +25,7 @@ interface ExpandableTextProps {
 	expandable?: boolean;
 }
 
-export const ExpandableText: React.FC<ExpandableTextProps> = ({
+export const ExpandableText = ({
 	children,
 	numberOfLines = 4,
 	variant = 'body',
@@ -34,7 +34,7 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
 	expandText = 'Read more',
 	collapseText = 'Show less',
 	expandable = true,
-}) => {
+}: ExpandableTextProps) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [showButton, setShowButton] = useState(false);
 

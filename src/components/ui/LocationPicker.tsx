@@ -25,11 +25,11 @@ interface LocationPickerProps {
 	onLocationClear: () => void;
 }
 
-export const LocationPicker: React.FC<LocationPickerProps> = ({
+export const LocationPicker = ({
 	location,
 	onLocationSelect,
 	onLocationClear,
-}) => {
+}: LocationPickerProps) => {
 	const [isManualInput, setIsManualInput] = useState(false);
 	const [manualAddress, setManualAddress] = useState('');
 	const [isLoading, setIsLoading] = useState(false);

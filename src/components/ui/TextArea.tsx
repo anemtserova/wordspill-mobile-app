@@ -19,7 +19,7 @@ interface TextAreaProps extends TextInputProps {
 	showCount?: boolean;
 }
 
-export const TextArea: React.FC<TextAreaProps> = ({
+export const TextArea = ({
 	label,
 	error,
 	hint,
@@ -30,7 +30,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
 	value,
 	style,
 	...props
-}) => {
+}: TextAreaProps) => {
 	const characterCount = value?.length || 0;
 
 	return (

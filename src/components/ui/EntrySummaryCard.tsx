@@ -18,12 +18,12 @@ interface EntrySummaryCardProps {
 	showDeleteButton?: boolean;
 }
 
-export const EntrySummaryCard: React.FC<EntrySummaryCardProps> = ({
+export const EntrySummaryCard = ({
 	entry,
 	onPress,
 	onDelete,
 	showDeleteButton = true,
-}) => {
+}: EntrySummaryCardProps) => {
 	return (
 		<TouchableOpacity activeOpacity={0.7} onPress={onPress}>
 			<Card style={styles.entryCard}>

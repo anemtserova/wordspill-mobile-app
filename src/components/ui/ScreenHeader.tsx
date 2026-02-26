@@ -13,13 +13,13 @@ interface ScreenHeaderProps {
 	style?: ViewStyle;
 }
 
-export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
+export const ScreenHeader = ({
 	title,
 	onBackPress,
 	showBackButton = true,
 	rightComponent,
 	style,
-}) => {
+}: ScreenHeaderProps) => {
 	const insets = useSafeAreaInsets();
 
 	return (

@@ -31,7 +31,7 @@ interface TagProps {
 	children: React.ReactNode;
 }
 
-export const Tag: React.FC<TagProps> = ({
+export const Tag = ({
 	variant = 'default',
 	size = 'md',
 	outlined = false,

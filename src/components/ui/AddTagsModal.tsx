@@ -20,12 +20,12 @@ interface AddTagsModalProps {
 	existingTags: string[];
 }
 
-export const AddTagsModal: React.FC<AddTagsModalProps> = ({
+export const AddTagsModal = ({
 	visible,
 	onClose,
 	onAddTags,
 	existingTags,
-}) => {
+}: AddTagsModalProps) => {
 	const [tagInput, setTagInput] = useState('');
 
 	const handleAddTags = () => {

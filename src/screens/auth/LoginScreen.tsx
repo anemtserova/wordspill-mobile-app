@@ -9,7 +9,7 @@ import {
 	Alert,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, Button, Input } from '../../components/ui';
+import { Text, Button, Input, WordspillInfoButton } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -148,6 +148,8 @@ export const LoginScreen = ({
 							</Text>
 						</TouchableOpacity>
 					</View>
+
+					<WordspillInfoButton navigation={navigation} />
 				</View>
 			</ScrollView>
 		</KeyboardAvoidingView>

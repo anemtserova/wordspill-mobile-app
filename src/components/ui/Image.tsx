@@ -26,7 +26,7 @@ interface ImageProps extends RNImageProps {
 	onPress?: () => void;
 }
 
-export const Image: React.FC<ImageProps> = ({
+export const Image = ({
 	variant = 'default',
 	size = 'md',
 	borderColor,
@@ -35,7 +35,7 @@ export const Image: React.FC<ImageProps> = ({
 	onPress,
 	style,
 	...props
-}) => {
+}: ImageProps) => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const imageStyle: ImageStyle[] = [

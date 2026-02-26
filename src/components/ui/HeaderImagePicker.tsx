@@ -22,13 +22,13 @@ interface HeaderImagePickerProps {
 	containerStyle?: ViewStyle;
 }
 
-export const HeaderImagePicker: React.FC<HeaderImagePickerProps> = ({
+export const HeaderImagePicker = ({
 	imageUri,
 	onPress,
 	placeholder = 'Add a header image',
 	height = HEADER_HEIGHT,
 	containerStyle,
-}) => {
+}: HeaderImagePickerProps) => {
 	return (
 		<TouchableOpacity
 			style={[styles.container, { height }, containerStyle]}

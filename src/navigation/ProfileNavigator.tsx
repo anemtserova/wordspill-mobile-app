@@ -10,17 +10,7 @@ export const ProfileNavigator = () => {
 	return (
 		<ProfileStack.Navigator
 			screenOptions={{
-				headerShown: true,
-				headerStyle: {
-					backgroundColor: colors.background.primary,
-				},
-				headerTintColor: colors.text.primary,
-				headerTitleStyle: {
-					fontFamily: typography.fonts.heading,
-					fontSize: typography.fontSize.lg,
-					color: colors.text.primary,
-				},
-				headerShadowVisible: false,
+				headerShown: false,
 			}}>
 			<ProfileStack.Screen
 				name="Profile"
@@ -30,18 +20,18 @@ export const ProfileNavigator = () => {
 			<ProfileStack.Screen
 				name="Settings"
 				component={SettingsScreen}
-				options={{
-					headerTitle: 'Settings',
-					headerBackTitle: 'Profile',
-				}}
+				// options={{
+				// 	headerTitle: 'Settings',
+				// 	headerBackTitle: 'Profile',
+				// }}
 			/>
 			<ProfileStack.Screen
 				name="Edit Profile"
 				component={EditProfileScreen}
-				options={{
-					headerTitle: 'Edit Profile',
-					headerBackTitle: 'Cancel',
-				}}
+				// options={{
+				// 	headerTitle: 'Edit Profile',
+				// 	headerBackTitle: 'Cancel',
+				// }}
 			/>
 		</ProfileStack.Navigator>
 	);

@@ -1,9 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { TabNavigator } from './TabNavigator';
-import { AddEntryScreen } from '../screens/mainApp/AddEntryScreen';
-import { EditEntryScreen } from '../screens/mainApp/EditEntryScreen';
-import { EntryDetailsScreen } from '../screens/mainApp/EntryDetailsScreen';
+
 import { EntryNavigator } from './EntryNavigator';
 
 const MainAppStack = createNativeStackNavigator();

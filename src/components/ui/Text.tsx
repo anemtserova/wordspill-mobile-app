@@ -91,7 +91,7 @@ const variantStyles: Record<TextVariant, TextStyle> = {
 	},
 };
 
-export const Text: React.FC<TextProps> = ({
+export const Text = ({
 	variant = 'body',
 	color,
 	align,
@@ -101,7 +101,7 @@ export const Text: React.FC<TextProps> = ({
 	ellipsizeMode = 'tail',
 	children,
 	...props
-}) => {
+}: TextProps) => {
 	const getFontFamily = () => {
 		if (weight) {
 			switch (weight) {

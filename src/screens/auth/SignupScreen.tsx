@@ -9,7 +9,13 @@ import {
 	Alert,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, Button, Input, ScreenHeader } from '../../components/ui';
+import {
+	Text,
+	Button,
+	Input,
+	ScreenHeader,
+	WordspillInfoButton,
+} from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -108,8 +114,8 @@ export const SignupScreen = ({
 				keyboardShouldPersistTaps="handled">
 				<View style={styles.form}>
 					<Input
-						label="Full Name"
-						placeholder="Enter your name"
+						label="Display Name"
+						placeholder="Enter your display name"
 						value={name}
 						onChangeText={(text) => {
 							setName(text);
@@ -184,6 +190,8 @@ export const SignupScreen = ({
 							</Text>
 						</TouchableOpacity>
 					</View>
+
+					<WordspillInfoButton navigation={navigation} />
 				</View>
 			</ScrollView>
 		</KeyboardAvoidingView>

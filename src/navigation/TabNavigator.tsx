@@ -1,7 +1,15 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, BookStack, UserCircle, HomeAlt } from 'iconoir-react-native';
+import { Platform } from 'react-native';
+import {
+	Home,
+	BookStack,
+	UserCircle,
+	HomeAlt,
+	InfoCircle,
+} from 'iconoir-react-native';
 import { CollectionsScreen } from '../screens/mainApp/CollectionsScreen';
 import { HomeScreen } from '../screens/mainApp/HomeScreen';
+import { InfoScreen } from '../screens/mainApp/InfoScreen';
 import { ProfileNavigator } from './ProfileNavigator';
 import { colors, spacing } from '../theme';
 
@@ -18,6 +26,8 @@ export const TabNavigator = () => {
 					backgroundColor: colors.background.primary,
 					borderTopColor: colors.neutral.gray200,
 					paddingTop: spacing.sm,
+					paddingBottom: spacing.md,
+					height: Platform.OS === 'ios' ? 85 : 70,
 				},
 			}}>
 			<Tabs.Screen
@@ -35,6 +45,20 @@ export const TabNavigator = () => {
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<BookStack
+							width={size}
+							height={size}
+							color={color}
+							strokeWidth={2}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="Info"
+				component={InfoScreen}
+				options={{
+					tabBarIcon: ({ color, size }) => (
+						<InfoCircle
 							width={size}
 							height={size}
 							color={color}

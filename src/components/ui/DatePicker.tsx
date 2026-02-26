@@ -22,14 +22,14 @@ interface DatePickerProps {
 	mode?: 'single' | 'range' | 'multiple';
 }
 
-export const DatePicker: React.FC<DatePickerProps> = ({
+export const DatePicker = ({
 	label,
 	value,
 	onChange,
 	placeholder = 'Select date',
 	containerStyle,
 	mode = 'single',
-}) => {
+}: DatePickerProps) => {
 	const defaultStyles = useDefaultStyles();
 	const [isOpen, setIsOpen] = useState(false);
 	const [tempDate, setTempDate] = useState(value);

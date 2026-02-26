@@ -18,14 +18,14 @@ interface SearchBarProps extends TextInputProps {
 	containerStyle?: ViewStyle;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({
+export const SearchBar = ({
 	variant = 'default',
 	value,
 	onClear,
 	containerStyle,
 	placeholder = 'Search...',
 	...props
-}) => {
+}: SearchBarProps) => {
 	const showClearButton = value && value.length > 0;
 
 	return (
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
 		paddingVertical: spacing.sm,
 		borderRadius: borderRadius.lg,
 		gap: spacing.sm,
+		minHeight: 60,
 	},
 	default: {
 		backgroundColor: colors.neutral.white,
@@ -82,6 +83,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontFamily: 'Jost-Regular',
 		color: colors.text.primary,
+
 		padding: 0,
 	},
 	clearButton: {

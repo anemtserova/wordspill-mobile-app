@@ -25,11 +25,11 @@ interface AddCollectionModalProps {
 	userId: string;
 }
 
-export const AddCollectionModal: React.FC<AddCollectionModalProps> = ({
+export const AddCollectionModal = ({
 	visible,
 	onClose,
 	userId,
-}) => {
+}: AddCollectionModalProps) => {
 	const [collectionNameInput, setCollectionNameInput] = useState('');
 	const [selectedColor, setSelectedColor] = useState(colors.primary.main);
 	const [selectedIcon, setSelectedIcon] = useState('book');
