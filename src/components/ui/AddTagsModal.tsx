@@ -7,7 +7,7 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 } from 'react-native';
-import { Xmark } from 'iconoir-react-native';
+import { Key, Xmark } from 'iconoir-react-native';
 import { Text } from './Text';
 import { Input } from './Input';
 import { Button } from './Button';
@@ -58,7 +58,10 @@ export const AddTagsModal = ({
 			transparent
 			animationType="fade"
 			onRequestClose={handleClose}>
-			<View style={styles.modalOverlay}>
+			<KeyboardAvoidingView
+				style={styles.modalOverlay}
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+				{/* <View style={styles.modalOverlay}> */}
 				<View style={styles.modalContent}>
 					<View style={styles.modalHeader}>
 						<Text variant="h4" style={styles.modalTitle}>
@@ -108,7 +111,8 @@ export const AddTagsModal = ({
 						</Button>
 					</View>
 				</View>
-			</View>
+				{/* </View> */}
+			</KeyboardAvoidingView>
 		</Modal>
 	);
 };

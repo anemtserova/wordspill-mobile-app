@@ -84,7 +84,7 @@ export const AddCollectionModal = ({
 					showsVerticalScrollIndicator={false}>
 					<View style={styles.modalContent}>
 						<View style={styles.modalHeader}>
-							<Text variant="h5">Add New Collection</Text>
+							<Text variant="h4">Add New Collection</Text>
 							<TouchableOpacity
 								onPress={handleClose}
 								style={styles.closeButton}>
@@ -107,7 +107,6 @@ export const AddCollectionModal = ({
 							onSubmitEditing={handleAddCollection}
 						/>
 
-						{/* Color Picker */}
 						<Text variant="h6" style={styles.sectionLabel}>
 							Choose Color
 						</Text>
@@ -134,7 +133,6 @@ export const AddCollectionModal = ({
 							))}
 						</View>
 
-						{/* Icon Picker */}
 						<Text variant="h6" style={styles.sectionLabel}>
 							Choose Icon
 						</Text>

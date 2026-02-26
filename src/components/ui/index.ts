@@ -18,3 +18,4 @@ export { VideoPlayer } from './VideoPlayer';
 export { ExpandableText } from './ExpandableText';
 export { WordspillInfoButton } from './WordspillInfoButton';
 export { IconStyled } from './IconStyled';
+export { CollectionCard } from './CollectionCard';

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
 	View,
 	StyleSheet,
 	ScrollView,
 	TouchableOpacity,
 	Dimensions,
+	RefreshControl,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
@@ -18,7 +19,6 @@ import { colors, spacing, typography } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetAllCollections } from '../../api/collections';
 import { getCollectionIcon } from '../../utils/collectionIcons';
-import { seedDefaultCollections } from '../../utils/seedDefaultCollections';
 import { Plus } from 'iconoir-react-native';
 
 const { width } = Dimensions.get('window');
@@ -31,32 +31,16 @@ export const HomeScreen = ({
 }) => {
 	const { profile, user } = useAuth();
 	const [searchQuery, setSearchQuery] = useState('');
+	const [refreshing, setRefreshing] = useState(false);
 	const [isCollectionModalVisible, setIsCollectionModalVisible] =
 		useState(false);
 
 	const {
 		data: collections = [],
+		refetch,
 		isLoading: collectionsLoading,
 		error: collectionsError,
-		refetch: refetchCollections,
 	} = useGetAllCollections(user?.uid || '');
-
-	useEffect(() => {
-		const seedIfNeeded = async () => {
-			if (
-				!collectionsLoading &&
-				!collectionsError &&
-				collections.length === 0 &&
-				user?.uid
-			) {
-				console.log('No collections found. Seeding default collections...');
-				await seedDefaultCollections(user.uid);
-				refetchCollections();
-			}
-		};
-
-		seedIfNeeded();
-	}, [collectionsLoading, collectionsError, collections.length, user?.uid]);
 
 	const displayName =
 		profile?.displayName || user?.email?.split('@')[0] || 'Friend';
@@ -75,6 +59,12 @@ export const HomeScreen = ({
 		});
 	};
 
+	const onRefresh = async () => {
+		setRefreshing(true);
+		await refetch();
+		setRefreshing(false);
+	};
+
 	const handleSearch = () => {
 		// TODO: Implement search functionality
 		console.log('Searching for:', searchQuery);
@@ -84,7 +74,10 @@ export const HomeScreen = ({
 		<View style={styles.container}>
 			<ScrollView
 				contentContainerStyle={styles.scrollContent}
-				showsVerticalScrollIndicator={false}>
+				showsVerticalScrollIndicator={false}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}>
 				<View style={styles.header}>
 					<View style={styles.greetingContainer}>
 						<Text variant="h2" style={styles.greeting}>

@@ -115,7 +115,8 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						Keep your writing organized by creating collections. Separate your
 						daily journal from your poetry, group travel stories together, or
 						create collections for fiction projects, vocabulary discoveries, or
-						personal reflections. Your collections, your way.
+						personal reflections. Your collections, your way. Tap on a
+						collection to see all entries within it.
 					</Text>
 				</View>
 
@@ -146,7 +147,8 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						Add tags to organize and connect your writing. Tag entries by mood,
 						theme, location, or any category that matters to you. Tags help you
 						discover patterns in your writing and quickly find related pieces
-						across different collections.
+						across different collections. Tap on a tag to see all entries
+						associated with it.
 					</Text>
 				</View>
 
@@ -267,14 +269,19 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						height={24}
 						strokeWidth={2}
 					/>
-					<Text variant="h3" style={styles.sectionTitle}>
+					<Text
+						variant="h4"
+						style={[
+							styles.sectionTitle,
+							{ marginBottom: spacing.sm, marginTop: spacing.md },
+						]}>
 						Start Your Writing Journey
 					</Text>
 					<Text
 						variant="body"
 						color={colors.text.tertiary}
 						style={styles.footerText}>
-						Gift yourself a writing journey today and let your words flow!
+						Gift yourself a moment of reflection and let your words flow!
 					</Text>
 				</View>
 				<Button
@@ -327,6 +334,7 @@ const styles = StyleSheet.create({
 	},
 	sectionTitle: {
 		flex: 1,
+		color: colors.accent.teal,
 	},
 	sectionText: {
 		lineHeight: 24,
