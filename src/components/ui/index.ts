@@ -10,6 +10,7 @@ export { ImagePicker } from './ImagePicker';
 export { HeaderImagePicker } from './HeaderImagePicker';
 export { LocationPicker } from './LocationPicker';
 export { ScreenHeader } from './ScreenHeader';
+export { ColoredScreenHeader } from './ColoredScreenHeader';
 export { DatePicker } from './DatePicker';
 export { AddCollectionModal } from './AddCollectionModal';
 export { AddTagsModal } from './AddTagsModal';

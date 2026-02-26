@@ -29,7 +29,7 @@ export const useGetEntriesByTag = (userId: string, tag: string) => {
 	return useQuery({
 		queryKey: ['entries', userId, 'tag', tag],
 		queryFn: () => getEntriesByTag(userId, tag),
-		enabled: !!tag,
+		enabled: !!userId && !!tag,
 	});
 };
 

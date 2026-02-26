@@ -16,6 +16,7 @@ interface EntrySummaryCardProps {
 	onPress: () => void;
 	onDelete: () => void;
 	showDeleteButton?: boolean;
+	onTagPress?: (tag: string) => void;
 }
 
 export const EntrySummaryCard = ({
@@ -23,6 +24,7 @@ export const EntrySummaryCard = ({
 	onPress,
 	onDelete,
 	showDeleteButton = true,
+	onTagPress,
 }: EntrySummaryCardProps) => {
 	return (
 		<TouchableOpacity activeOpacity={0.7} onPress={onPress}>
@@ -52,11 +54,20 @@ export const EntrySummaryCard = ({
 						{entry.tags.length > 0 && (
 							<View style={styles.tagsContainer}>
 								{entry.tags.slice(0, 3).map((tag: string, index: number) => (
-									<View key={index} style={styles.tag}>
+									<TouchableOpacity
+										key={index}
+										style={styles.tag}
+										onPress={(e) => {
+											if (onTagPress) {
+												e.stopPropagation();
+												onTagPress(tag);
+											}
+										}}
+										disabled={!onTagPress}>
 										<Text variant="caption" color={colors.primary.main}>
 											#{tag}
 										</Text>
-									</View>
+									</TouchableOpacity>
 								))}
 								{entry.tags.length > 3 && (
 									<Text variant="caption" color={colors.text.secondary}>
@@ -65,7 +76,6 @@ export const EntrySummaryCard = ({
 								)}
 							</View>
 						)}
-
 						<View style={styles.entryFooter}>
 							<Text variant="caption" color={colors.text.secondary}>
 								{new Date(entry.createdAt).toDateString()}

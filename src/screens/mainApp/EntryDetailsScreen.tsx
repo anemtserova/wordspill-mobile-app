@@ -230,11 +230,16 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 							</View>
 							<View style={styles.tagsWrapper}>
 								{entry.tags.map((tag, index) => (
-									<View key={index} style={styles.tag}>
+									<TouchableOpacity
+										key={index}
+										style={styles.tag}
+										onPress={() =>
+											navigation.navigate('Entries By Tag', { tag })
+										}>
 										<Text variant="label" color={colors.text.primary}>
 											#{tag}
 										</Text>
-									</View>
+									</TouchableOpacity>
 								))}
 							</View>
 						</View>

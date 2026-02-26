@@ -9,14 +9,18 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, Button, EntrySummaryCard } from '../../components/ui';
+import {
+	Text,
+	Button,
+	EntrySummaryCard,
+	ColoredScreenHeader,
+} from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetAllCollections } from '../../api/collections';
 import { useGetEntriesByCollection } from '../../api/entries/queries';
 import { deleteEntry } from '../../api/firebase/firestore';
 import { getCollectionIcon } from '../../utils/collectionIcons';
-import { NavArrowLeft } from 'iconoir-react-native';
 
 type Props = NativeStackScreenProps<any, 'Collections'>;
 
@@ -86,47 +90,20 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			<View
-				style={[
-					styles.header,
-					{
-						backgroundColor: collection.color || colors.primary.light,
-					},
-				]}>
-				<View style={styles.headerTop}>
-					<TouchableOpacity
-						style={styles.backButton}
-						onPress={() => navigation.goBack()}>
-						<NavArrowLeft
-							width={24}
-							height={24}
-							color={colors.neutral.white}
-							strokeWidth={2.5}
-						/>
-					</TouchableOpacity>
-
+			<ColoredScreenHeader
+				title={collection.name}
+				subtitle={`${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`}
+				icon={
 					<IconComponent
 						width={32}
 						height={32}
 						color={colors.neutral.white}
 						strokeWidth={2}
 					/>
-
-					<Text
-						variant="h3"
-						color={colors.neutral.white}
-						style={styles.headerTitle}>
-						{collection.name}
-					</Text>
-				</View>
-
-				<Text
-					variant="label"
-					color={colors.neutral.white}
-					style={styles.entryCount}>
-					{entries.length} {entries.length === 1 ? 'entry' : 'entries'}
-				</Text>
-			</View>
+				}
+				backgroundColor={collection.color || colors.primary.light}
+				onBackPress={() => navigation.goBack()}
+			/>
 
 			<ScrollView
 				contentContainerStyle={[
@@ -171,6 +148,9 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 									navigation.navigate('Entry Details', { entryId: entry.id })
 								}
 								onDelete={() => handleDeleteEntry(entry.id, entry.title)}
+								onTagPress={(selectedTag) =>
+									navigation.navigate('Entries By Tag', { tag: selectedTag })
+								}
 							/>
 						))}
 					</View>
@@ -194,30 +174,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: colors.background.secondary,
-	},
-	header: {
-		paddingBottom: spacing.lg,
-		paddingHorizontal: spacing.lg,
-		borderBottomLeftRadius: 24,
-		borderBottomRightRadius: 24,
-	},
-	headerTop: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: spacing.sm,
-		marginBottom: spacing.xs,
-		paddingTop: spacing.lg,
-	},
-	backButton: {
-		padding: spacing.xs,
-		marginRight: spacing.xs,
-	},
-	headerTitle: {
-		flex: 1,
-	},
-	entryCount: {
-		marginLeft: spacing['2xl'] + spacing.sm,
-		opacity: 0.85,
 	},
 	scrollContent: {
 		padding: spacing.lg,
