@@ -4,7 +4,7 @@ import { NavArrowLeft } from 'iconoir-react-native';
 import { Text } from './Text';
 import { colors, spacing } from '../../theme';
 
-interface ColoredScreenHeaderProps {
+interface ColorScreenHeaderProps {
 	title: string;
 	subtitle?: string;
 	icon: React.ReactNode;
@@ -13,14 +13,14 @@ interface ColoredScreenHeaderProps {
 	style?: ViewStyle;
 }
 
-export const ColoredScreenHeader = ({
+export const ColorScreenHeader = ({
 	title,
 	subtitle,
 	icon,
 	backgroundColor = colors.primary.main,
 	onBackPress,
 	style,
-}: ColoredScreenHeaderProps) => {
+}: ColorScreenHeaderProps) => {
 	return (
 		<View style={[styles.header, { backgroundColor }, style]}>
 			<View style={styles.headerTop}>

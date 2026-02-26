@@ -13,7 +13,7 @@ import {
 	Text,
 	Button,
 	EntrySummaryCard,
-	ColoredScreenHeader,
+	ColorScreenHeader,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
@@ -90,7 +90,7 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			<ColoredScreenHeader
+			<ColorScreenHeader
 				title={collection.name}
 				subtitle={`${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`}
 				icon={

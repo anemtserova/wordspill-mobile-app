@@ -13,7 +13,7 @@ import {
 	Text,
 	Button,
 	EntrySummaryCard,
-	ColoredScreenHeader,
+	ColorScreenHeader,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
@@ -36,13 +36,13 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 	} = useGetEntriesByTag(user?.uid || '', tag || '');
 
 	// Debug logging
-	React.useEffect(() => {
-		if (entriesError) {
-			console.error('EntriesByTagScreen error:', entriesError);
-			console.log('userId:', user?.uid);
-			console.log('tag:', tag);
-		}
-	}, [entriesError, user?.uid, tag]);
+	// React.useEffect(() => {
+	// 	if (entriesError) {
+	// 		console.error('EntriesByTagScreen error:', entriesError);
+	// 		console.log('userId:', user?.uid);
+	// 		console.log('tag:', tag);
+	// 	}
+	// }, [entriesError, user?.uid, tag]);
 
 	const deleteEntryMutation = useMutation({
 		mutationFn: async (entryId: string) => {
@@ -94,7 +94,7 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 	if (!user?.uid) {
 		return (
 			<View style={styles.container}>
-				<ColoredScreenHeader
+				<ColorScreenHeader
 					title={tag}
 					subtitle="0 entries"
 					icon={
@@ -119,7 +119,7 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			<ColoredScreenHeader
+			<ColorScreenHeader
 				title={tag}
 				subtitle={`${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`}
 				icon={
