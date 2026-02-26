@@ -12,7 +12,6 @@ interface CollectionCardProps {
 	onPress: () => void;
 	onEdit: () => void;
 	onDelete: () => void;
-	isDraggable?: boolean;
 }
 
 export const CollectionCard = ({
@@ -21,7 +20,6 @@ export const CollectionCard = ({
 	onPress,
 	onEdit,
 	onDelete,
-	isDraggable = false,
 }: CollectionCardProps) => {
 	const IconComponent = getCollectionIcon(collection.iconName);
 	const backgroundColor = collection.color || colors.primary.main;
@@ -48,8 +46,7 @@ export const CollectionCard = ({
 		<TouchableOpacity
 			style={styles.container}
 			onPress={onPress}
-			activeOpacity={0.7}
-			disabled={isDraggable}>
+			activeOpacity={0.7}>
 			<View style={styles.content}>
 				{/* Icon */}
 				<View style={[styles.iconContainer, { backgroundColor }]}>
