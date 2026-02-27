@@ -24,6 +24,18 @@ export const LoginScreen = ({
 	const [loading, setLoading] = useState(false);
 	const [errors, setErrors] = useState({ email: '', password: '' });
 
+	const validatePassword = (password: string): string => {
+		if (!password) return 'Password is required';
+		if (password.length < 8) return 'Password must be at least 8 characters';
+		if (!/[a-zA-Z]/.test(password))
+			return 'Password must contain at least one letter';
+		if (!/[0-9]/.test(password))
+			return 'Password must contain at least one number';
+		if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password))
+			return 'Password must contain at least one special character';
+		return '';
+	};
+
 	const validateForm = () => {
 		const newErrors = { email: '', password: '' };
 		let isValid = true;
@@ -36,11 +48,9 @@ export const LoginScreen = ({
 			isValid = false;
 		}
 
-		if (!password) {
-			newErrors.password = 'Password is required';
-			isValid = false;
-		} else if (password.length < 6) {
-			newErrors.password = 'Password must be at least 6 characters';
+		const passwordError = validatePassword(password);
+		if (passwordError) {
+			newErrors.password = passwordError;
 			isValid = false;
 		}
 
@@ -54,7 +64,6 @@ export const LoginScreen = ({
 		setLoading(true);
 		try {
 			await login(email, password);
-			// Navigation will be handled by RootNavigator based on auth state
 		} catch (error: any) {
 			const errorMessage =
 				error.code === 'auth/user-not-found'

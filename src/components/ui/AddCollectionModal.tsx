@@ -97,15 +97,21 @@ export const AddCollectionModal = ({
 							</TouchableOpacity>
 						</View>
 
-						<TextInput
-							style={styles.modalInput}
-							placeholder="Collection name"
-							value={collectionNameInput}
-							onChangeText={setCollectionNameInput}
-							placeholderTextColor={colors.text.secondary}
-							autoFocus
-							onSubmitEditing={handleAddCollection}
-						/>
+						<View>
+							<TextInput
+								style={styles.modalInput}
+								placeholder="Collection name"
+								value={collectionNameInput}
+								onChangeText={setCollectionNameInput}
+								placeholderTextColor={colors.text.secondary}
+								autoFocus
+								onSubmitEditing={handleAddCollection}
+								maxLength={50}
+							/>
+							<Text variant="caption" style={styles.charCounter}>
+								{collectionNameInput.length}/50
+							</Text>
+						</View>
 
 						<Text variant="h6" style={styles.sectionLabel}>
 							Choose Color
@@ -221,7 +227,12 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontFamily: 'Jost_400Regular',
 		color: colors.text.primary,
-		marginBottom: spacing.lg,
+		marginBottom: spacing.xs,
+	},
+	charCounter: {
+		textAlign: 'right',
+		color: colors.text.secondary,
+		marginBottom: spacing.md,
 	},
 	sectionLabel: {
 		marginTop: spacing.sm,

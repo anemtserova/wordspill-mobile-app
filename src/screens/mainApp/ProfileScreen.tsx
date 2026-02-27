@@ -17,6 +17,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing, borderRadius } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
+import { useOnboarding } from '../../contexts/OnboardingContext';
 import {
 	User,
 	Settings,
@@ -33,6 +34,7 @@ interface ProfileScreenProps {
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 	const { user, profile, logout } = useAuth();
+	const { resetOnboarding } = useOnboarding();
 
 	const handleLogout = () => {
 		Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -60,6 +62,25 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
 	const handleSettings = () => {
 		navigation.navigate('Settings');
+	};
+
+	const handleResetOnboarding = () => {
+		Alert.alert(
+			'Reset Onboarding',
+			'This will reset onboarding and restart the app. Continue?',
+			[
+				{ text: 'Cancel', style: 'cancel' },
+				{
+					text: 'Reset',
+					style: 'destructive',
+					onPress: async () => {
+						await resetOnboarding();
+						// Force app to check onboarding state
+						Alert.alert('Success', 'Please restart the app to see onboarding.');
+					},
+				},
+			],
+		);
 	};
 
 	const displayName =
@@ -210,6 +231,43 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 					</Card>
 				</View>
 
+				{/* DEV ONLY: Reset Onboarding */}
+				{__DEV__ && (
+					<View style={styles.section}>
+						<Text variant="label" style={styles.sectionTitle}>
+							DEVELOPER
+						</Text>
+						<Card variant="outlined" padding="xs">
+							<TouchableOpacity
+								style={styles.menuItem}
+								onPress={handleResetOnboarding}
+								activeOpacity={0.7}>
+								<View style={styles.menuItemLeft}>
+									<View
+										style={[
+											styles.iconContainer,
+											{ backgroundColor: colors.secondary.main },
+										]}>
+										<Book
+											width={20}
+											height={20}
+											color={colors.neutral.white}
+											strokeWidth={2}
+										/>
+									</View>
+									<Text variant="body">Reset Onboarding</Text>
+								</View>
+								<NavArrowRight
+									width={20}
+									height={20}
+									color={colors.text.secondary}
+									strokeWidth={2}
+								/>
+							</TouchableOpacity>
+						</Card>
+					</View>
+				)}
+
 				<Button
 					variant="outline"
 					onPress={handleLogout}
@@ -263,6 +321,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginBottom: spacing.md,
+		overflow: 'hidden',
+	},
+	avatarInitials: {
+		textAlign: 'center',
+		lineHeight: 100,
+		includeFontPadding: false,
 	},
 	userDetails: {
 		alignItems: 'center',

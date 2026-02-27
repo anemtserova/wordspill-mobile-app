@@ -88,7 +88,10 @@ export const HomeScreen = ({
 						<Text variant="h4" style={styles.greeting}>
 							{greeting},
 						</Text>
-						<Text variant="h2" color={colors.secondary.dark}>
+						<Text
+							variant="h2"
+							color={colors.secondary.dark}
+							style={{ marginLeft: 4 }}>
 							{displayName}
 						</Text>
 					</View>
@@ -274,11 +277,15 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.secondary.main,
 		justifyContent: 'center',
 		alignItems: 'center',
+		overflow: 'hidden',
 	},
 	avatarText: {
 		fontSize: 32,
 		fontFamily: 'Jost_700Bold',
 		color: colors.neutral.white,
+		textAlign: 'center',
+		lineHeight: 70,
+		includeFontPadding: false,
 	},
 	searchBar: {
 		marginHorizontal: spacing.md,

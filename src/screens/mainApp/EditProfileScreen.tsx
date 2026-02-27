@@ -149,7 +149,6 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 				style={styles.scrollView}
 				contentContainerStyle={styles.scrollContent}
 				showsVerticalScrollIndicator={false}>
-				{/* Avatar Section */}
 				<Card variant="elevated" padding="lg" style={styles.avatarCard}>
 					<Text weight="bold" variant="label" style={styles.sectionLabel}>
 						PROFILE PHOTO
@@ -160,7 +159,11 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 								<RNImage source={{ uri: avatarUrl }} style={styles.avatar} />
 							) : (
 								<View style={styles.avatarPlaceholder}>
-									<Text weight="bold" variant="h2" color={colors.neutral.white}>
+									<Text
+										weight="bold"
+										variant="h2"
+										color={colors.neutral.white}
+										style={styles.avatarInitials}>
 										{getInitials()}
 									</Text>
 								</View>
@@ -307,6 +310,12 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.primary.main,
 		alignItems: 'center',
 		justifyContent: 'center',
+		overflow: 'hidden',
+	},
+	avatarInitials: {
+		textAlign: 'center',
+		lineHeight: 120,
+		includeFontPadding: false,
 	},
 	uploadingOverlay: {
 		position: 'absolute',
@@ -335,7 +344,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		gap: spacing.xs,
-		backgroundColor: colors.accent.teal,
+		backgroundColor: colors.accent.peach,
 	},
 	helperText: {
 		marginTop: spacing.sm,
@@ -349,6 +358,6 @@ const styles = StyleSheet.create({
 	},
 	saveButton: {
 		marginTop: spacing.md,
-		backgroundColor: colors.accent.teal,
+		backgroundColor: colors.accent.peach,
 	},
 });

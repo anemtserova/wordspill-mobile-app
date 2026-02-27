@@ -370,16 +370,10 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 						Tags
 					</Text>
 					<Button
-						variant="outline"
+						variant="secondary"
 						onPress={() => setIsTagModalVisible(true)}
 						style={styles.addTagButton}>
-						<Plus
-							width={20}
-							height={20}
-							color={colors.primary.main}
-							strokeWidth={2}
-						/>
-						<Text variant="body" color={colors.primary.main}>
+						<Text variant="body" color={colors.primary.contrast}>
 							Add Tags
 						</Text>
 					</Button>

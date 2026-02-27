@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	TextInput,
 	TextInputProps,
 	StyleSheet,
 	View,
 	ViewStyle,
+	TouchableOpacity,
 } from 'react-native';
+
 import { Text } from './Text';
 import { colors, spacing, borderRadius, typography } from '../../theme';
+import { Eye, EyeClosed } from 'iconoir-react-native';
 
 interface InputProps extends TextInputProps {
 	label?: string;
@@ -28,6 +31,26 @@ export const Input = ({
 	style,
 	...props
 }: InputProps) => {
+	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+	const isPasswordField = props.secureTextEntry;
+
+	const togglePasswordVisibility = () => {
+		setIsPasswordVisible(!isPasswordVisible);
+	};
+
+	const actualRightIcon = isPasswordField ? (
+		<TouchableOpacity
+			onPress={togglePasswordVisibility}
+			hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+			{isPasswordVisible ? (
+				<Eye width={20} height={20} color={colors.text.secondary} />
+			) : (
+				<EyeClosed width={20} height={20} color={colors.text.secondary} />
+			)}
+		</TouchableOpacity>
+	) : (
+		rightIcon
+	);
 	return (
 		<View style={[styles.container, containerStyle]}>
 			{label && (
@@ -46,13 +69,16 @@ export const Input = ({
 					style={[
 						styles.input,
 						leftIcon ? styles.inputWithLeftIcon : undefined,
-						rightIcon ? styles.inputWithRightIcon : undefined,
+						actualRightIcon ? styles.inputWithRightIcon : undefined,
 						style,
 					]}
 					placeholderTextColor={colors.text.tertiary}
 					{...props}
+					secureTextEntry={isPasswordField && !isPasswordVisible}
 				/>
-				{rightIcon && <View style={styles.iconRight}>{rightIcon}</View>}
+				{actualRightIcon && (
+					<View style={styles.iconRight}>{actualRightIcon}</View>
+				)}
 			</View>
 			{error && (
 				<Text variant="caption" style={styles.error}>

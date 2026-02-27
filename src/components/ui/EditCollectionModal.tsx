@@ -118,6 +118,9 @@ export const EditCollectionModal = ({
 							autoFocus={true}
 							maxLength={50}
 						/>
+						<Text variant="caption" style={styles.charCounter}>
+							{collectionName.length}/50
+						</Text>
 					</View>
 
 					<View style={styles.buttonContainer}>
@@ -179,6 +182,11 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: colors.text.primary,
 		backgroundColor: colors.background.secondary,
+		marginBottom: spacing.xs,
+	},
+	charCounter: {
+		textAlign: 'right',
+		color: colors.text.secondary,
 	},
 	buttonContainer: {
 		flexDirection: 'row',

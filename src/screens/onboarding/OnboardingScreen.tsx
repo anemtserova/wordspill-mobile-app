@@ -1,39 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Image, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button } from '../../components/ui';
+import { Button, Text } from '../../components/ui';
 import { useOnboarding } from '../../contexts/OnboardingContext';
 import { colors } from '../../theme';
+
+const iconImage = require('../../../assets/icon.png');
 
 export const OnboardingScreen = () => {
 	const insets = useSafeAreaInsets();
 	const { completeOnboarding } = useOnboarding();
+	const [imageError, setImageError] = useState(false);
 
 	const handleGetStarted = async () => {
 		await completeOnboarding();
 	};
+
+	console.log('OnboardingScreen rendering, icon source:', iconImage);
 
 	return (
 		<View style={[styles.container, { paddingTop: insets.top }]}>
 			<StatusBar barStyle="dark-content" />
 
 			<View style={styles.content}>
-				{/* Image container - you can replace the source with your own image */}
 				<View style={styles.imageContainer}>
 					<Image
-						source={require('../../../assets/icon.png')}
+						source={iconImage}
 						style={styles.image}
 						resizeMode="contain"
+						onError={(error) => {
+							console.log('Image load error:', error.nativeEvent);
+							setImageError(true);
+						}}
+						onLoad={() => {
+							console.log('Image loaded successfully');
+						}}
 					/>
+					{imageError && (
+						<Text variant="body" color={colors.semantic.error}>
+							Failed to load icon
+						</Text>
+					)}
 				</View>
 
-				{/* Get Started button at the bottom */}
 				<View
 					style={[
 						styles.buttonContainer,
 						{ paddingBottom: insets.bottom + 24 },
 					]}>
-					<Button variant="primary" size="lg" onPress={handleGetStarted}>
+					<Button variant="accent" size="lg" onPress={handleGetStarted}>
 						Get Started
 					</Button>
 				</View>
@@ -45,7 +60,7 @@ export const OnboardingScreen = () => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: colors.neutral.cream,
+		backgroundColor: colors.neutral.white,
 	},
 	content: {
 		flex: 1,
@@ -58,12 +73,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingHorizontal: 32,
 		paddingTop: 60,
+		width: '100%',
 	},
 	image: {
-		width: '100%',
-		height: '100%',
-		maxWidth: 400,
-		maxHeight: 400,
+		width: 400,
+		height: 700,
 	},
 	buttonContainer: {
 		width: '100%',
