@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -23,7 +23,7 @@ import { getCollectionIcon } from '../../utils/collectionIcons';
 import { LightBulbOn, Plus } from 'iconoir-react-native';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - spacing.lg * 3) / 2;
+const CARD_WIDTH = (width - spacing.xl * 3) / 2;
 
 export const HomeScreen = ({
 	navigation,
@@ -47,6 +47,15 @@ export const HomeScreen = ({
 		profile?.displayName || user?.email?.split('@')[0] || 'Friend';
 	const greeting = getGreeting();
 
+	// Filter collections based on search query
+	const filteredCollections = useMemo(() => {
+		if (!searchQuery.trim()) return collections;
+		const query = searchQuery.toLowerCase();
+		return collections.filter((collection) =>
+			collection.name.toLowerCase().includes(query),
+		);
+	}, [collections, searchQuery]);
+
 	const handleCollectionPress = (collectionId: string) => {
 		navigation.navigate('Entries', {
 			screen: 'Collections',
@@ -66,11 +75,6 @@ export const HomeScreen = ({
 		setRefreshing(false);
 	};
 
-	const handleSearch = () => {
-		// TODO: Implement search functionality
-		console.log('Searching for:', searchQuery);
-	};
-
 	return (
 		<View style={styles.container}>
 			<ScrollView
@@ -81,7 +85,7 @@ export const HomeScreen = ({
 				}>
 				<View style={styles.header}>
 					<View style={styles.greetingContainer}>
-						<Text variant="h2" style={styles.greeting}>
+						<Text variant="h4" style={styles.greeting}>
 							{greeting},
 						</Text>
 						<Text variant="h2" color={colors.secondary.dark}>
@@ -109,15 +113,14 @@ export const HomeScreen = ({
 
 				<SearchBar
 					variant="filled"
-					placeholder="Search collections or tags..."
+					placeholder="Search collections..."
 					value={searchQuery}
 					onChangeText={setSearchQuery}
 					onClear={() => setSearchQuery('')}
-					onSubmitEditing={handleSearch}
 					containerStyle={styles.searchBar}
 				/>
 
-				<View style={styles.section}>
+				<Card style={styles.section}>
 					<Text variant="h4" style={styles.sectionTitle}>
 						Choose a Collection
 					</Text>
@@ -130,13 +133,15 @@ export const HomeScreen = ({
 						<Text variant="body" color={colors.semantic.error}>
 							Error loading collections
 						</Text>
-					) : collections.length === 0 ? (
+					) : filteredCollections.length === 0 ? (
 						<Text variant="body" color={colors.text.secondary}>
-							No collections yet. Start creating entries!
+							{searchQuery
+								? 'No collections match your search'
+								: 'No collections yet. Start creating entries!'}
 						</Text>
 					) : (
 						<View style={styles.collectionsGrid}>
-							{collections.map((collection) => {
+							{filteredCollections.map((collection) => {
 								const IconComponent = getCollectionIcon(collection.iconName);
 
 								return (
@@ -198,7 +203,7 @@ export const HomeScreen = ({
 						onPress={handleStartWithoutCollection}>
 						Start Without Collection
 					</Button>
-				</View>
+				</Card>
 
 				<Card variant="filled" padding="lg" style={styles.tipCard}>
 					<Text variant="h6" style={styles.tipTitle}>
@@ -236,7 +241,7 @@ function getGreeting(): string {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: colors.background.primary,
+		backgroundColor: colors.background.secondary,
 	},
 	scrollContent: {
 		paddingBottom: spacing.xl,
@@ -276,24 +281,28 @@ const styles = StyleSheet.create({
 		color: colors.neutral.white,
 	},
 	searchBar: {
-		marginHorizontal: spacing.lg,
+		marginHorizontal: spacing.md,
 		marginBottom: spacing.lg,
 		marginTop: spacing.md,
-		backgroundColor: colors.background.secondary,
+		backgroundColor: colors.background.tertiary,
 	},
 	section: {
-		paddingHorizontal: spacing.lg,
+		paddingHorizontal: spacing.md,
 		marginBottom: spacing.sm,
+		marginHorizontal: spacing.md,
 	},
 	sectionTitle: {
 		marginBottom: spacing.sm,
+		alignSelf: 'center',
 	},
 	jumpRightInTitle: {
 		marginTop: spacing.xs,
 		marginBottom: spacing.sm,
+		alignSelf: 'center',
 	},
 	collectionsGrid: {
 		flexDirection: 'row',
+		justifyContent: 'center',
 		flexWrap: 'wrap',
 		gap: spacing.md,
 	},
@@ -318,6 +327,10 @@ const styles = StyleSheet.create({
 	tipCard: {
 		marginTop: spacing.lg,
 		marginHorizontal: spacing.lg,
+		borderColor: colors.accent.gold,
+		borderWidth: 3,
+		borderRadius: 12,
+		borderStyle: 'dashed',
 	},
 	tipTitle: {
 		marginBottom: spacing.sm,

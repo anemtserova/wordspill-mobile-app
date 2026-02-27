@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -14,6 +14,7 @@ import {
 	Button,
 	EntrySummaryCard,
 	ColorScreenHeader,
+	SearchBar,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
@@ -30,6 +31,7 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 	const { user } = useAuth();
 	const queryClient = useQueryClient();
 	const insets = useSafeAreaInsets();
+	const [searchQuery, setSearchQuery] = useState('');
 
 	const { data: collections = [] } = useGetAllCollections(user?.uid || '');
 	const collection = collections.find((c) => c.id === collectionId);
@@ -39,6 +41,17 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 		isLoading: entriesLoading,
 		error: entriesError,
 	} = useGetEntriesByCollection(user?.uid || '', collectionId);
+
+	const filteredEntries = useMemo(() => {
+		if (!searchQuery.trim()) return entries;
+		const query = searchQuery.toLowerCase();
+		return entries.filter(
+			(entry: any) =>
+				entry.title?.toLowerCase().includes(query) ||
+				entry.content?.toLowerCase().includes(query) ||
+				entry.tags?.some((tag: string) => tag.toLowerCase().includes(query)),
+		);
+	}, [entries, searchQuery]);
 
 	const deleteEntryMutation = useMutation({
 		mutationFn: async (entryId: string) => {
@@ -93,7 +106,7 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 		<View style={styles.container}>
 			<ColorScreenHeader
 				title={collection.name}
-				subtitle={`${entries.length} ${entries.length === 1 ? 'spill' : 'spills'}`}
+				subtitle={`${filteredEntries.length} ${filteredEntries.length === 1 ? 'spill' : 'spills'}`}
 				icon={
 					<IconComponent
 						width={32}
@@ -106,39 +119,55 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 				onBackPress={() => navigation.goBack()}
 			/>
 
+			<SearchBar
+				variant="filled"
+				placeholder="Search spills by title, content, or tags..."
+				value={searchQuery}
+				onChangeText={setSearchQuery}
+				onClear={() => setSearchQuery('')}
+				containerStyle={styles.searchBar}
+			/>
+
 			<ScrollView
 				contentContainerStyle={[styles.scrollContent, { paddingBottom: 80 }]}
 				showsVerticalScrollIndicator={false}>
 				{entriesLoading ? (
 					<View style={styles.centerContent}>
 						<Text variant="body" color={colors.text.secondary}>
-							Loading entries...
+							Loading spills...
 						</Text>
 					</View>
 				) : entriesError ? (
 					<View style={styles.centerContent}>
 						<Text variant="body" color={colors.semantic.error}>
-							Error loading entries
+							Error loading spills
 						</Text>
 					</View>
-				) : entries.length === 0 ? (
+				) : filteredEntries.length === 0 ? (
 					<View style={styles.centerContent}>
+						<Text variant="h4" style={styles.emptyTitle}>
+							{searchQuery ? 'No Spills Found' : 'No Spills Yet'}
+						</Text>
 						<Text
 							variant="body"
 							color={colors.text.secondary}
 							style={styles.emptyText}>
-							No entries yet in this collection
+							{searchQuery
+								? 'No spills match your search'
+								: 'No spills yet in this collection'}
 						</Text>
-						<Button
-							onPress={handleAddEntry}
-							variant="primary"
-							style={styles.firstEntryButton}>
-							Add Your First Entry {''}
-						</Button>
+						{!searchQuery && (
+							<Button
+								onPress={handleAddEntry}
+								variant="primary"
+								style={styles.firstEntryButton}>
+								Add Your First Spill {''}
+							</Button>
+						)}
 					</View>
 				) : (
 					<View style={styles.entriesContainer}>
-						{entries.map((entry) => (
+						{filteredEntries.map((entry) => (
 							<EntrySummaryCard
 								key={entry.id}
 								entry={entry}
@@ -174,6 +203,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: colors.background.secondary,
 	},
+	searchBar: {
+		marginHorizontal: spacing.lg,
+		marginTop: spacing.md,
+		paddingVertical: spacing.md,
+		backgroundColor: colors.background.primary,
+	},
 	scrollContent: {
 		padding: spacing.lg,
 	},
@@ -181,6 +216,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingTop: spacing['4xl'],
+	},
+	emptyTitle: {
+		marginBottom: spacing.md,
+		textAlign: 'center',
 	},
 	emptyText: {
 		textAlign: 'center',

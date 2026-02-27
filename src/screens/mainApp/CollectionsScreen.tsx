@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -13,6 +13,7 @@ import {
 	CollectionCard,
 	AddCollectionModal,
 	ColorScreenHeader,
+	SearchBar,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
@@ -35,6 +36,7 @@ export const CollectionsScreen = ({
 	const [refreshing, setRefreshing] = useState(false);
 	const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 	const [selectedCollection, setSelectedCollection] = useState<any>(null);
+	const [searchQuery, setSearchQuery] = useState('');
 	const insets = useSafeAreaInsets();
 
 	const {
@@ -43,6 +45,14 @@ export const CollectionsScreen = ({
 		refetch,
 	} = useGetAllCollections(user?.uid || '');
 	const deleteCollectionMutation = useDeleteCollection(user?.uid || '');
+
+	const filteredCollections = useMemo(() => {
+		if (!searchQuery.trim()) return collections;
+		const query = searchQuery.toLowerCase();
+		return collections.filter((collection) =>
+			collection.name.toLowerCase().includes(query),
+		);
+	}, [collections, searchQuery]);
 
 	const onRefresh = async () => {
 		setRefreshing(true);
@@ -114,6 +124,15 @@ export const CollectionsScreen = ({
 				}}
 			/>
 
+			<SearchBar
+				variant="filled"
+				placeholder="Search collections..."
+				value={searchQuery}
+				onChangeText={setSearchQuery}
+				onClear={() => setSearchQuery('')}
+				containerStyle={styles.searchBar}
+			/>
+
 			<ScrollView
 				style={styles.scrollView}
 				contentContainerStyle={styles.scrollContent}
@@ -127,27 +146,31 @@ export const CollectionsScreen = ({
 							Loading collections...
 						</Text>
 					</View>
-				) : collections.length === 0 ? (
+				) : filteredCollections.length === 0 ? (
 					<View style={styles.emptyContainer}>
 						<Text variant="h4" style={styles.emptyTitle}>
-							No Collections Yet
+							{searchQuery ? 'No Collections Found' : 'No Collections Yet'}
 						</Text>
 						<Text
 							variant="body"
 							color={colors.text.secondary}
 							style={styles.emptyText}>
-							Create your first collection to organize your spills
+							{searchQuery
+								? 'No collections match your search'
+								: 'Create your first collection to organize your spills'}
 						</Text>
-						<Button
-							variant="primary"
-							onPress={() => setIsAddModalVisible(true)}
-							style={styles.createButton}>
-							Create Collection
-						</Button>
+						{!searchQuery && (
+							<Button
+								variant="primary"
+								onPress={() => setIsAddModalVisible(true)}
+								style={styles.createButton}>
+								Create Collection
+							</Button>
+						)}
 					</View>
 				) : (
 					<View style={styles.collectionsContainer}>
-						{collections.map((collection) => (
+						{filteredCollections.map((collection) => (
 							<CollectionCardWithEntryCount
 								key={collection.id}
 								collection={collection}
@@ -192,6 +215,12 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: colors.background.secondary,
+	},
+	searchBar: {
+		marginHorizontal: spacing.lg,
+		marginTop: spacing.md,
+		paddingVertical: spacing.md,
+		backgroundColor: colors.background.primary,
 	},
 	header: {
 		flexDirection: 'row',
@@ -241,7 +270,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingHorizontal: spacing.xl,
-		paddingTop: spacing['5xl'],
+		paddingTop: spacing['4xl'],
 	},
 	emptyTitle: {
 		marginBottom: spacing.md,

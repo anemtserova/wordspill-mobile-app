@@ -16,7 +16,7 @@ import {
 	ColorScreenHeader,
 } from '../../components/ui';
 import { colors, spacing, borderRadius } from '../../theme';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 import {
 	User,
 	Settings,
@@ -114,7 +114,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 							</View>
 						)}
 						<View style={styles.userDetails}>
-							<Text variant="h5" style={styles.userName}>
+							<Text variant="h3" style={styles.userName}>
 								{displayName}
 							</Text>
 							<Text variant="body" color={colors.text.secondary}>

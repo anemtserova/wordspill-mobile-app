@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -14,6 +14,7 @@ import {
 	Button,
 	EntrySummaryCard,
 	ColorScreenHeader,
+	SearchBar,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
@@ -28,6 +29,7 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 	const { user } = useAuth();
 	const queryClient = useQueryClient();
 	const insets = useSafeAreaInsets();
+	const [searchQuery, setSearchQuery] = useState('');
 
 	const {
 		data: entries = [],
@@ -35,14 +37,16 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 		error: entriesError,
 	} = useGetEntriesByTag(user?.uid || '', tag || '');
 
-	// Debug logging
-	// React.useEffect(() => {
-	// 	if (entriesError) {
-	// 		console.error('EntriesByTagScreen error:', entriesError);
-	// 		console.log('userId:', user?.uid);
-	// 		console.log('tag:', tag);
-	// 	}
-	// }, [entriesError, user?.uid, tag]);
+	const filteredEntries = useMemo(() => {
+		if (!searchQuery.trim()) return entries;
+		const query = searchQuery.toLowerCase();
+		return entries.filter(
+			(entry: any) =>
+				entry.title?.toLowerCase().includes(query) ||
+				entry.content?.toLowerCase().includes(query) ||
+				entry.tags?.some((t: string) => t.toLowerCase().includes(query)),
+		);
+	}, [entries, searchQuery]);
 
 	const deleteEntryMutation = useMutation({
 		mutationFn: async (entryId: string) => {
@@ -121,7 +125,7 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 		<View style={styles.container}>
 			<ColorScreenHeader
 				title={tag}
-				subtitle={`${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`}
+				subtitle={`${filteredEntries.length} ${filteredEntries.length === 1 ? 'entry' : 'entries'}`}
 				icon={
 					<Hashtag
 						width={32}
@@ -134,6 +138,15 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 				onBackPress={() => navigation.goBack()}
 			/>
 
+			<SearchBar
+				variant="filled"
+				placeholder="Search spills by title, content, or tags..."
+				value={searchQuery}
+				onChangeText={setSearchQuery}
+				onClear={() => setSearchQuery('')}
+				containerStyle={styles.searchBar}
+			/>
+
 			<ScrollView
 				contentContainerStyle={[
 					styles.scrollContent,
@@ -143,13 +156,13 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 				{entriesLoading ? (
 					<View style={styles.centerContent}>
 						<Text variant="body" color={colors.text.secondary}>
-							Loading entries...
+							Loading spills...
 						</Text>
 					</View>
 				) : entriesError ? (
 					<View style={styles.centerContent}>
 						<Text variant="body" color={colors.semantic.error}>
-							Error loading entries
+							Error loading spills
 						</Text>
 						<Text
 							variant="caption"
@@ -160,24 +173,28 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 								: 'Unknown error'}
 						</Text>
 					</View>
-				) : entries.length === 0 ? (
+				) : filteredEntries.length === 0 ? (
 					<View style={styles.centerContent}>
 						<Text
 							variant="body"
 							color={colors.text.secondary}
 							style={styles.emptyText}>
-							No entries with this tag yet
+							{searchQuery
+								? 'No spills match your search'
+								: 'No spills with this tag yet'}
 						</Text>
-						<Button
-							onPress={handleAddEntry}
-							variant="primary"
-							style={styles.firstEntryButton}>
-							Add Your First Entry {''}
-						</Button>
+						{!searchQuery && (
+							<Button
+								onPress={handleAddEntry}
+								variant="primary"
+								style={styles.firstEntryButton}>
+								Add Your First Spill {''}
+							</Button>
+						)}
 					</View>
 				) : (
 					<View style={styles.entriesContainer}>
-						{entries.map((entry) => (
+						{filteredEntries.map((entry) => (
 							<EntrySummaryCard
 								key={entry.id}
 								entry={entry}
@@ -215,6 +232,12 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: colors.background.secondary,
+	},
+	searchBar: {
+		marginHorizontal: spacing.lg,
+		marginTop: spacing.md,
+		paddingVertical: spacing.md,
 		backgroundColor: colors.background.primary,
 	},
 	scrollContent: {
@@ -225,7 +248,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingVertical: spacing['4xl'],
+		paddingVertical: spacing.lg,
 		gap: spacing.lg,
 	},
 	emptyText: {

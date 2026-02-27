@@ -25,10 +25,10 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						Welcome to Wordspill
 					</Text>
 					<Text
-						variant="body"
+						variant="h4"
 						color={colors.text.secondary}
 						style={styles.subtitle}>
-						Your personal writing companion
+						Your personal writing companion {''}
 					</Text>
 				</View>
 

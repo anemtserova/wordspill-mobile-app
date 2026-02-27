@@ -3,7 +3,6 @@ import {
 	View,
 	StyleSheet,
 	ScrollView,
-	TouchableOpacity,
 	Alert,
 	ActivityIndicator,
 	Image as RNImage,
@@ -13,7 +12,7 @@ import * as ImagePickerExpo from 'expo-image-picker';
 import { Camera, Xmark } from 'iconoir-react-native';
 import { Text, Button, Card, ScreenHeader, Input } from '../../components/ui';
 import { colors, spacing, borderRadius } from '../../theme';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 import { useUpdateUser } from '../../api/users/mutations';
 import { uploadMedia } from '../../api/firebase/storage';
 import { useGetUser } from '../../api/users';
@@ -120,7 +119,6 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 				avatarUrl: avatarUrl,
 			});
 
-			// Navigate back - React Query invalidation will handle the update
 			navigation.goBack();
 		} catch (error) {
 			Alert.alert('Error', 'Failed to update profile');
@@ -153,7 +151,7 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 				showsVerticalScrollIndicator={false}>
 				{/* Avatar Section */}
 				<Card variant="elevated" padding="lg" style={styles.avatarCard}>
-					<Text variant="label" style={styles.sectionLabel}>
+					<Text weight="bold" variant="label" style={styles.sectionLabel}>
 						PROFILE PHOTO
 					</Text>
 					<View style={styles.avatarContainer}>
@@ -162,7 +160,7 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 								<RNImage source={{ uri: avatarUrl }} style={styles.avatar} />
 							) : (
 								<View style={styles.avatarPlaceholder}>
-									<Text variant="h2" color={colors.neutral.white}>
+									<Text weight="bold" variant="h2" color={colors.neutral.white}>
 										{getInitials()}
 									</Text>
 								</View>
@@ -178,33 +176,30 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 						</View>
 						<View style={styles.avatarActions}>
 							<Button
-								variant="primary"
+								variant="accent"
 								size="sm"
 								onPress={handlePickImage}
 								disabled={isUploading}
-								style={styles.avatarButton}>
+								style={styles.avatarButtonAdd}>
 								<Camera
 									width={18}
 									height={18}
 									color={colors.neutral.white}
 									strokeWidth={2}
 								/>
-								<Text variant="bodySmall" color={colors.neutral.white}>
+								<Text
+									variant="bodySmall"
+									color={colors.neutral.white}
+									style={{ paddingLeft: spacing.xs }}>
 									{avatarUrl ? 'Change Photo' : 'Add Photo'}
 								</Text>
 							</Button>
 							{avatarUrl && !isUploading && (
 								<Button
-									variant="ghost"
+									variant="outline"
 									size="sm"
 									onPress={handleRemoveAvatar}
-									style={styles.avatarButton}>
-									<Xmark
-										width={18}
-										height={18}
-										color={colors.semantic.error}
-										strokeWidth={2}
-									/>
+									style={styles.avatarButtonRemove}>
 									<Text
 										variant="bodySmall"
 										style={{ color: colors.semantic.error }}>
@@ -218,7 +213,7 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 
 				{/* Display Name Section */}
 				<Card variant="elevated" padding="lg" style={styles.nameCard}>
-					<Text variant="label" style={styles.sectionLabel}>
+					<Text weight="bold" variant="label" style={styles.sectionLabel}>
 						DISPLAY NAME
 					</Text>
 					<Input
@@ -238,7 +233,7 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 
 				{/* Email Section (Read-only) */}
 				<Card variant="elevated" padding="lg" style={styles.emailCard}>
-					<Text variant="label" style={styles.sectionLabel}>
+					<Text weight="bold" variant="label" style={styles.sectionLabel}>
 						EMAIL
 					</Text>
 					<View style={styles.emailContainer}>
@@ -254,9 +249,8 @@ export const EditProfileScreen = ({ navigation }: EditProfileScreenProps) => {
 					</Text>
 				</Card>
 
-				{/* Save Button */}
 				<Button
-					variant="primary"
+					variant="accent"
 					onPress={handleSave}
 					loading={updateUserMutation.isPending}
 					disabled={updateUserMutation.isPending || isUploading}
@@ -331,10 +325,17 @@ const styles = StyleSheet.create({
 		width: '100%',
 		justifyContent: 'center',
 	},
-	avatarButton: {
+	avatarButtonRemove: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		gap: spacing.xs,
+		borderColor: colors.accent.peach,
+	},
+	avatarButtonAdd: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: spacing.xs,
+		backgroundColor: colors.accent.teal,
 	},
 	helperText: {
 		marginTop: spacing.sm,
@@ -348,5 +349,6 @@ const styles = StyleSheet.create({
 	},
 	saveButton: {
 		marginTop: spacing.md,
+		backgroundColor: colors.accent.teal,
 	},
 });
