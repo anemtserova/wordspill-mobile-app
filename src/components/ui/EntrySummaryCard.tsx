@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -19,90 +19,92 @@ interface EntrySummaryCardProps {
 	onTagPress?: (tag: string) => void;
 }
 
-export const EntrySummaryCard = ({
-	entry,
-	onPress,
-	onDelete,
-	showDeleteButton = true,
-	onTagPress,
-}: EntrySummaryCardProps) => {
-	return (
-		<TouchableOpacity activeOpacity={0.7} onPress={onPress}>
-			<Card style={styles.entryCard}>
-				<View style={styles.entryContent}>
-					{entry.headerImage && (
-						<RNImage
-							source={{ uri: entry.headerImage }}
-							style={styles.entryHeaderImage}
-							resizeMode="cover"
-						/>
-					)}
-
-					<View style={styles.entryInfo}>
-						<Text variant="h5" numberOfLines={2}>
-							{entry.title}
-						</Text>
-						<Text
-							variant="body"
-							color={colors.text.secondary}
-							numberOfLines={3}
-							align="justify"
-							style={styles.entryExcerpt}>
-							{entry.content}
-						</Text>
-
-						{entry.tags.length > 0 && (
-							<View style={styles.tagsContainer}>
-								{entry.tags.slice(0, 3).map((tag: string, index: number) => (
-									<TouchableOpacity
-										key={index}
-										style={styles.tag}
-										onPress={(e) => {
-											if (onTagPress) {
-												e.stopPropagation();
-												onTagPress(tag);
-											}
-										}}
-										disabled={!onTagPress}>
-										<Text variant="caption" color={colors.primary.main}>
-											#{tag}
-										</Text>
-									</TouchableOpacity>
-								))}
-								{entry.tags.length > 3 && (
-									<Text variant="caption" color={colors.text.secondary}>
-										+{entry.tags.length - 3}
-									</Text>
-								)}
-							</View>
+export const EntrySummaryCard = memo(
+	({
+		entry,
+		onPress,
+		onDelete,
+		showDeleteButton = true,
+		onTagPress,
+	}: EntrySummaryCardProps) => {
+		return (
+			<TouchableOpacity activeOpacity={0.7} onPress={onPress}>
+				<Card style={styles.entryCard}>
+					<View style={styles.entryContent}>
+						{entry.headerImage && (
+							<RNImage
+								source={{ uri: entry.headerImage }}
+								style={styles.entryHeaderImage}
+								resizeMode="cover"
+							/>
 						)}
-						<View style={styles.entryFooter}>
-							<Text variant="caption" color={colors.text.secondary}>
-								{new Date(entry.createdAt).toDateString()}
+
+						<View style={styles.entryInfo}>
+							<Text variant="h5" numberOfLines={2}>
+								{entry.title}
+							</Text>
+							<Text
+								variant="body"
+								color={colors.text.secondary}
+								numberOfLines={3}
+								align="justify"
+								style={styles.entryExcerpt}>
+								{entry.content}
 							</Text>
 
-							{showDeleteButton && (
-								<TouchableOpacity
-									style={styles.deleteButton}
-									onPress={(e) => {
-										e.stopPropagation();
-										onDelete();
-									}}>
-									<Trash
-										width={20}
-										height={20}
-										color={colors.semantic.error}
-										strokeWidth={2}
-									/>
-								</TouchableOpacity>
+							{entry.tags.length > 0 && (
+								<View style={styles.tagsContainer}>
+									{entry.tags.slice(0, 3).map((tag: string, index: number) => (
+										<TouchableOpacity
+											key={index}
+											style={styles.tag}
+											onPress={(e) => {
+												if (onTagPress) {
+													e.stopPropagation();
+													onTagPress(tag);
+												}
+											}}
+											disabled={!onTagPress}>
+											<Text variant="caption" color={colors.primary.main}>
+												#{tag}
+											</Text>
+										</TouchableOpacity>
+									))}
+									{entry.tags.length > 3 && (
+										<Text variant="caption" color={colors.text.secondary}>
+											+{entry.tags.length - 3}
+										</Text>
+									)}
+								</View>
 							)}
+							<View style={styles.entryFooter}>
+								<Text variant="caption" color={colors.text.secondary}>
+									{new Date(entry.createdAt).toDateString()}
+								</Text>
+
+								{showDeleteButton && (
+									<TouchableOpacity
+										style={styles.deleteButton}
+										onPress={(e) => {
+											e.stopPropagation();
+											onDelete();
+										}}>
+										<Trash
+											width={20}
+											height={20}
+											color={colors.semantic.error}
+											strokeWidth={2}
+										/>
+									</TouchableOpacity>
+								)}
+							</View>
 						</View>
 					</View>
-				</View>
-			</Card>
-		</TouchableOpacity>
-	);
-};
+				</Card>
+			</TouchableOpacity>
+		);
+	},
+);
 
 const styles = StyleSheet.create({
 	entryCard: {

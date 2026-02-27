@@ -41,7 +41,7 @@
 			[
 				"expo-location",
 				{
-					"locationAlwaysAndWhenInUsePermission": "The app needs access to your location to save it into your stories and keeps your memories complete."
+					"locationAlwaysAndWhenInUsePermission": "The app needs access to your location to add it into your stories and to keep your memories complete."
 				}
 			]
 		]

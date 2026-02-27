@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from './src/hooks/useFonts';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AuthProvider } from './src/contexts/AuthContext';
+import { OnboardingProvider } from './src/contexts/OnboardingContext';
 import { colors } from './src/theme';
 
 const queryClient = new QueryClient();
@@ -20,17 +21,22 @@ export default function App() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<AuthProvider>
-				<QueryClientProvider client={queryClient}>
-					<SafeAreaProvider>
-						<SafeAreaView
-							style={{ flex: 1, backgroundColor: colors.background.secondary }}>
-							<NavigationContainer>
-								<StatusBar style="auto" />
-								<RootNavigator />
-							</NavigationContainer>
-						</SafeAreaView>
-					</SafeAreaProvider>
-				</QueryClientProvider>
+				<OnboardingProvider>
+					<QueryClientProvider client={queryClient}>
+						<SafeAreaProvider>
+							<SafeAreaView
+								style={{
+									flex: 1,
+									backgroundColor: colors.background.secondary,
+								}}>
+								<NavigationContainer>
+									<StatusBar style="auto" />
+									<RootNavigator />
+								</NavigationContainer>
+							</SafeAreaView>
+						</SafeAreaProvider>
+					</QueryClientProvider>
+				</OnboardingProvider>
 			</AuthProvider>
 		</GestureHandlerRootView>
 	);

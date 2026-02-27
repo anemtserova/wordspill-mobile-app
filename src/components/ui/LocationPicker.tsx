@@ -145,7 +145,7 @@ export const LocationPicker = ({
 						onPress={handleManualSave}
 						disabled={!manualAddress.trim()}
 						style={styles.manualButton}>
-						Save
+						Save Location
 					</Button>
 				</View>
 			</Card>
@@ -153,19 +153,19 @@ export const LocationPicker = ({
 	}
 
 	return (
-		<Card variant="outlined" padding="md">
+		<Card variant="outlined" padding="md" style={styles.locationContainer}>
 			<View style={styles.emptyState}>
 				<PineTree
 					width={32}
 					height={32}
-					color={colors.text.secondary}
+					color={colors.accent.teal}
 					strokeWidth={2}
 				/>
 				<Text
 					variant="bodySmall"
 					color={colors.text.secondary}
 					style={styles.emptyText}>
-					Add a location to your entry
+					Add a location
 				</Text>
 				<View style={styles.actions}>
 					<Button
@@ -175,15 +175,17 @@ export const LocationPicker = ({
 						loading={isLoading}
 						disabled={isLoading}
 						style={styles.actionButton}>
-						<Position
-							width={18}
-							height={18}
-							color={colors.text.primary}
-							strokeWidth={2}
-						/>
-						<Text variant="bodySmall" style={styles.buttonText}>
-							Current Location
-						</Text>
+						<View style={styles.addLocationButtonContainer}>
+							<Position
+								width={18}
+								height={18}
+								color={colors.text.primary}
+								strokeWidth={2}
+							/>
+							<Text variant="bodySmall" style={styles.buttonText}>
+								Current Location
+							</Text>
+						</View>
 					</Button>
 					<Button
 						variant="ghost"
@@ -199,6 +201,18 @@ export const LocationPicker = ({
 };
 
 const styles = StyleSheet.create({
+	locationContainer: {
+		backgroundColor: colors.neutral.white,
+		borderStyle: 'dashed',
+		borderWidth: 2,
+		borderColor: colors.neutral.gray300,
+		borderRadius: borderRadius.lg,
+	},
+	addLocationButtonContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: spacing.xs,
+	},
 	locationInfo: {
 		flex: 1,
 		flexDirection: 'row',

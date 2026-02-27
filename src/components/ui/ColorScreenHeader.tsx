@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 	headerTop: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		gap: spacing.md,
+		gap: spacing.xs,
 		marginBottom: spacing.md,
 	},
 	backButton: {

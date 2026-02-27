@@ -4,6 +4,12 @@ export interface MediaItem {
 	thumbnailUrl?: string; // For videos
 }
 
+export interface Location {
+	latitude: number;
+	longitude: number;
+	address?: string;
+}
+
 export interface Entry {
 	id: string;
 	title: string;
@@ -13,6 +19,7 @@ export interface Entry {
 	tags: string[];
 	headerImage: string | null;
 	media: MediaItem[];
+	location: Location | null;
 	createdAt: Date;
 	updatedAt: Date;
 	deletedAt?: Date | null;

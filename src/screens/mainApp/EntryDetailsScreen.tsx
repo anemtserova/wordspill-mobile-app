@@ -24,7 +24,13 @@ import { useGetEntry } from '../../api/entries';
 import { useGetAllCollections } from '../../api/collections';
 import { deleteEntry } from '../../api/firebase/firestore';
 import { getCollectionIcon } from '../../utils/collectionIcons';
-import { EditPencil, Trash, Calendar, BookStack } from 'iconoir-react-native';
+import {
+	EditPencil,
+	Trash,
+	Calendar,
+	BookStack,
+	PineTree,
+} from 'iconoir-react-native';
 import { Hashtag } from 'iconoir-react-native/regular';
 
 const { width } = Dimensions.get('window');
@@ -245,6 +251,29 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 						</View>
 					)}
 
+					{entry.location && (
+						<View style={styles.locationContainer}>
+							<View style={styles.metadataItem}>
+								<PineTree
+									width={16}
+									height={16}
+									color={colors.text.secondary}
+									strokeWidth={2}
+								/>
+								<Text
+									weight="medium"
+									variant="label"
+									color={colors.text.primary}>
+									Location:
+								</Text>
+							</View>
+							<Text variant="body" color={colors.text.primary}>
+								{entry.location.address ||
+									`${entry.location.latitude}, ${entry.location.longitude}`}
+							</Text>
+						</View>
+					)}
+
 					<View style={styles.entryContent}>
 						<ExpandableText
 							variant="body"
@@ -361,6 +390,9 @@ const styles = StyleSheet.create({
 		paddingHorizontal: spacing.sm,
 		paddingVertical: spacing.xs,
 		borderRadius: 12,
+	},
+	locationContainer: {
+		marginBottom: spacing.md,
 	},
 	entryContent: {
 		marginTop: spacing.md,

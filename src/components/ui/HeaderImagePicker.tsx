@@ -62,12 +62,12 @@ export const HeaderImagePicker = ({
 					<MediaImage
 						width={48}
 						height={48}
-						color={colors.text.secondary}
+						color={colors.accent.teal}
 						strokeWidth={2}
 					/>
 					<Text
 						variant="body"
-						color={colors.text.secondary}
+						color={colors.accent.teal}
 						style={styles.placeholderText}>
 						{placeholder}
 					</Text>

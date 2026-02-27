@@ -20,6 +20,7 @@ import {
 	DatePicker,
 	AddTagsModal,
 	ScreenHeader,
+	LocationPicker,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { Plus } from 'iconoir-react-native';
@@ -27,7 +28,7 @@ import * as ImagePickerExpo from 'expo-image-picker';
 import { useUpdateEntry, useGetEntry } from '../../api/entries';
 import { useAuth } from '../../contexts/AuthContext';
 import { uploadMedia } from '../../api/firebase/storage';
-import { MediaItem } from '../../types/Entry';
+import { MediaItem, Location } from '../../types/Entry';
 import { useGetAllCollections } from '../../api/collections';
 
 type EditEntryScreenProps = NativeStackScreenProps<any, 'Edit Entry'>;
@@ -56,6 +57,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 	const [mediaItems, setMediaItems] = useState<
 		{ uri: string; type: 'image' | 'video'; isExisting?: boolean }[]
 	>([]);
+	const [location, setLocation] = useState<Location | null>(null);
 	const [isSaving, setIsSaving] = useState(false);
 
 	useEffect(() => {
@@ -66,6 +68,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 			setSelectedCollection(entry.collectionId);
 			setTags(entry.tags || []);
 			setHeaderImage(entry.headerImage);
+			setLocation(entry.location || null);
 
 			if (entry.media && entry.media.length > 0) {
 				const existingMedia = entry.media.map((item) => ({
@@ -232,6 +235,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 				headerImage: uploadedHeaderImage,
 				media: uploadedMedia,
 				date: entryDate,
+				location,
 				updatedAt: new Date(),
 			};
 
@@ -392,6 +396,17 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 							))}
 						</View>
 					)}
+				</View>
+
+				<View style={styles.section}>
+					<Text variant="label" style={styles.sectionLabel}>
+						Location (Optional)
+					</Text>
+					<LocationPicker
+						location={location}
+						onLocationSelect={setLocation}
+						onLocationClear={() => setLocation(null)}
+					/>
 				</View>
 
 				<View style={styles.section}>

@@ -4,7 +4,7 @@ import { AuthNavigator } from './AuthNavigator';
 import { TabNavigator } from './TabNavigator';
 import { MainAppNavigator } from './MainAppNavigator';
 import { useAuth } from '../contexts/AuthContext';
-import { useOnboarding } from '../hooks/useOnboarding';
+import { useOnboarding } from '../contexts/OnboardingContext';
 import { LoadingScreen } from '../screens/loading/LoadingScreen';
 import { DesignSystemExample } from '../screens/DesignSystemExample';
 

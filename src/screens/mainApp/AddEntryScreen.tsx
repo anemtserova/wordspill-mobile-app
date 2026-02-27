@@ -21,14 +21,16 @@ import {
 	DatePicker,
 	AddTagsModal,
 	ScreenHeader,
+	LocationPicker,
+	IconStyled,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
-import { Plus } from 'iconoir-react-native';
+import { Plus, PlusCircle, PlusCircleSolid } from 'iconoir-react-native';
 import * as ImagePickerExpo from 'expo-image-picker';
 import { useCreateEntry } from '../../api/entries';
 import { useAuth } from '../../contexts/AuthContext';
 import { uploadMedia } from '../../api/firebase/storage';
-import { MediaItem } from '../../types/Entry';
+import { MediaItem, Location } from '../../types/Entry';
 import { useGetAllCollections } from '../../api/collections';
 
 interface AddEntryScreenProps {
@@ -63,6 +65,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 	const [mediaItems, setMediaItems] = useState<
 		{ uri: string; type: 'image' | 'video' }[]
 	>([]);
+	const [location, setLocation] = useState<Location | null>(null);
 	const [isSaving, setIsSaving] = useState(false);
 
 	const defaultCollections = useGetAllCollections(userId).data || [];
@@ -210,6 +213,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 				headerImage: uploadedHeaderImage,
 				media: uploadedMedia,
 				date: entryDate,
+				location,
 				updatedAt: new Date(),
 			};
 
@@ -317,16 +321,13 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 						Tags
 					</Text>
 					<Button
-						variant="outline"
+						variant="secondary"
 						onPress={() => setIsTagModalVisible(true)}
 						style={styles.addTagButton}>
-						<Plus
-							width={20}
-							height={20}
-							color={colors.primary.main}
-							strokeWidth={2}
-						/>
-						<Text variant="body" color={colors.primary.main}>
+						<Text
+							variant="bodySmall"
+							color={colors.text.inverse}
+							style={{ marginLeft: spacing.xs }}>
 							Add Tags
 						</Text>
 					</Button>
@@ -343,6 +344,17 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 							))}
 						</View>
 					)}
+				</View>
+
+				<View style={styles.section}>
+					<Text variant="label" style={styles.sectionLabel}>
+						Location (Optional)
+					</Text>
+					<LocationPicker
+						location={location}
+						onLocationSelect={setLocation}
+						onLocationClear={() => setLocation(null)}
+					/>
 				</View>
 
 				<View style={styles.section}>
@@ -414,6 +426,7 @@ const styles = StyleSheet.create({
 	collectionTag: {
 		marginBottom: 0,
 	},
+
 	addTagButton: {
 		marginTop: spacing.xs,
 	},

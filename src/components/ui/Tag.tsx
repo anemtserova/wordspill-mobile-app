@@ -40,7 +40,7 @@ export const Tag = ({
 	onPress,
 	style,
 	children,
-}) => {
+}: TagProps) => {
 	const tagStyle: ViewStyle[] = [
 		styles.base,
 		outlined ? styles[`outlined_${variant}`] : styles[`filled_${variant}`],
