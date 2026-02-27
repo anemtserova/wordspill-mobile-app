@@ -67,7 +67,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 	const email = user?.email || '';
 	const avatarUrl = profile?.avatarUrl;
 
-	// Get initials for avatar
 	const getInitials = () => {
 		if (profile?.displayName) {
 			const names = profile.displayName.split(' ');

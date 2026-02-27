@@ -6,6 +6,7 @@ import {
 	TouchableOpacity,
 	Dimensions,
 	RefreshControl,
+	Image as RNImage,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
@@ -92,9 +93,16 @@ export const HomeScreen = ({
 						style={styles.avatarContainer}
 						onPress={() => navigation.navigate('ProfileTab')}>
 						<View style={styles.avatar}>
-							<Text style={styles.avatarText}>
-								{displayName.charAt(0).toUpperCase()}
-							</Text>
+							{profile?.avatarUrl ? (
+								<RNImage
+									source={{ uri: profile.avatarUrl }}
+									style={styles.avatar}
+								/>
+							) : (
+								<Text style={styles.avatarText}>
+									{displayName.charAt(0).toUpperCase()}
+								</Text>
+							)}
 						</View>
 					</TouchableOpacity>
 				</View>

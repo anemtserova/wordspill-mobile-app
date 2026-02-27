@@ -7,5 +7,6 @@ export const useGetUser = (userId: string) => {
 		queryFn: async () => {
 			return getUser(userId);
 		},
+		enabled: !!userId,
 	});
 };

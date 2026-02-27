@@ -229,5 +229,8 @@ export const updateUser = async (
 	updatedData: Partial<Omit<UserProfile, 'id' | 'createdAt' | 'updatedAt'>>,
 ): Promise<void> => {
 	const userDocRef = doc(db, 'users', userId);
-	await updateDoc(userDocRef, updatedData);
+	await updateDoc(userDocRef, {
+		...updatedData,
+		updatedAt: serverTimestamp(),
+	});
 };

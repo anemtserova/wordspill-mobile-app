@@ -7,8 +7,8 @@ export const useUpdateUser = (userId: string) => {
 
 	return useMutation({
 		mutationFn: (data: Partial<UserProfile>) => updateUser(userId, data),
-		// onSuccess: () => {
-		// 	qc.invalidateQueries({ queryKey: ['users', userId] });
-		// },
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['users', userId] });
+		},
 	});
 };

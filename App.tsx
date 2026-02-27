@@ -20,9 +20,9 @@ export default function App() {
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<AuthProvider>
-				<OnboardingProvider>
-					<QueryClientProvider client={queryClient}>
+			<QueryClientProvider client={queryClient}>
+				<AuthProvider>
+					<OnboardingProvider>
 						<SafeAreaProvider>
 							<SafeAreaView
 								style={{
@@ -35,9 +35,9 @@ export default function App() {
 								</NavigationContainer>
 							</SafeAreaView>
 						</SafeAreaProvider>
-					</QueryClientProvider>
-				</OnboardingProvider>
-			</AuthProvider>
+					</OnboardingProvider>
+				</AuthProvider>
+			</QueryClientProvider>
 		</GestureHandlerRootView>
 	);
 }
