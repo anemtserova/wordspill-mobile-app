@@ -12,6 +12,7 @@ import {
 	Button,
 	CollectionCard,
 	AddCollectionModal,
+	ColorScreenHeader,
 } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
@@ -20,8 +21,9 @@ import {
 	useDeleteCollection,
 } from '../../api/collections';
 import { useGetEntriesByCollection } from '../../api/entries';
-import { Plus } from 'iconoir-react-native';
+import { BookStack, NavArrowLeft, Plus } from 'iconoir-react-native';
 import { EditCollectionModal } from '../../components/ui/EditCollectionModal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const CollectionsScreen = ({
 	navigation,
@@ -33,6 +35,7 @@ export const CollectionsScreen = ({
 	const [refreshing, setRefreshing] = useState(false);
 	const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 	const [selectedCollection, setSelectedCollection] = useState<any>(null);
+	const insets = useSafeAreaInsets();
 
 	const {
 		data: collections = [],
@@ -93,21 +96,23 @@ export const CollectionsScreen = ({
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.header}>
-				<Text variant="h2" style={styles.title}>
-					My Collections
-				</Text>
-				<TouchableOpacity
-					style={styles.addButton}
-					onPress={() => setIsAddModalVisible(true)}>
-					<Plus
+			<ColorScreenHeader
+				title="My Collections"
+				onBackPress={() => navigation.goBack()}
+				icon={
+					<BookStack
 						width={24}
 						height={24}
-						color={colors.primary.main}
+						color={colors.background.secondary}
 						strokeWidth={2}
 					/>
-				</TouchableOpacity>
-			</View>
+				}
+				style={{
+					backgroundColor: colors.accent.teal,
+					paddingBottom: spacing.md,
+					paddingTop: spacing.md,
+				}}
+			/>
 
 			<ScrollView
 				style={styles.scrollView}
@@ -131,7 +136,7 @@ export const CollectionsScreen = ({
 							variant="body"
 							color={colors.text.secondary}
 							style={styles.emptyText}>
-							Create your first collection to organize your entries
+							Create your first collection to organize your spills
 						</Text>
 						<Button
 							variant="primary"
@@ -151,6 +156,17 @@ export const CollectionsScreen = ({
 					</View>
 				)}
 			</ScrollView>
+
+			<TouchableOpacity
+				style={[styles.fab, { bottom: spacing.lg + insets.bottom }]}
+				onPress={() => setIsAddModalVisible(true)}>
+				<Plus
+					width={24}
+					height={24}
+					color={colors.neutral.white}
+					strokeWidth={2.5}
+				/>
+			</TouchableOpacity>
 
 			<AddCollectionModal
 				visible={isAddModalVisible}
@@ -175,21 +191,32 @@ export const CollectionsScreen = ({
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: colors.background.primary,
+		backgroundColor: colors.background.secondary,
 	},
 	header: {
 		flexDirection: 'row',
-		justifyContent: 'space-between',
+		justifyContent: 'space-evenly',
 		alignItems: 'center',
 		paddingHorizontal: spacing.lg,
-		paddingTop: spacing['2xl'],
+		paddingTop: spacing.lg,
 		paddingBottom: spacing.lg,
-		backgroundColor: colors.background.secondary,
+		backgroundColor: colors.background.primary,
 		borderBottomWidth: 1,
 		borderBottomColor: colors.border.light,
+		borderBottomLeftRadius: spacing.lg,
+		borderBottomRightRadius: spacing.lg,
 	},
 	title: {
 		flex: 1,
+	},
+	backButton: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: colors.secondary.light,
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginRight: spacing.md,
 	},
 	addButton: {
 		width: 40,
@@ -204,6 +231,7 @@ const styles = StyleSheet.create({
 	},
 	scrollContent: {
 		padding: spacing.lg,
+		paddingBottom: 80,
 	},
 	collectionsContainer: {
 		paddingBottom: spacing.xl,
@@ -225,5 +253,20 @@ const styles = StyleSheet.create({
 	},
 	createButton: {
 		minWidth: 200,
+	},
+	fab: {
+		position: 'absolute',
+		right: spacing.lg,
+		width: 56,
+		height: 56,
+		borderRadius: 28,
+		backgroundColor: colors.primary.main,
+		alignItems: 'center',
+		justifyContent: 'center',
+		elevation: 4,
+		shadowColor: colors.neutral.black,
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
 	},
 });

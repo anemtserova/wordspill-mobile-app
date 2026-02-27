@@ -219,7 +219,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 
 			await createEntryMutation.mutateAsync(newEntry);
 
-			Alert.alert('Success', 'Entry saved successfully!', [
+			Alert.alert('Success', 'Spill saved successfully!', [
 				{
 					text: 'OK',
 					onPress: () => navigation.goBack(),
@@ -228,7 +228,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		} catch (error) {
 			Alert.alert(
 				'Error',
-				'Failed to save entry. Please check your connection and try again.',
+				'Failed to save spill. Please check your connection and try again.',
 			);
 			console.error('Save error:', error);
 		} finally {
@@ -238,8 +238,8 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 
 	const handleDiscard = () => {
 		Alert.alert(
-			'Discard Entry?',
-			'Are you sure you want to discard this entry? All changes will be lost.',
+			'Discard Spill?',
+			'Are you sure you want to discard this spill? All changes will be lost.',
 			[
 				{ text: 'Cancel', style: 'cancel' },
 				{
@@ -255,7 +255,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 		<KeyboardAvoidingView
 			style={styles.container}
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-			<ScreenHeader title="New Entry" onBackPress={handleDiscard} />
+			<ScreenHeader title="New Spill" onBackPress={handleDiscard} />
 
 			<ScrollView
 				style={styles.scrollView}
@@ -383,7 +383,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 					loading={isSaving}
 					disabled={isSaving}
 					style={styles.actionButton}>
-					Save Entry
+					Save Spill
 				</Button>
 			</View>
 

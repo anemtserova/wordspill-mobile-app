@@ -48,7 +48,6 @@ export const CollectionCard = ({
 			onPress={onPress}
 			activeOpacity={0.7}>
 			<View style={styles.content}>
-				{/* Icon */}
 				<View style={[styles.iconContainer, { backgroundColor }]}>
 					<IconComponent
 						width={28}
@@ -58,13 +57,12 @@ export const CollectionCard = ({
 					/>
 				</View>
 
-				{/* Collection Info */}
 				<View style={styles.textContainer}>
 					<Text variant="h5" style={styles.collectionName}>
 						{collection.name}
 					</Text>
 					<Text variant="bodySmall" color={colors.text.secondary}>
-						{entryCount} {entryCount === 1 ? 'entry' : 'entries'}
+						{entryCount} {entryCount === 1 ? 'spill' : 'spills'}
 					</Text>
 				</View>
 
@@ -107,7 +105,7 @@ export const CollectionCard = ({
 const styles = StyleSheet.create({
 	container: {
 		width: '100%',
-		backgroundColor: colors.background.secondary,
+		backgroundColor: colors.background.primary,
 		borderRadius: borderRadius.lg,
 		borderWidth: 1,
 		borderColor: colors.border.light,

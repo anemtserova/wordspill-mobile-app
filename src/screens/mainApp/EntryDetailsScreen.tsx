@@ -114,7 +114,7 @@ export const EntryDetailsScreen = ({ route, navigation }: Props) => {
 	return (
 		<View style={styles.container}>
 			<ScreenHeader
-				title="Entry Details"
+				title="Spill Details"
 				onBackPress={() => navigation.goBack()}
 				rightComponent={
 					<View style={{ flexDirection: 'row', gap: spacing.md }}>

@@ -5,6 +5,7 @@ import {
 	TouchableOpacity,
 	Alert,
 	ActivityIndicator,
+	Switch,
 } from 'react-native';
 import { Xmark, Position, PineTree } from 'iconoir-react-native';
 import { Text } from './Text';
@@ -74,13 +75,11 @@ export const LocationPicker = ({
 		};
 
 		onLocationSelect(mockLocation);
-		setIsManualInput(false);
 		setManualAddress('');
 	};
 
 	const handleClear = () => {
 		onLocationClear();
-		setIsManualInput(false);
 		setManualAddress('');
 	};
 
@@ -116,42 +115,6 @@ export const LocationPicker = ({
 		);
 	}
 
-	if (isManualInput) {
-		return (
-			<Card variant="outlined" padding="md">
-				<Text variant="label" style={styles.inputLabel}>
-					Enter Location
-				</Text>
-				<Input
-					placeholder="e.g., Paris, France or 123 Main St"
-					value={manualAddress}
-					onChangeText={setManualAddress}
-					autoFocus
-				/>
-				<View style={styles.manualActions}>
-					<Button
-						variant="outline"
-						size="sm"
-						onPress={() => {
-							setIsManualInput(false);
-							setManualAddress('');
-						}}
-						style={styles.manualButton}>
-						Cancel
-					</Button>
-					<Button
-						variant="primary"
-						size="sm"
-						onPress={handleManualSave}
-						disabled={!manualAddress.trim()}
-						style={styles.manualButton}>
-						Save Location
-					</Button>
-				</View>
-			</Card>
-		);
-	}
-
 	return (
 		<Card variant="outlined" padding="md" style={styles.locationContainer}>
 			<View style={styles.emptyState}>
@@ -167,34 +130,77 @@ export const LocationPicker = ({
 					style={styles.emptyText}>
 					Add a location
 				</Text>
-				<View style={styles.actions}>
-					<Button
-						variant="outline"
-						size="sm"
-						onPress={handleGetCurrentLocation}
-						loading={isLoading}
-						disabled={isLoading}
-						style={styles.actionButton}>
-						<View style={styles.addLocationButtonContainer}>
-							<Position
-								width={18}
-								height={18}
-								color={colors.text.primary}
-								strokeWidth={2}
-							/>
-							<Text variant="bodySmall" style={styles.buttonText}>
-								Current Location
-							</Text>
-						</View>
-					</Button>
-					<Button
-						variant="ghost"
-						size="sm"
-						onPress={() => setIsManualInput(true)}
-						style={styles.actionButton}>
-						<Text variant="bodySmall">Enter Manually</Text>
-					</Button>
+
+				<View style={styles.switchContainer}>
+					<Text variant="bodySmall" color={colors.text.secondary}>
+						Use Locator
+					</Text>
+					<Switch
+						value={isManualInput}
+						onValueChange={setIsManualInput}
+						ios_backgroundColor={colors.accent.teal}
+						trackColor={{
+							false: colors.neutral.gray300,
+							true: colors.neutral.gray300,
+						}}
+						thumbColor={
+							isManualInput ? colors.accent.peach : colors.accent.teal
+						}
+					/>
+					<Text variant="bodySmall" color={colors.text.secondary}>
+						Add Manually {''}
+					</Text>
 				</View>
+
+				{isManualInput ? (
+					<View style={styles.manualInputContainer}>
+						<Input
+							placeholder="e.g., Planet Earth or 123 Main St"
+							value={manualAddress}
+							onChangeText={setManualAddress}
+						/>
+						<View style={styles.actions}>
+							<Button
+								variant="outline"
+								size="sm"
+								onPress={() => setIsManualInput(false)}
+								style={styles.saveButton}>
+								Back to Locator
+							</Button>
+							<Button
+								variant="secondary"
+								size="sm"
+								onPress={handleManualSave}
+								disabled={!manualAddress.trim()}
+								style={styles.saveButton}>
+								Save Location
+							</Button>
+						</View>
+					</View>
+				) : (
+					<View style={styles.actions}>
+						<Button
+							variant="outline"
+							size="sm"
+							fullWidth
+							onPress={handleGetCurrentLocation}
+							loading={isLoading}
+							disabled={isLoading}
+							style={styles.actionButton}>
+							<View style={styles.addLocationButtonContainer}>
+								<Position
+									width={18}
+									height={18}
+									color={colors.text.primary}
+									strokeWidth={2}
+								/>
+								<Text variant="bodySmall" style={styles.buttonText}>
+									Current Location
+								</Text>
+							</View>
+						</Button>
+					</View>
+				)}
 			</View>
 		</Card>
 	);
@@ -237,10 +243,26 @@ const styles = StyleSheet.create({
 	emptyText: {
 		textAlign: 'center',
 	},
-	actions: {
+	switchContainer: {
 		flexDirection: 'row',
+		alignItems: 'center',
 		gap: spacing.sm,
 		marginTop: spacing.xs,
+	},
+	manualInputContainer: {
+		width: '100%',
+		gap: spacing.sm,
+	},
+	saveButton: {
+		width: '45%',
+	},
+	actions: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		gap: spacing.sm,
+		marginTop: spacing.xs,
+		width: '100%',
 	},
 	actionButton: {
 		flexDirection: 'row',
@@ -249,16 +271,5 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		marginLeft: spacing.xs,
-	},
-	inputLabel: {
-		marginBottom: spacing.xs,
-	},
-	manualActions: {
-		flexDirection: 'row',
-		gap: spacing.sm,
-		marginTop: spacing.sm,
-	},
-	manualButton: {
-		flex: 1,
 	},
 });

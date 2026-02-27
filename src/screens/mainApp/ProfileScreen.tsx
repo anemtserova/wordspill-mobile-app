@@ -8,7 +8,13 @@ import {
 	Image as RNImage,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, Button, Card, ScreenHeader } from '../../components/ui';
+import {
+	Text,
+	Button,
+	Card,
+	ScreenHeader,
+	ColorScreenHeader,
+} from '../../components/ui';
 import { colors, spacing, borderRadius } from '../../theme';
 import { useAuth } from '../../hooks/useAuth';
 import {
@@ -18,6 +24,7 @@ import {
 	LogOut,
 	Book,
 	NavArrowRight,
+	ProfileCircle,
 } from 'iconoir-react-native';
 
 interface ProfileScreenProps {
@@ -75,12 +82,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<ScreenHeader
-				title="Profile"
-				showBackButton={true}
+			<ColorScreenHeader
+				icon={
+					<ProfileCircle
+						width={24}
+						height={24}
+						color={colors.background.secondary}
+					/>
+				}
+				title="My Profile"
 				onBackPress={() => navigation.goBack()}
 				style={{
-					backgroundColor: colors.accent.cream,
+					backgroundColor: colors.accent.peach,
 					paddingBottom: spacing.md,
 					paddingTop: spacing.md,
 				}}
@@ -110,7 +123,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 							</Text>
 						</View>
 					</View>
-					{/* <Button
+					<Button
 						variant="outline"
 						size="sm"
 						onPress={handleEditProfile}
@@ -124,7 +137,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 						<Text variant="bodySmall" style={styles.editButtonText}>
 							Edit Profile
 						</Text>
-					</Button> */}
+					</Button>
 				</Card>
 
 				<View style={styles.section}>
@@ -247,7 +260,7 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 100,
 		borderRadius: 50,
-		backgroundColor: colors.accent.cream,
+		backgroundColor: colors.accent.peach,
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginBottom: spacing.md,
@@ -290,7 +303,7 @@ const styles = StyleSheet.create({
 		width: 36,
 		height: 36,
 		borderRadius: borderRadius.md,
-		backgroundColor: colors.accent.cream,
+		backgroundColor: colors.accent.peach,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},

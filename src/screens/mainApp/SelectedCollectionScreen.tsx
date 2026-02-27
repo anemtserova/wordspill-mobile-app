@@ -21,6 +21,7 @@ import { useGetAllCollections } from '../../api/collections';
 import { useGetEntriesByCollection } from '../../api/entries/queries';
 import { deleteEntry } from '../../api/firebase/firestore';
 import { getCollectionIcon } from '../../utils/collectionIcons';
+import { Plus } from 'iconoir-react-native';
 
 type Props = NativeStackScreenProps<any, 'Collections'>;
 
@@ -92,7 +93,7 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 		<View style={styles.container}>
 			<ColorScreenHeader
 				title={collection.name}
-				subtitle={`${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`}
+				subtitle={`${entries.length} ${entries.length === 1 ? 'spill' : 'spills'}`}
 				icon={
 					<IconComponent
 						width={32}
@@ -106,10 +107,7 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 			/>
 
 			<ScrollView
-				contentContainerStyle={[
-					styles.scrollContent,
-					{ paddingBottom: 60 + insets.bottom + spacing.lg },
-				]}
+				contentContainerStyle={[styles.scrollContent, { paddingBottom: 80 }]}
 				showsVerticalScrollIndicator={false}>
 				{entriesLoading ? (
 					<View style={styles.centerContent}>
@@ -157,15 +155,16 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 				)}
 			</ScrollView>
 
-			{entries.length > 0 && (
-				<TouchableOpacity
-					style={[styles.fab, { bottom: 60 + insets.bottom + spacing.lg }]}
-					onPress={handleAddEntry}>
-					<Text variant="h2" color={colors.neutral.white}>
-						+
-					</Text>
-				</TouchableOpacity>
-			)}
+			<TouchableOpacity
+				style={[styles.fab, { bottom: spacing.lg + insets.bottom }]}
+				onPress={handleAddEntry}>
+				<Plus
+					width={24}
+					height={24}
+					color={colors.neutral.white}
+					strokeWidth={2.5}
+				/>
+			</TouchableOpacity>
 		</View>
 	);
 };

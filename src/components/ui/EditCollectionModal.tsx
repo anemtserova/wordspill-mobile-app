@@ -111,7 +111,7 @@ export const EditCollectionModal = ({
 						</Text>
 						<TextInput
 							style={styles.input}
-							value={collection?.name || collectionName}
+							value={collectionName}
 							onChangeText={setCollectionName}
 							placeholder="Enter collection name"
 							placeholderTextColor={colors.text.tertiary}

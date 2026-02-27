@@ -58,14 +58,6 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 
 				<View style={styles.section}>
 					<View style={styles.sectionHeader}>
-						{/* <View style={styles.iconContainer}>
-                <Plus
-                  width={24}
-                  height={24}
-                  color={colors.secondary.contrast}
-                  strokeWidth={2}
-                />
-              </View> */}
 						<IconStyled
 							icon={Plus}
 							color={colors.secondary.contrast}
@@ -73,31 +65,22 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 							height={24}
 						/>
 						<Text variant="h3" style={styles.sectionTitle}>
-							Create Entries
+							Create Spills
 						</Text>
 					</View>
 					<Text
 						variant="body"
 						color={colors.text.secondary}
 						style={styles.sectionText}>
-						Write freely in your personal space. Pen diary entries, compose
+						Write freely in your personal space. Pen diary spills, compose
 						poems, draft stories, jot down travel experiences, capture
 						interesting words you discover, or record personal thoughts and
-						reflections. Add images to enrich your entries and preserve
-						memories.
+						reflections. Add images to enrich your spills and preserve memories.
 					</Text>
 				</View>
 
 				<View style={styles.section}>
 					<View style={styles.sectionHeader}>
-						{/* <View style={styles.iconContainer}>
-							<BookStack
-								width={24}
-								height={24}
-								color={colors.secondary.contrast}
-								strokeWidth={2}
-							/>
-						</View> */}
 						<IconStyled
 							icon={BookStack}
 							color={colors.secondary.contrast}
@@ -116,20 +99,12 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						daily journal from your poetry, group travel stories together, or
 						create collections for fiction projects, vocabulary discoveries, or
 						personal reflections. Your collections, your way. Tap on a
-						collection to see all entries within it.
+						collection to see all spills within it.
 					</Text>
 				</View>
 
 				<View style={styles.section}>
 					<View style={styles.sectionHeader}>
-						{/* <View style={styles.iconContainer}>
-							<Hashtag
-								width={24}
-								height={24}
-								color={colors.secondary.contrast}
-								strokeWidth={2}
-							/>
-						</View> */}
 						<IconStyled
 							icon={Hashtag}
 							color={colors.secondary.contrast}
@@ -144,24 +119,16 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						variant="body"
 						color={colors.text.secondary}
 						style={styles.sectionText}>
-						Add tags to organize and connect your writing. Tag entries by mood,
+						Add tags to organize and connect your writing. Tag spills by mood,
 						theme, location, or any category that matters to you. Tags help you
 						discover patterns in your writing and quickly find related pieces
-						across different collections. Tap on a tag to see all entries
+						across different collections. Tap on a tag to see all spills
 						associated with it.
 					</Text>
 				</View>
 
 				<View style={styles.section}>
 					<View style={styles.sectionHeader}>
-						{/* <View style={styles.iconContainer}>
-							<Search
-								width={24}
-								height={24}
-								color={colors.secondary.contrast}
-								strokeWidth={2}
-							/>
-						</View> */}
 						<IconStyled
 							icon={Search}
 							color={colors.secondary.contrast}
@@ -176,10 +143,11 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						variant="body"
 						color={colors.text.secondary}
 						style={styles.sectionText}>
-						Revisit your writing journey anytime. Search through your entries,
-						browse collections, and reflect on your growth as a writer. Your
-						words are preserved and easily accessible whenever inspiration
-						strikes or memories call.
+						Revisit your writing journey anytime. Search through your spills by
+						keywords, tags, or collection. Reflect on your growth as a writer,
+						rediscover past thoughts and experiences, and see how your writing
+						evolves over time. Your words are preserved and easily accessible
+						whenever inspiration strikes or memories call.
 					</Text>
 				</View>
 
@@ -199,7 +167,7 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						variant="body"
 						color={colors.text.secondary}
 						style={styles.sectionText}>
-						Your writing evolves, and so can your entries. Edit and refine your
+						Your writing evolves, and so can your spills. Edit and refine your
 						work, continue unfinished pieces, or add new insights to previous
 						reflections. Your creative space adapts to your needs.
 					</Text>
@@ -208,14 +176,6 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 				<View style={[styles.section, styles.lastSection]}>
 					<View style={styles.purposeBox}>
 						<View style={styles.sectionHeader}>
-							{/* <View style={[styles.iconContainer, { width: 35, height: 35 }]}>
-								<Sparks
-									width={20}
-									height={20}
-									color={colors.secondary.contrast}
-									strokeWidth={2}
-								/>
-							</View> */}
 							<IconStyled
 								icon={Sparks}
 								color={colors.secondary.contrast}
@@ -226,42 +186,34 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 								backgroundColor={colors.secondary.light}
 								marginRight={spacing.md}
 							/>
-							<Text variant="h3" style={styles.purposeTitle}>
+							<Text align="center" variant="h3" style={styles.purposeTitle}>
 								Perfect For
 							</Text>
 						</View>
 						<View style={styles.purposeList}>
-							<Text variant="body" style={styles.purposeItem}>
-								• Daily journaling and personal reflection
+							<Text align="center" variant="h6" style={styles.purposeItem}>
+								Poets and fiction writers
 							</Text>
-							<Text variant="body" style={styles.purposeItem}>
-								• Writing poetry and fiction
+							<Text align="center" variant="h6" style={styles.purposeItem}>
+								Daily journaling and personal reflection
 							</Text>
-							<Text variant="body" style={styles.purposeItem}>
-								• Travel journals and adventure logs
+							<Text align="center" variant="h6" style={styles.purposeItem}>
+								Capturing new words and vocabulary discoveries
 							</Text>
-							<Text variant="body" style={styles.purposeItem}>
-								• Capturing new words and discoveries
+							<Text align="center" variant="h6" style={styles.purposeItem}>
+								Travel journals and adventure logs
 							</Text>
-							<Text variant="body" style={styles.purposeItem}>
-								• Recording thoughts and inspirations
+							<Text align="center" variant="h6" style={styles.purposeItem}>
+								Recording thoughts and inspirations
 							</Text>
-							<Text variant="body" style={styles.purposeItem}>
-								• Anyone who loves to write
+							<Text align="center" variant="h6" style={styles.purposeItem}>
+								Anyone who loves to write
 							</Text>
 						</View>
 					</View>
 				</View>
 
 				<View style={styles.footer}>
-					{/* <View style={styles.iconContainer}>
-						<Gift
-							width={24}
-							height={24}
-							color={colors.secondary.contrast}
-							strokeWidth={2}
-						/>
-					</View> */}
 					<IconStyled
 						icon={Gift}
 						color={colors.secondary.contrast}
@@ -281,7 +233,7 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						variant="body"
 						color={colors.text.tertiary}
 						style={styles.footerText}>
-						Gift yourself a moment of reflection and let your words flow!
+						Gift yourself a moment of reflection and let your words spill!
 					</Text>
 				</View>
 				<Button
@@ -331,6 +283,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		marginBottom: spacing.md,
+		justifyContent: 'center',
 	},
 	sectionTitle: {
 		flex: 1,
@@ -348,7 +301,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.neutral.gray200,
 	},
 	purposeTitle: {
-		color: colors.primary.main,
+		color: colors.accent.teal,
 	},
 	purposeList: {
 		gap: spacing.sm,

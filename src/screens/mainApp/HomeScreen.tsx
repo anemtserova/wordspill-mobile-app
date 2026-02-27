@@ -19,7 +19,7 @@ import { colors, spacing, typography } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetAllCollections } from '../../api/collections';
 import { getCollectionIcon } from '../../utils/collectionIcons';
-import { Plus } from 'iconoir-react-native';
+import { LightBulbOn, Plus } from 'iconoir-react-native';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - spacing.lg * 3) / 2;
@@ -83,7 +83,7 @@ export const HomeScreen = ({
 						<Text variant="h2" style={styles.greeting}>
 							{greeting},
 						</Text>
-						<Text variant="h2" color={colors.secondary.main}>
+						<Text variant="h2" color={colors.secondary.dark}>
 							{displayName}
 						</Text>
 					</View>
@@ -169,7 +169,7 @@ export const HomeScreen = ({
 									width={32}
 									height={32}
 									color={colors.primary.main}
-									strokeWidth={2}
+									strokeWidth={2.5}
 								/>
 								<Text
 									variant="h6"
@@ -194,11 +194,17 @@ export const HomeScreen = ({
 
 				<Card variant="filled" padding="lg" style={styles.tipCard}>
 					<Text variant="h6" style={styles.tipTitle}>
-						💡 Quick Tip
+						<LightBulbOn
+							width={24}
+							height={24}
+							color={colors.accent.gold}
+							strokeWidth={3}
+						/>{' '}
+						Quick Tip
 					</Text>
 					<Text variant="body" color={colors.text.secondary}>
-						Collections help organize your vocabulary by topics. Choose one to
-						get started or create your own!
+						Collections help organize your spills by topics. Choose one to get
+						started or create your own!
 					</Text>
 				</Card>
 			</ScrollView>
@@ -232,9 +238,9 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		paddingHorizontal: spacing.lg,
-		paddingTop: spacing['2xl'],
+		paddingTop: spacing.lg,
 		paddingBottom: spacing.lg,
-		backgroundColor: colors.background.secondary,
+		backgroundColor: colors.accent.cream,
 		borderBottomLeftRadius: 24,
 		borderBottomRightRadius: 24,
 	},
@@ -302,6 +308,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	tipCard: {
+		marginTop: spacing.lg,
 		marginHorizontal: spacing.lg,
 	},
 	tipTitle: {

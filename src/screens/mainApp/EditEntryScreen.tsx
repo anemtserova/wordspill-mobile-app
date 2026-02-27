@@ -183,11 +183,11 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 
 	const handleUpdate = async () => {
 		if (!title.trim()) {
-			Alert.alert('Missing Title', 'Please enter a title for your entry.');
+			Alert.alert('Missing Title', 'Please enter a title for your spill.');
 			return;
 		}
 		if (!content.trim()) {
-			Alert.alert('Missing Content', 'Please add some content to your entry.');
+			Alert.alert('Missing Content', 'Please add some content to your spill.');
 			return;
 		}
 
@@ -241,7 +241,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 
 			await updateEntryMutation.mutateAsync(updatedEntry);
 
-			Alert.alert('Success', 'Entry updated successfully!', [
+			Alert.alert('Success', 'Spill updated successfully!', [
 				{
 					text: 'OK',
 					onPress: () => navigation.goBack(),
@@ -250,7 +250,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 		} catch (error) {
 			Alert.alert(
 				'Error',
-				'Failed to update entry. Please check your connection and try again.',
+				'Failed to update spill. Please check your connection and try again.',
 			);
 			console.error('Update error:', error);
 		} finally {
@@ -261,7 +261,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 	const handleDiscard = () => {
 		Alert.alert(
 			'Discard Changes?',
-			'Are you sure you want to discard your changes?',
+			'Are you sure you want to discard your changes to this spill? All changes will be lost.',
 			[
 				{ text: 'Cancel', style: 'cancel' },
 				{
@@ -281,7 +281,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 					variant="body"
 					color={colors.text.secondary}
 					style={styles.loadingText}>
-					Loading entry...
+					Loading spill...
 				</Text>
 			</View>
 		);
@@ -291,7 +291,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 		return (
 			<View style={styles.loadingContainer}>
 				<Text variant="body" color={colors.semantic.error}>
-					Error loading entry
+					Error loading spill. Please try again later.
 				</Text>
 				<Button onPress={() => navigation.goBack()} variant="outline">
 					Go Back
@@ -304,7 +304,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 		<KeyboardAvoidingView
 			style={styles.container}
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-			<ScreenHeader title="Edit Entry" onBackPress={handleDiscard} />
+			<ScreenHeader title="Edit Spill" onBackPress={handleDiscard} />
 
 			<ScrollView
 				style={styles.scrollView}
@@ -435,7 +435,7 @@ export const EditEntryScreen: React.FC<EditEntryScreenProps> = ({
 					loading={isSaving}
 					disabled={isSaving}
 					style={styles.actionButton}>
-					Update Entry
+					Update Spill
 				</Button>
 			</View>
 

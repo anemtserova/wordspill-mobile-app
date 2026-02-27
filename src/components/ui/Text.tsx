@@ -63,17 +63,17 @@ const variantStyles: Record<TextVariant, TextStyle> = {
 	},
 	body: {
 		fontFamily: typography.fonts.body,
-		fontSize: typography.fontSize.xl, // 20px - comfortable for typing and reading
+		fontSize: typography.fontSize.xl,
 		lineHeight: typography.fontSize.xl * typography.lineHeight.relaxed,
 	},
 	bodyLarge: {
 		fontFamily: typography.fonts.body,
-		fontSize: typography.fontSize['2xl'], // 24px - extra large for emphasis
+		fontSize: typography.fontSize['2xl'],
 		lineHeight: typography.fontSize['2xl'] * typography.lineHeight.relaxed,
 	},
 	bodySmall: {
 		fontFamily: typography.fonts.body,
-		fontSize: typography.fontSize.lg, // 18px - still comfortably readable
+		fontSize: typography.fontSize.lg,
 		lineHeight: typography.fontSize.lg * typography.lineHeight.normal,
 	},
 	caption: {
