@@ -1,9 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Image, ActivityIndicator } from 'react-native';
-import { colors } from '../../theme';
+import { colors, shadows, spacing } from '../../theme';
 import { Text } from '../../components/ui';
-
-const iconImage = require('../../../assets/icon.png');
 
 export const LoadingScreen = () => {
 	return (
@@ -12,8 +10,18 @@ export const LoadingScreen = () => {
 				variant="h2"
 				color={colors.primary.main}
 				style={styles.logoContainer}>
-				Wordspill is Loading
+				Wordspill is Loading ...
 			</Text>
+			<Image
+				source={require('../../../assets/icon.png')}
+				style={{
+					width: 100,
+					height: 100,
+					borderRadius: spacing.lg,
+					...shadows.md,
+				}}
+				resizeMode="contain"
+			/>
 			<ActivityIndicator
 				size="large"
 				color={colors.primary.main}

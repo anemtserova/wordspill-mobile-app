@@ -125,7 +125,7 @@ export const EntriesByTagScreen = ({ route, navigation }: Props) => {
 		<View style={styles.container}>
 			<ColorScreenHeader
 				title={tag}
-				subtitle={`${filteredEntries.length} ${filteredEntries.length === 1 ? 'entry' : 'entries'}`}
+				subtitle={`${filteredEntries.length} ${filteredEntries.length === 1 ? 'spill' : 'spills'}`}
 				icon={
 					<Hashtag
 						width={32}

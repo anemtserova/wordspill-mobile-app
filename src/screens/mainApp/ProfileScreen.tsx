@@ -269,16 +269,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 				)}
 
 				<Button
-					variant="outline"
+					variant="secondary"
 					onPress={handleLogout}
 					style={styles.logoutButton}>
 					<LogOut
 						width={20}
 						height={20}
-						color={colors.semantic.error}
+						color={colors.background.primary}
 						strokeWidth={2}
 					/>
-					<Text variant="body" color={colors.semantic.error}>
+					<Text variant="body" color={colors.text.inverse}>
 						Logout
 					</Text>
 				</Button>

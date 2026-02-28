@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -32,6 +32,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { uploadMedia } from '../../api/firebase/storage';
 import { MediaItem, Location } from '../../types/Entry';
 import { useGetAllCollections } from '../../api/collections';
+import * as ExpoLocation from 'expo-location';
 
 interface AddEntryScreenProps {
 	navigation: NativeStackNavigationProp<any>;
@@ -213,7 +214,7 @@ export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
 				headerImage: uploadedHeaderImage,
 				media: uploadedMedia,
 				date: entryDate,
-				location,
+				location: location,
 				updatedAt: new Date(),
 			};
 

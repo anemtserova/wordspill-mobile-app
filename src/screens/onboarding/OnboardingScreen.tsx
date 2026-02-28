@@ -3,9 +3,7 @@ import { View, StyleSheet, Image, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Text } from '../../components/ui';
 import { useOnboarding } from '../../contexts/OnboardingContext';
-import { colors } from '../../theme';
-
-const iconImage = require('../../../assets/icon.png');
+import { colors, shadows, spacing } from '../../theme';
 
 export const OnboardingScreen = () => {
 	const insets = useSafeAreaInsets();
@@ -16,8 +14,6 @@ export const OnboardingScreen = () => {
 		await completeOnboarding();
 	};
 
-	console.log('OnboardingScreen rendering, icon source:', iconImage);
-
 	return (
 		<View style={[styles.container, { paddingTop: insets.top }]}>
 			<StatusBar barStyle="dark-content" />
@@ -25,11 +21,11 @@ export const OnboardingScreen = () => {
 			<View style={styles.content}>
 				<View style={styles.imageContainer}>
 					<Image
-						source={iconImage}
+						source={require('../../../assets/icon.png')}
 						style={styles.image}
 						resizeMode="contain"
 						onError={(error) => {
-							console.log('Image load error:', error.nativeEvent);
+							console.error('Image load error:', error.nativeEvent);
 							setImageError(true);
 						}}
 						onLoad={() => {
@@ -60,7 +56,7 @@ export const OnboardingScreen = () => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: colors.neutral.white,
+		backgroundColor: colors.neutral.cream,
 	},
 	content: {
 		flex: 1,
@@ -76,8 +72,10 @@ const styles = StyleSheet.create({
 		width: '100%',
 	},
 	image: {
-		width: 400,
-		height: 700,
+		width: 380,
+		height: 380,
+		borderRadius: 100,
+		...shadows.lg,
 	},
 	buttonContainer: {
 		width: '100%',

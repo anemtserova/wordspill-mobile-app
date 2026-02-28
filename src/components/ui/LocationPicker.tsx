@@ -8,17 +8,13 @@ import {
 	Switch,
 } from 'react-native';
 import { Xmark, Position, PineTree } from 'iconoir-react-native';
+import * as ExpoLocation from 'expo-location';
 import { Text } from './Text';
 import { Input } from './Input';
 import { Button } from './Button';
 import { Card } from './Card';
 import { colors, spacing, borderRadius } from '../../theme';
-
-interface Location {
-	latitude: number;
-	longitude: number;
-	address?: string;
-}
+import { Location } from '../../types/Entry';
 
 interface LocationPickerProps {
 	location: Location | null;
@@ -39,43 +35,99 @@ export const LocationPicker = ({
 		setIsLoading(true);
 		try {
 			// Request location permissions
-			// Note: You'll need to install expo-location and request permissions
-			// For now, this is a mock implementation
+			let { status } = await ExpoLocation.requestForegroundPermissionsAsync();
+			if (status !== 'granted') {
+				Alert.alert(
+					'Permission Denied',
+					'Location permission is required to use this feature. Please enable it in your device settings.',
+				);
+				setIsLoading(false);
+				return;
+			}
 
+			const isEnabled = await ExpoLocation.hasServicesEnabledAsync();
+			if (!isEnabled) {
+				Alert.alert(
+					'Location Services Disabled',
+					'Please enable location services in your device settings.',
+				);
+				setIsLoading(false);
+				return;
+			}
+
+			// Get current position with timeout for emulator compatibility
+			let currentLocation = await ExpoLocation.getCurrentPositionAsync({
+				accuracy: ExpoLocation.Accuracy.Balanced,
+				timeInterval: 5000,
+				distanceInterval: 0,
+			});
+
+			// Optionally get address from coordinates (reverse geocoding)
+			let address: string | undefined = undefined;
+			try {
+				const [result] = await ExpoLocation.reverseGeocodeAsync({
+					latitude: currentLocation.coords.latitude,
+					longitude: currentLocation.coords.longitude,
+				});
+				if (result) {
+					address = [result.city, result.region, result.country]
+						.filter(Boolean)
+						.join(', ');
+				}
+			} catch (geocodeError) {
+				console.log('Geocoding failed, using coordinates only:', geocodeError);
+			}
+
+			const location: Location = {
+				latitude: currentLocation.coords.latitude,
+				longitude: currentLocation.coords.longitude,
+				address,
+			};
+
+			onLocationSelect(location);
+		} catch (error: any) {
+			console.error('Location error:', error);
 			Alert.alert(
-				'Location Feature',
-				'To use current location, please install expo-location:\n\nnpx expo install expo-location',
+				'Location Error',
+				`Failed to get current location: ${error.message || 'Unknown error'}. Make sure location is enabled in your emulator's extended controls.`,
 			);
-
-			// Mock location data for demonstration
-			// const mockLocation: Location = {
-			// 	latitude: 42.6977,
-			// 	longitude: 23.3219,
-			// 	address: 'Sofia, Bulgaria',
-			// };
-			// onLocationSelect(mockLocation);
-		} catch (error) {
-			Alert.alert('Error', 'Failed to get current location');
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
-	const handleManualSave = () => {
+	const handleManualSave = async () => {
 		if (!manualAddress.trim()) {
 			Alert.alert('Error', 'Please enter a location');
 			return;
 		}
 
-		// Mock geocoding - in production, use a geocoding service
-		const mockLocation: Location = {
-			latitude: 0,
-			longitude: 0,
-			address: manualAddress.trim(),
-		};
+		setIsLoading(true);
+		try {
+			// Try to geocode the address to get coordinates
+			const results = await ExpoLocation.geocodeAsync(manualAddress.trim());
 
-		onLocationSelect(mockLocation);
-		setManualAddress('');
+			const location: Location = {
+				latitude: results[0]?.latitude || 0,
+				longitude: results[0]?.longitude || 0,
+				address: manualAddress.trim(),
+			};
+
+			onLocationSelect(location);
+			setManualAddress('');
+			setIsManualInput(false);
+		} catch (error) {
+			// If geocoding fails, still save with address only
+			const location: Location = {
+				latitude: 0,
+				longitude: 0,
+				address: manualAddress.trim(),
+			};
+			onLocationSelect(location);
+			setManualAddress('');
+			setIsManualInput(false);
+		}
+		setIsLoading(false);
 	};
 
 	const handleClear = () => {
@@ -121,7 +173,7 @@ export const LocationPicker = ({
 				<PineTree
 					width={32}
 					height={32}
-					color={colors.accent.teal}
+					color={isManualInput ? colors.accent.peach : colors.accent.teal}
 					strokeWidth={2}
 				/>
 				<Text

@@ -14,11 +14,12 @@
 // Retrieved 2026-02-07, License - CC BY-SA 4.0
 
 {
+	"extends": "expo/tsconfig.base",
 	"compilerOptions": {
 		"strict": true,
+		"jsx": "react-native",
 		"paths": {
 			"@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
 		}
-	},
-	"extends": "expo/tsconfig.base"
+	}
 }

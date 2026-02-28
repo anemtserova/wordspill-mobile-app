@@ -7,13 +7,18 @@
 		"orientation": "portrait",
 		"userInterfaceStyle": "light",
 		"newArchEnabled": true,
+		"assetBundlePatterns": ["**/*"],
 		"splash": {
+			"image": "./assets/icon.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
 		"ios": {
 			"supportsTablet": true,
-			"bundleIdentifier": "com.anonymous.wordspillmobileapp"
+			"bundleIdentifier": "com.anonymous.wordspillmobileapp",
+			"infoPlist": {
+				"NSLocationWhenInUseUsageDescription": "The app needs access to your location to add it to your spills and keep your memories complete."
+			}
 		},
 		"android": {
 			"adaptiveIcon": {
@@ -21,7 +26,8 @@
 			},
 			"edgeToEdgeEnabled": true,
 			"predictiveBackGestureEnabled": false,
-			"package": "com.anonymous.wordspillmobileapp"
+			"package": "com.anonymous.wordspillmobileapp",
+			"permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
 		},
 		"web": {},
 		"plugins": [
@@ -41,7 +47,8 @@
 			[
 				"expo-location",
 				{
-					"locationAlwaysAndWhenInUsePermission": "The app needs access to your location to add it into your stories and to keep your memories complete."
+					"locationAlwaysAndWhenInUsePermission": "The app needs access to your location to add it to your spills and keep your memories complete.",
+					"locationWhenInUsePermission": "The app needs access to your location to add it to your spills."
 				}
 			]
 		]

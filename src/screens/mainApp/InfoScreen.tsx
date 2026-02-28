@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import { Button, Text, IconStyled } from '../../components/ui';
-import { colors, spacing, typography } from '../../theme';
+import { colors, shadows, spacing, typography } from '../../theme';
 import {
 	BookStack,
 	Page,
@@ -21,7 +21,18 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 				contentContainerStyle={styles.scrollContent}
 				showsVerticalScrollIndicator={false}>
 				<View style={styles.header}>
-					<Text variant="h1" style={styles.title}>
+					<Image
+						source={require('../../../assets/icon.png')}
+						style={{
+							width: 80,
+							height: 80,
+							borderRadius: spacing.lg,
+							...shadows.md,
+							marginBottom: spacing.md,
+						}}
+						resizeMode="contain"
+					/>
+					<Text variant="h3" style={styles.title}>
 						Welcome to Wordspill
 					</Text>
 					<Text
@@ -65,7 +76,7 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 							height={24}
 						/>
 						<Text variant="h3" style={styles.sectionTitle}>
-							Create Spills
+							Create (word)Spills
 						</Text>
 					</View>
 					<Text

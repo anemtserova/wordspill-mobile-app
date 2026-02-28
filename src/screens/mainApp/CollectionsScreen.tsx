@@ -109,6 +109,7 @@ export const CollectionsScreen = ({
 			<ColorScreenHeader
 				title="My Collections"
 				onBackPress={() => navigation.goBack()}
+				subtitle={`${collections.length} ${collections.length === 1 ? 'collection' : 'collections'}`}
 				icon={
 					<BookStack
 						width={24}
