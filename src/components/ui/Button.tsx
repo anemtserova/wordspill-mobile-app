@@ -7,9 +7,21 @@ import {
 	ViewStyle,
 } from 'react-native';
 import { Text } from './Text';
-import { colors, spacing, borderRadius, shadows } from '../../theme';
+import {
+	colors,
+	spacing,
+	borderRadius,
+	shadows,
+	typography,
+} from '../../theme';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'accent';
+type ButtonVariant =
+	| 'primary'
+	| 'secondary'
+	| 'outline'
+	| 'ghost'
+	| 'accent'
+	| 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps extends TouchableOpacityProps {
@@ -56,6 +68,7 @@ export const Button = ({
 				<>
 					{leftIcon && <>{leftIcon}</>}
 					<Text
+						weight={variant === 'danger' ? 'bold' : 'semibold'}
 						style={[styles.text, styles[`text_${size}`], { color: textColor }]}>
 						{children}
 					</Text>
@@ -78,6 +91,8 @@ const getTextColor = (variant: ButtonVariant): string => {
 			return colors.primary.main;
 		case 'accent':
 			return colors.neutral.white;
+		case 'danger':
+			return colors.accent.peach;
 		default:
 			return colors.neutral.white;
 	}
@@ -111,6 +126,11 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.accent.gold,
 		...shadows.md,
 	},
+	danger: {
+		backgroundColor: 'transparent',
+		borderWidth: 2,
+		borderColor: colors.accent.peach,
+	},
 	disabled: {
 		opacity: 0.5,
 	},
@@ -132,9 +152,7 @@ const styles = StyleSheet.create({
 	fullWidth: {
 		width: '100%',
 	},
-	text: {
-		fontWeight: '600',
-	},
+	text: {},
 	text_sm: {
 		fontSize: 14,
 	},

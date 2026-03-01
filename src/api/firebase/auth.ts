@@ -21,15 +21,9 @@ export const registerUser = async (
 	// Create Firestore profile
 	await setDoc(doc(db, 'users', user.uid), {
 		displayName: displayName,
-		username: '',
 		email: user.email,
 		avatarUrl: null,
 		createdAt: new Date(),
-		settings: {
-			theme: 'light',
-			fontSize: 16,
-			fontFamily: 'System',
-		},
 	});
 
 	// Seed default collections for the new user

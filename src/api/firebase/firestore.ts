@@ -112,9 +112,23 @@ export const createEntry = async (
 	userId: string,
 	entryData: Omit<Entry, 'id' | 'createdAt'>,
 ): Promise<string> => {
+	let collectionId = entryData.collectionId;
+
+	// If no collection is specified, assign to "In Limbo" collection
+	if (!collectionId) {
+		const collectionsCol = collection(db, 'users', userId, 'collections');
+		const q = query(collectionsCol, where('name', '==', 'In Limbo'));
+		const snapshot = await getDocs(q);
+
+		if (!snapshot.empty) {
+			collectionId = snapshot.docs[0].id;
+		}
+	}
+
 	const entriesCol = collection(db, 'users', userId, 'entries');
 	const newEntry = {
 		...entryData,
+		collectionId,
 		createdAt: serverTimestamp(),
 	};
 	const docRef = await addDoc(entriesCol, newEntry);
@@ -215,9 +229,14 @@ export const getUser = async (userId: string): Promise<UserProfile | null> => {
 	const userDocRef = doc(db, 'users', userId);
 	const userDoc = await getDoc(userDocRef);
 	if (userDoc.exists()) {
+		const data = userDoc.data();
 		return {
 			id: userDoc.id,
-			...userDoc.data(),
+			...data,
+			createdAt: data.createdAt?.toDate?.() || data.createdAt,
+			updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+			deactivatedAt:
+				data.deactivatedAt?.toDate?.() || data.deactivatedAt || null,
 		} as UserProfile;
 	} else {
 		return null;
@@ -231,6 +250,26 @@ export const updateUser = async (
 	const userDocRef = doc(db, 'users', userId);
 	await updateDoc(userDocRef, {
 		...updatedData,
+		updatedAt: serverTimestamp(),
+	});
+};
+
+export const deactivateAccount = async (userId: string): Promise<void> => {
+	const userDocRef = doc(db, 'users', userId);
+	await updateDoc(userDocRef, {
+		deactivatedAt: serverTimestamp(),
+		reminderSent7Days: false,
+		reminderSent1Day: false,
+		updatedAt: serverTimestamp(),
+	});
+};
+
+export const reactivateAccount = async (userId: string): Promise<void> => {
+	const userDocRef = doc(db, 'users', userId);
+	await updateDoc(userDocRef, {
+		deactivatedAt: null,
+		reminderSent7Days: false,
+		reminderSent1Day: false,
 		updatedAt: serverTimestamp(),
 	});
 };

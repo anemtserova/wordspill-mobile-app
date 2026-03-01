@@ -8,6 +8,7 @@ import {
 } from '../api/firebase/auth';
 import { User } from 'firebase/auth';
 import { useGetUser } from '../api/users/queries';
+import { reactivateAccount } from '../api/firebase/firestore';
 
 export const useAuth = () => {
 	const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
@@ -28,6 +29,22 @@ export const useAuth = () => {
 
 		return unsubscribe;
 	}, []);
+
+	// Check if account is deactivated and reactivate on login
+	useEffect(() => {
+		const checkAndReactivate = async () => {
+			if (profile && profile.deactivatedAt && firebaseUser) {
+				try {
+					await reactivateAccount(firebaseUser.uid);
+					console.log('Account reactivated successfully');
+				} catch (error) {
+					console.error('Failed to reactivate account:', error);
+				}
+			}
+		};
+
+		checkAndReactivate();
+	}, [profile, firebaseUser]);
 
 	return {
 		user: firebaseUser, // Firebase auth user

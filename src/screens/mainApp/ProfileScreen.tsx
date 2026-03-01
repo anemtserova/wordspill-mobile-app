@@ -142,7 +142,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 						)}
 						<View style={styles.userDetails}>
 							<Text variant="h3" style={styles.userName}>
-								{displayName}
+								{displayName}{' '}
 							</Text>
 							<Text variant="body" color={colors.text.secondary}>
 								{email}
@@ -208,7 +208,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 										strokeWidth={2}
 									/>
 								</View>
-								<Text variant="body">Settings</Text>
+								<Text variant="body">Account Settings</Text>
 							</View>
 							<NavArrowRight
 								width={20}

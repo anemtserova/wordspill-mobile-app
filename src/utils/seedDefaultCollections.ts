@@ -4,6 +4,12 @@ import { colors } from '../theme';
 
 export const DEFAULT_COLLECTIONS = [
 	{
+		name: 'In Limbo',
+		color: colors.neutral.gray400,
+		iconUrl: null,
+		iconName: 'suitcase',
+	},
+	{
 		name: 'Fiction',
 		color: colors.accent.cream,
 		iconUrl: null,

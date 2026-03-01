@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-	View,
-	StyleSheet,
-	ScrollView,
-	Image,
-	Share,
-	Alert,
-	Platform,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Platform } from 'react-native';
 import { Button, Text, IconStyled } from '../../components/ui';
 import { colors, shadows, spacing, typography } from '../../theme';
 import {
@@ -17,14 +9,13 @@ import {
 	Plus,
 	EditPencil,
 	Gift,
-	Spark,
 	Sparks,
-	ShareAndroid,
 	ShareAndroidSolid,
 	ShareIos,
 } from 'iconoir-react-native';
 import { Hashtag } from 'iconoir-react-native/regular';
 import { handleShareApp } from '../../utils/handleShareApp';
+import { WSLogo } from '../../components/ui/WSLogo';
 
 export const InfoScreen = ({ navigation }: { navigation: any }) => {
 	return (
@@ -33,17 +24,7 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 				contentContainerStyle={styles.scrollContent}
 				showsVerticalScrollIndicator={false}>
 				<View style={styles.header}>
-					<Image
-						source={require('../../../assets/icon.png')}
-						style={{
-							width: 80,
-							height: 80,
-							borderRadius: spacing.lg,
-							...shadows.md,
-							marginBottom: spacing.md,
-						}}
-						resizeMode="contain"
-					/>
+					<WSLogo />
 					<Text variant="h3" style={styles.title}>
 						Welcome to Wordspill
 					</Text>
@@ -121,8 +102,10 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						Keep your writing organized by creating collections. Separate your
 						daily journal from your poetry, group travel stories together, or
 						create collections for fiction projects, vocabulary discoveries, or
-						personal reflections. Your collections, your way. Tap on a
-						collection to see all spills within it.
+						personal reflections. Your collections, your way. Each new account
+						starts with a default list of collections to help you get started,
+						but feel free to create your own custom ones that fit your unique
+						preferences. Tap on a collection to see all spills it contains.
 					</Text>
 				</View>
 

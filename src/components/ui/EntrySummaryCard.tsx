@@ -79,7 +79,7 @@ export const EntrySummaryCard = memo(
 							)}
 							<View style={styles.entryFooter}>
 								<Text variant="caption" color={colors.text.secondary}>
-									{new Date(entry.createdAt).toDateString()}
+									{entry.date.toDateString()}
 								</Text>
 
 								{showDeleteButton && (

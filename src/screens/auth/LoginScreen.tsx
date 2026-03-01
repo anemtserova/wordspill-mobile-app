@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, Button, Input, WordspillInfoButton } from '../../components/ui';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../contexts/AuthContext';
+import { WSLogo } from '../../components/ui/WSLogo';
 
 export const LoginScreen = ({
 	navigation,

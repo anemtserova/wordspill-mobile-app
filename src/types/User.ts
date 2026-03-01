@@ -11,4 +11,8 @@ export interface UserProfile {
 		fontSize: number;
 		fontFamily: string;
 	};
+	// Account deactivation fields
+	deactivatedAt?: Date | null;
+	reminderSent7Days?: boolean;
+	reminderSent1Day?: boolean;
 }
