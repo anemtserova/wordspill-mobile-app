@@ -41,5 +41,11 @@ yarn-error.*
 /ios
 /android
 
+# builds
+builds/
+*.apk
+*.aab
+*.ipa
+
 # Design system example (development only)
 src/screens/DesignSystemExample.tsx

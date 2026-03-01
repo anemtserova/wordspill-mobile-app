@@ -1,56 +1,73 @@
 {
-	"expo": {
-		"name": "wordspill-mobile-app",
-		"slug": "wordspill-mobile-app",
-		"icon": "./assets/icon.png",
-		"version": "1.0.0",
-		"orientation": "portrait",
-		"userInterfaceStyle": "light",
-		"newArchEnabled": true,
-		"assetBundlePatterns": ["**/*"],
-		"splash": {
-			"image": "./assets/icon.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
-		},
-		"ios": {
-			"supportsTablet": true,
-			"bundleIdentifier": "com.anonymous.wordspillmobileapp",
-			"infoPlist": {
-				"NSLocationWhenInUseUsageDescription": "The app needs access to your location to add it to your spills and keep your memories complete."
-			}
-		},
-		"android": {
-			"adaptiveIcon": {
-				"backgroundColor": "#ffffff"
-			},
-			"edgeToEdgeEnabled": true,
-			"predictiveBackGestureEnabled": false,
-			"package": "com.anonymous.wordspillmobileapp",
-			"permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
-		},
-		"web": {},
-		"plugins": [
-			[
-				"expo-image-picker",
-				{
-					"photosPermission": "The app accesses your photos to let you add them to your stories.",
-					"cameraPermission": "The app accesses your camera to let you take photos and add them to your stories."
-				}
-			],
-			[
-				"expo-media-library",
-				{
-					"accessPrivileges": "The app needs access to your media library to let you add photos to your stories."
-				}
-			],
-			[
-				"expo-location",
-				{
-					"locationAlwaysAndWhenInUsePermission": "The app needs access to your location to add it to your spills and keep your memories complete.",
-					"locationWhenInUsePermission": "The app needs access to your location to add it to your spills."
-				}
-			]
-		]
-	}
+  "expo": {
+    "name": "wordspill-mobile-app",
+    "slug": "wordspill-mobile-app",
+    "icon": "./assets/icon.png",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.wordspillmobileapp",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "The app needs access to your location to add it to your spills and keep your memories complete."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.wordspillmobileapp",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_MEDIA_AUDIO"
+      ]
+    },
+    "web": {},
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you add them to your stories.",
+          "cameraPermission": "The app accesses your camera to let you take photos and add them to your stories."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "accessPrivileges": "The app needs access to your media library to let you add photos to your stories."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "The app needs access to your location to add it to your spills and keep your memories complete.",
+          "locationWhenInUsePermission": "The app needs access to your location to add it to your spills."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "fd2d6fff-e771-44dc-94df-7f09779ee0fe"
+      }
+    }
+  }
 }
