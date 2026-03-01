@@ -79,6 +79,135 @@ npm run logs
 npm run build
 ```
 
+## Testing
+
+The project includes HTTP-triggered test versions of the scheduled functions that you can call directly for testing purposes.
+
+### Available Test Functions
+
+#### `testDeleteExpiredAccounts`
+
+Manually triggers the account deletion process without waiting for the scheduled time.
+
+**What it does:**
+
+- Finds all users deactivated more than 14 days ago
+- Deletes their collections, entries, and user document
+- Deletes their Firebase Auth account
+- Returns a summary of the deletion process
+
+#### `testSendDeactivationReminders`
+
+Manually triggers the reminder email process without waiting for the scheduled time.
+
+**What it does:**
+
+- Finds users deactivated 7-8 days ago (sends 7-day reminder)
+- Finds users deactivated 13-14 days ago (sends 1-day reminder)
+- Sends reminder emails via Resend
+- Marks users as having received reminders
+- Returns a summary of emails sent
+
+### How to Use Test Functions
+
+#### 1. Start the Firebase Emulator
+
+```bash
+cd functions
+npm run serve
+```
+
+The emulator will start and display URLs for your functions, typically at:
+
+- `http://127.0.0.1:5001/[your-project-id]/us-central1/testDeleteExpiredAccounts`
+- `http://127.0.0.1:5001/[your-project-id]/us-central1/testSendDeactivationReminders`
+
+#### 2. Call the Test Functions
+
+**Using curl:**
+
+```bash
+# Test account deletion
+curl http://127.0.0.1:5001/[your-project-id]/us-central1/testDeleteExpiredAccounts
+
+# Test reminder emails
+curl http://127.0.0.1:5001/[your-project-id]/us-central1/testSendDeactivationReminders
+```
+
+**Using your browser:**
+
+Simply navigate to the function URLs shown in the emulator output.
+
+**Using a tool like Postman or Insomnia:**
+
+Create a GET request to the function URLs.
+
+#### 3. Example Responses
+
+**testDeleteExpiredAccounts:**
+
+```json
+{
+	"success": true,
+	"message": "Deletion process completed",
+	"deleted": 2,
+	"total": 2
+}
+```
+
+Or if no accounts need deletion:
+
+```json
+{
+	"success": true,
+	"message": "No expired accounts to delete",
+	"deleted": 0
+}
+```
+
+**testSendDeactivationReminders:**
+
+```json
+{
+	"success": true,
+	"message": "Reminder process completed",
+	"sevenDayReminders": 3,
+	"oneDayReminders": 1,
+	"totalReminders": 4,
+	"resendConfigured": true
+}
+```
+
+### Testing in Production
+
+You can also test these functions in production (after deployment):
+
+```bash
+# Get your function URL from Firebase Console
+curl https://us-central1-[your-project-id].cloudfunctions.net/testDeleteExpiredAccounts
+```
+
+**Important:** Consider removing or securing these test functions before going live, or add authentication to prevent unauthorized access.
+
+### Troubleshooting
+
+**"No expired accounts to delete"**
+
+- Make sure you have test users in Firestore with a `deactivatedAt` timestamp older than 14 days
+- Check the Firestore emulator UI at `http://127.0.0.1:4000` to verify your data
+
+**"resendConfigured: false"**
+
+- Your Resend API key is not configured
+- Create a `.env` file in the `functions` directory with `RESEND_API_KEY=your_key`
+- Restart the emulator after adding the `.env` file
+
+**Function returns 500 error**
+
+- Check the emulator logs for detailed error messages
+- Verify your Firebase configuration
+- Ensure all dependencies are installed (`pnpm install`)
+
 ## Deployment
 
 ### Deploy all functions:

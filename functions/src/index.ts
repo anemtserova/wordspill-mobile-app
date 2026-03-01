@@ -23,7 +23,7 @@ const getResend = () => {
  * that have been deactivated for more than 14 days.
  */
 export const deleteExpiredAccounts = functions.pubsub
-	.schedule('30 14 * * *')
+	.schedule('0 2 * * *')
 	.timeZone('UTC')
 	.onRun(async (context) => {
 		const fourteenDaysAgo = new Date();
