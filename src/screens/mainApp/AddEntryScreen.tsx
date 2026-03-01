@@ -44,10 +44,7 @@ interface AddEntryScreenProps {
 	};
 }
 
-export const AddEntryScreen: React.FC<AddEntryScreenProps> = ({
-	navigation,
-	route,
-}) => {
+export const AddEntryScreen = ({ navigation, route }: AddEntryScreenProps) => {
 	const preselectedCollection = route?.params?.collectionId;
 	const { user } = useAuth();
 	const userId = user?.uid || '';

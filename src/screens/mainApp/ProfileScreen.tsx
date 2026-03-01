@@ -6,6 +6,8 @@ import {
 	TouchableOpacity,
 	Alert,
 	Image as RNImage,
+	Share,
+	Platform,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
@@ -26,7 +28,11 @@ import {
 	Book,
 	NavArrowRight,
 	ProfileCircle,
+	ShareAndroid,
+	ShareAndroidSolid,
+	ShareIos,
 } from 'iconoir-react-native';
+import { handleShareApp } from '../../utils/handleShareApp';
 
 interface ProfileScreenProps {
 	navigation: NativeStackNavigationProp<any>;
@@ -188,9 +194,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 								strokeWidth={2}
 							/>
 						</TouchableOpacity>
-
 						<View style={styles.divider} />
-
 						<TouchableOpacity
 							style={styles.menuItem}
 							onPress={handleSettings}
@@ -218,10 +222,36 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
 				<View style={styles.section}>
 					<Text variant="label" style={styles.sectionTitle}>
-						ABOUT
+						ABOUT APP
 					</Text>
 
-					<Card variant="outlined" padding="md">
+					<Card variant="outlined" padding="xs">
+						<TouchableOpacity
+							style={styles.menuItem}
+							onPress={handleShareApp}
+							activeOpacity={0.7}>
+							<View style={styles.menuItemLeft}>
+								<View style={styles.iconContainer}>
+									{Platform.OS === 'android' ? (
+										<ShareAndroidSolid
+											width={20}
+											height={20}
+											color={colors.primary.contrast}
+											strokeWidth={2}
+										/>
+									) : (
+										<ShareIos
+											width={20}
+											height={20}
+											color={colors.primary.contrast}
+											strokeWidth={2}
+										/>
+									)}
+								</View>
+								<Text variant="body">Share Wordspill</Text>
+							</View>
+						</TouchableOpacity>
+						<View style={styles.divider} />
 						<View style={styles.infoRow}>
 							<Text variant="body" color={colors.text.secondary}>
 								Version
@@ -235,7 +265,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 				{__DEV__ && (
 					<View style={styles.section}>
 						<Text variant="label" style={styles.sectionTitle}>
-							DEVELOPER
+							DEVELOPER USE ONLY
 						</Text>
 						<Card variant="outlined" padding="xs">
 							<TouchableOpacity
@@ -379,6 +409,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		padding: spacing.md,
 	},
 	logoutButton: {
 		flexDirection: 'row',

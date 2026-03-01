@@ -181,16 +181,18 @@ export const CollectionsScreen = ({
 				)}
 			</ScrollView>
 
-			<TouchableOpacity
-				style={[styles.fab, { bottom: spacing.lg + insets.bottom }]}
-				onPress={() => setIsAddModalVisible(true)}>
-				<Plus
-					width={24}
-					height={24}
-					color={colors.neutral.white}
-					strokeWidth={2.5}
-				/>
-			</TouchableOpacity>
+			{filteredCollections.length > 0 ? (
+				<TouchableOpacity
+					style={[styles.fab, { bottom: spacing.lg + insets.bottom }]}
+					onPress={() => setIsAddModalVisible(true)}>
+					<Plus
+						width={24}
+						height={24}
+						color={colors.neutral.white}
+						strokeWidth={2.5}
+					/>
+				</TouchableOpacity>
+			) : null}
 
 			<AddCollectionModal
 				visible={isAddModalVisible}

@@ -184,16 +184,18 @@ export const SelectedCollectionScreen = ({ route, navigation }: Props) => {
 				)}
 			</ScrollView>
 
-			<TouchableOpacity
-				style={[styles.fab, { bottom: spacing.lg + insets.bottom }]}
-				onPress={handleAddEntry}>
-				<Plus
-					width={24}
-					height={24}
-					color={colors.neutral.white}
-					strokeWidth={2.5}
-				/>
-			</TouchableOpacity>
+			{filteredEntries.length > 0 ? (
+				<TouchableOpacity
+					style={[styles.fab, { bottom: spacing.lg + insets.bottom }]}
+					onPress={handleAddEntry}>
+					<Plus
+						width={24}
+						height={24}
+						color={colors.neutral.white}
+						strokeWidth={2.5}
+					/>
+				</TouchableOpacity>
+			) : null}
 		</View>
 	);
 };

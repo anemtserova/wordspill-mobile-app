@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
+import {
+	View,
+	StyleSheet,
+	ScrollView,
+	Image,
+	Share,
+	Alert,
+	Platform,
+} from 'react-native';
 import { Button, Text, IconStyled } from '../../components/ui';
 import { colors, shadows, spacing, typography } from '../../theme';
 import {
@@ -11,8 +19,12 @@ import {
 	Gift,
 	Spark,
 	Sparks,
+	ShareAndroid,
+	ShareAndroidSolid,
+	ShareIos,
 } from 'iconoir-react-native';
 import { Hashtag } from 'iconoir-react-native/regular';
+import { handleShareApp } from '../../utils/handleShareApp';
 
 export const InfoScreen = ({ navigation }: { navigation: any }) => {
 	return (
@@ -247,6 +259,37 @@ export const InfoScreen = ({ navigation }: { navigation: any }) => {
 						Gift yourself a moment of reflection and let your words spill!
 					</Text>
 				</View>
+				<Button
+					variant="ghost"
+					onPress={handleShareApp}
+					style={{ marginBottom: spacing.md, alignSelf: 'center' }}>
+					<View
+						style={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							gap: spacing.sm,
+						}}>
+						{Platform.OS === 'android' ? (
+							<ShareAndroidSolid
+								width={20}
+								height={20}
+								color={colors.accent.peach}
+								strokeWidth={2}
+							/>
+						) : (
+							<ShareIos
+								width={20}
+								height={20}
+								color={colors.accent.peach}
+								strokeWidth={2}
+							/>
+						)}
+
+						<Text weight="bold" variant="label" color={colors.accent.peach}>
+							Share Wordspill
+						</Text>
+					</View>
+				</Button>
 				<Button
 					variant="ghost"
 					onPress={() => navigation.goBack()}
