@@ -19,6 +19,9 @@ A guest user cannot access personal data areas (entries, collections, profile se
 #### **_Available screens or actions:_**
 
 - Onboarding flow (if not completed yet)
+
+\*NOTE: onboarding was intended to consist of several video screens introducing the user to app goals and purpose but later was decided to be simplified to a single screen with app logo and a **_Get Started_** button
+
 - Login screen
 - Sign up screen
 - Reset/Forgot password screen
@@ -576,17 +579,17 @@ If permission is denied or location services are disabled, an `Alert` is shown e
 
 Auth errors are caught in `try/catch` blocks on each auth screen and surfaced via `Alert.alert()` with a user-friendly message. Firebase error codes are mapped to readable strings before display — no raw Firebase error codes are shown to the user.
 
-| Screen | Error Code | Message Shown |
-| --- | --- | --- |
-| `LoginScreen` | `auth/user-not-found` | _"No account found with this email"_ |
-| `LoginScreen` | `auth/wrong-password` | _"Incorrect password"_ |
-| `LoginScreen` | `auth/invalid-credential` | _"Invalid email or password"_ |
-| `LoginScreen` | anything else | _"Login failed. Please try again."_ |
-| `SignupScreen` | `auth/email-already-in-use` | _"An account with this email already exists"_ |
-| `SignupScreen` | `auth/weak-password` | _"Password is too weak"_ |
-| `SignupScreen` | `auth/invalid-email` | _"Invalid email address"_ |
-| `ForgottenPasswordScreen` | `auth/user-not-found` | _"No account found with this email"_ |
-| `ForgottenPasswordScreen` | `auth/invalid-email` | _"Invalid email address"_ |
+| Screen                    | Error Code                  | Message Shown                                 |
+| ------------------------- | --------------------------- | --------------------------------------------- |
+| `LoginScreen`             | `auth/user-not-found`       | _"No account found with this email"_          |
+| `LoginScreen`             | `auth/wrong-password`       | _"Incorrect password"_                        |
+| `LoginScreen`             | `auth/invalid-credential`   | _"Invalid email or password"_                 |
+| `LoginScreen`             | anything else               | _"Login failed. Please try again."_           |
+| `SignupScreen`            | `auth/email-already-in-use` | _"An account with this email already exists"_ |
+| `SignupScreen`            | `auth/weak-password`        | _"Password is too weak"_                      |
+| `SignupScreen`            | `auth/invalid-email`        | _"Invalid email address"_                     |
+| `ForgottenPasswordScreen` | `auth/user-not-found`       | _"No account found with this email"_          |
+| `ForgottenPasswordScreen` | `auth/invalid-email`        | _"Invalid email address"_                     |
 
 ---
 
@@ -605,13 +608,13 @@ Data errors from Firestore are handled at the query and mutation level:
 
 Screens account for the case where a query returns an empty result or a resource is not found:
 
-| Screen | Empty State Shown |
-| --- | --- |
-| `HomeScreen` | _"No collections match your search"_ (search active) / _"No collections yet. Start creating entries!"_ (no collections) |
-| `CollectionsScreen` | _"No Collections Found"_ (search active) / _"No Collections Yet"_ (no collections) |
-| `SelectedCollectionScreen` | _"No Spills Found"_ (search active) / _"No Spills Yet"_ + _"Add Your First Spill"_ button (empty collection) |
-| `EntriesByTagScreen` | _"Tag not found"_ if tag param is missing / error message if fetch fails |
-| `EntryDetailsScreen` | _"Entry not found"_ if `entryId` resolves to nothing |
-| `SelectedCollectionScreen` | _"Collection not found"_ if `collectionId` param resolves to no matching collection |
+| Screen                     | Empty State Shown                                                                                                       |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `HomeScreen`               | _"No collections match your search"_ (search active) / _"No collections yet. Start creating entries!"_ (no collections) |
+| `CollectionsScreen`        | _"No Collections Found"_ (search active) / _"No Collections Yet"_ (no collections)                                      |
+| `SelectedCollectionScreen` | _"No Spills Found"_ (search active) / _"No Spills Yet"_ + _"Add Your First Spill"_ button (empty collection)            |
+| `EntriesByTagScreen`       | _"Tag not found"_ if tag param is missing / error message if fetch fails                                                |
+| `EntryDetailsScreen`       | _"Entry not found"_ if `entryId` resolves to nothing                                                                    |
+| `SelectedCollectionScreen` | _"Collection not found"_ if `collectionId` param resolves to no matching collection                                     |
 
 Loading states are handled with inline text (e.g. _"Loading spills..."_) rendered in place of the list while `isLoading` is true.
