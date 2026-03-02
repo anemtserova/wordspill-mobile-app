@@ -8,7 +8,8 @@ Wordspill is a React Native mobile application built with Expo that allows users
 
 The app features user authentication, account management with deactivation/reactivation capabilities, and automated scheduled tasks for account deletion and email reminders via Firebase Cloud Functions.
 
-**_For full list of technical details check_** [FUNCTIONALGUIDE.md](/FUNCTIONALGUIDE.md)
+**_For full list of technical details check [FUNCTIONALGUIDE.md](/FUNCTIONALGUIDE.md)_**
+#### ***To download*** `.apk` ***file, please check RELEASES > Assets***
 
 ## Features
 
