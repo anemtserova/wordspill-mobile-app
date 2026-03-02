@@ -48,7 +48,7 @@ Scheduled function that runs daily at 2 AM UTC to permanently delete accounts th
 
 ### `sendDeactivationReminders`
 
-Scheduled function that runs daily at 10 AM UTC to send email reminders to users whose accounts are approaching deletion.
+Scheduled function that runs daily at 2:30 PM UTC to send email reminders to users whose accounts are approaching deletion.
 
 **Reminder schedule:**
 
